@@ -1,5 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./PredictorCard.css";
+import BackendStatus from "./BackendStatus";
+import ErrorAlert from "./ErrorAlert";
+import Header from "./Header";
+import LoadingState from "./LoadingState";
+import PredictButton from "./PredictButton";
+import PredictionResults from "./PredictionResults";
+import UploadSection from "./UploadSection";
 
 // Vite uses import.meta.env for env vars. Expect VITE_API_URL.
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -129,144 +136,28 @@ const PredictorCard = () => {
   return (
     <div className="predictor-container">
       <div className="predictor-card">
-        <h1>🌱 Plant Disease Detector</h1>
-        <p className="subtitle">
-          Upload a potato leaf image to detect diseases
-        </p>
-
-        {/* Image Upload Section */}
-        <div className="upload-section">
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageSelect}
-            id="imageInput"
-            style={{ display: "none" }}
-          />
-
-          {!preview ? (
-            <label htmlFor="imageInput" className="upload-area">
-              <div className="upload-icon">📸</div>
-              <div className="upload-text">
-                <p className="upload-title">Click to upload or drag and drop</p>
-                <p className="upload-hint">PNG, JPG, GIF up to 10MB</p>
-              </div>
-            </label>
-          ) : (
-            <div className="preview-section">
-              <img src={preview} alt="Preview" className="preview-image" />
-              <button className="clear-button" onClick={handleClear}>
-                Clear Image
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Predict Button */}
-        {!backendOnline && (
-          <div className="error-message">
-            <span>❌ {backendMessage}</span>
-          </div>
-        )}
-
-        {image && backendOnline && (
-          <button
-            className="predict-button"
-            onClick={handlePredict}
-            disabled={loading}
-          >
-            {loading ? "Analyzing... ⏳" : "Predict Disease 🔍"}
-          </button>
-        )}
-
-        {/* Error Message */}
-        {error && (
-          <div className="error-message">
-            <span>❌ {error}</span>
-          </div>
-        )}
-
-        {/* Prediction Results */}
-        {prediction && (
-          <div className="results-section">
-            <div
-              className="prediction-result"
-              style={{ borderLeftColor: getStatusColor(prediction.disease) }}
-            >
-              <div className="disease-header">
-                <span className="status-emoji">
-                  {getStatusEmoji(prediction.disease)}
-                </span>
-                <h2 className="disease-name">{prediction.disease}</h2>
-              </div>
-
-              {guidance && guidance.status && (
-                <p className="subtitle" style={{ marginTop: "6px" }}>
-                  {guidance.status}
-                </p>
-              )}
-
-              <div className="confidence-bar">
-                <div
-                  className="confidence-fill"
-                  style={{ width: `${prediction.confidence}%` }}
-                >
-                  <span className="confidence-text">
-                    {prediction.confidence}%
-                  </span>
-                </div>
-              </div>
-
-              {/* All Predictions */}
-              <div className="all-predictions">
-                <h3>All Predictions:</h3>
-                <div className="predictions-list">
-                  {Object.entries(prediction.all_predictions).map(
-                    ([className, score]) => (
-                      <div key={className} className="prediction-item">
-                        <span className="class-name">{className}</span>
-                        <div className="mini-bar">
-                          <div
-                            className="mini-fill"
-                            style={{ width: `${score * 100}%` }}
-                          ></div>
-                        </div>
-                        <span className="score">
-                          {(score * 100).toFixed(2)}%
-                        </span>
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-
-              {/* Tips */}
-              <div className="tips-section">
-                <h3>💡 Recommendations:</h3>
-                <ul className="tips-list">
-                  {Array.isArray(guidance?.tips) ? (
-                    guidance.tips.map((tip, idx) => <li key={idx}>{tip}</li>)
-                  ) : (
-                    <li>No recommendations available</li>
-                  )}
-                </ul>
-              </div>
-            </div>
-
-            <button className="new-prediction-button" onClick={handleClear}>
-              Try Another Image
-            </button>
-          </div>
-        )}
-
-        {/* Loading State */}
-        {loading && (
-          <div className="loading-spinner">
-            <div className="spinner"></div>
-            <p>Analyzing image...</p>
-          </div>
-        )}
+        <Header />
+        <UploadSection
+          preview={preview}
+          fileInputRef={fileInputRef}
+          onSelect={handleImageSelect}
+          onClear={handleClear}
+        />
+        <BackendStatus online={backendOnline} message={backendMessage} />
+        <PredictButton
+          show={Boolean(image) && backendOnline}
+          loading={loading}
+          onPredict={handlePredict}
+        />
+        <ErrorAlert message={error} />
+        <PredictionResults
+          prediction={prediction}
+          guidance={guidance}
+          onClear={handleClear}
+          getStatusColor={getStatusColor}
+          getStatusEmoji={getStatusEmoji}
+        />
+        <LoadingState loading={loading} />
       </div>
     </div>
   );
