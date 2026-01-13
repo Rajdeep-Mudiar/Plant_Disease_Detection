@@ -1,0 +1,42 @@
+.backend-status-container {
+  margin-bottom: 20px;
+}
+
+.backend-error-message {
+  background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border-left: 6px solid #b71c1c;
+  box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
+  font-weight: 500;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: slideDown 0.3s ease;
+}
+
+.backend-error-message span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .backend-error-message {
+    padding: 12px 16px;
+    font-size: 0.95em;
+  }
+}

@@ -1,4 +1,5 @@
 import React from "react";
+import "./UploadSection.css";
 
 const UploadSection = ({ preview, fileInputRef, onSelect, onClear }) => (
   <div className="upload-section">

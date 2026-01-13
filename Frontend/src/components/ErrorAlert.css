@@ -1,0 +1,43 @@
+.error-alert-container {
+  margin-bottom: 20px;
+}
+
+.error-alert-message {
+  background: linear-gradient(135deg, #ef5350 0%, #e53935 100%);
+  color: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border-left: 6px solid #d32f2f;
+  box-shadow: 0 4px 12px rgba(239, 83, 80, 0.2);
+  font-weight: 500;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: fadeInAlert 0.4s ease;
+}
+
+.error-alert-message span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+@keyframes fadeInAlert {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  .error-alert-message {
+    padding: 12px 16px;
+    font-size: 0.95em;
+  }
+}
