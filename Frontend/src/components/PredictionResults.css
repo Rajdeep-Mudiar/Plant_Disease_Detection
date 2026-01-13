@@ -1,0 +1,229 @@
+.results-section {
+  margin: 30px 0;
+}
+
+.prediction-result {
+  background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+  border-left: 6px solid #4caf50;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+  animation: slideInResult 0.4s ease;
+}
+
+.prediction-result.disease-early-blight {
+  border-left-color: #ff9800;
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+}
+
+.prediction-result.disease-late-blight {
+  border-left-color: #f44336;
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.15);
+}
+
+@keyframes slideInResult {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.disease-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.status-emoji {
+  font-size: 2.5em;
+}
+
+.disease-name {
+  margin: 0;
+  color: #1b5e20;
+  font-size: 2em;
+  font-weight: 700;
+}
+
+.prediction-result.disease-early-blight .disease-name {
+  color: #e65100;
+}
+
+.prediction-result.disease-late-blight .disease-name {
+  color: #c62828;
+}
+
+.confidence-bar {
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+  height: 32px;
+  overflow: hidden;
+  margin: 20px 0;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.confidence-fill {
+  background: linear-gradient(90deg, #4caf50 0%, #388e3c 100%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s ease;
+}
+
+.confidence-text {
+  color: white;
+  font-weight: 600;
+  font-size: 0.95em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.prediction-result.disease-early-blight .confidence-fill {
+  background: linear-gradient(90deg, #ff9800 0%, #f57c00 100%);
+}
+
+.prediction-result.disease-late-blight .confidence-fill {
+  background: linear-gradient(90deg, #f44336 0%, #d32f2f 100%);
+}
+
+.all-predictions {
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.all-predictions h3 {
+  margin: 0 0 15px 0;
+  color: #1b5e20;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.predictions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prediction-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.class-name {
+  color: #2e7d32;
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.mini-bar {
+  flex: 1;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 6px;
+  height: 24px;
+  overflow: hidden;
+  border: 1px solid rgba(76, 175, 80, 0.15);
+}
+
+.mini-fill {
+  background: linear-gradient(90deg, #81c784 0%, #4caf50 100%);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  transition: width 0.5s ease;
+}
+
+.guidance-section {
+  margin-top: 25px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
+  border-left: 4px solid #4caf50;
+}
+
+.guidance-section h3 {
+  margin: 0 0 15px 0;
+  color: #1b5e20;
+  font-size: 1.1em;
+  font-weight: 600;
+}
+
+.guidance-tips {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.guidance-tips li {
+  padding: 10px 0;
+  color: #2e7d32;
+  border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+  display: flex;
+  gap: 10px;
+}
+
+.guidance-tips li:last-child {
+  border-bottom: none;
+}
+
+.guidance-tips li::before {
+  content: "✓";
+  color: #4caf50;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.clear-results-button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #558b2f 0%, #33691e 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(83, 139, 47, 0.2);
+}
+
+.clear-results-button:hover {
+  background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+@media (max-width: 768px) {
+  .prediction-result {
+    padding: 20px;
+  }
+
+  .disease-header {
+    gap: 10px;
+  }
+
+  .status-emoji {
+    font-size: 2em;
+  }
+
+  .disease-name {
+    font-size: 1.6em;
+  }
+
+  .confidence-bar {
+    height: 28px;
+  }
+
+  .prediction-item {
+    gap: 10px;
+  }
+}

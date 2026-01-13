@@ -1,4 +1,5 @@
 import React from "react";
+import "./PredictionResults.css";
 
 const PredictionResults = ({
   prediction,

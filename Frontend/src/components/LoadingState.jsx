@@ -1,4 +1,5 @@
 import React from "react";
+import "./LoadingState.css";
 
 const LoadingState = ({ loading }) => {
   if (!loading) return null;
