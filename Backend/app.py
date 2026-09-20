@@ -27,6 +27,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 JSON_PATH = os.path.join(MODEL_DIR, "potato_disease_detection_model.json")
 WEIGHTS_PATH = os.path.join(MODEL_DIR, "potato_disease_detection_model_weights.weights.h5")
 KERAS_PATH = os.path.join(MODEL_DIR, "potato_disease_detection_model.keras")
+MODELS_SUBDIR_KERAS_PATH = os.path.join(MODEL_DIR, "models", "potato_disease_detection_model.keras")
 
 # Class names and guidance
 # IMPORTANT: Class order must be alphabetical to match training via
@@ -55,12 +56,13 @@ def load_plant_model():
     """Load the trained plant disease detection model"""
     global model
     try:
-        if os.path.exists(KERAS_PATH):
-            # Load new-format .keras model with Keras v3 loader
-            model = keras.models.load_model(KERAS_PATH, compile=False)
+        target_keras_path = KERAS_PATH if os.path.exists(KERAS_PATH) else (MODELS_SUBDIR_KERAS_PATH if os.path.exists(MODELS_SUBDIR_KERAS_PATH) else None)
+        if target_keras_path:
+            # Load new-format .keras model with Keras loader
+            model = keras.models.load_model(target_keras_path, compile=False)
             # Compile is optional for inference; keep for consistency
             model.compile(loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-            print(f"✓ Model loaded from {KERAS_PATH} using keras.models.load_model")
+            print(f"[OK] Model loaded from {target_keras_path} using keras.models.load_model")
             return model
         
         if os.path.exists(JSON_PATH):
@@ -75,12 +77,12 @@ def load_plant_model():
 
             model.load_weights(WEIGHTS_PATH)
             model.compile(loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-            print(f"✓ Model loaded from JSON + Weights using tensorflow.keras.model_from_json")
+            print(f"[OK] Model loaded from JSON + Weights using tensorflow.keras.model_from_json")
             return model
         
         raise FileNotFoundError(f"No model files found at {MODEL_DIR}")
     except Exception as e:
-        print(f"✗ Error loading model: {e}")
+        print(f"[ERROR] Error loading model: {e}")
         return None
 
 def allowed_file(filename):
@@ -291,18 +293,18 @@ if __name__ == '__main__':
     model = load_plant_model()
     
     if model:
-        print("\n✓ Starting Flask server...")
+        print("\n[OK] Starting Flask server...")
         print("Available endpoints:")
         print("  - GET  /health")
         print("  - GET  /info")
         print("  - GET  /classes")
         print("  - POST /predict (multipart/form-data)")
         print("  - POST /predict_base64 (base64 image in JSON)")
-        print("\nServer running on http://localhost:5000")
+        print("\nServer running on http://localhost:5001")
         print("=" * 50 + "\n")
         
         # Run Flask app
-        app.run(debug=True, host='0.0.0.0', port=5000)
+        app.run(debug=True, host='0.0.0.0', port=5001)
     else:
-        print("\n✗ Failed to load model. Exiting...")
+        print("\n[ERROR] Failed to load model. Exiting...")
         exit(1)

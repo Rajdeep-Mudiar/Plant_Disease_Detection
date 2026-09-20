@@ -7,10 +7,11 @@ const PredictButton = ({ show, loading, onPredict }) => {
   return (
     <div className="predict-button-container">
       <button className="predict-button" onClick={onPredict} disabled={loading}>
-        {loading ? "Analyzing... ⏳" : "Predict Disease 🔍"}
+        {loading ? "Analyzing... ⏳" : "Analyze Leaf"}
       </button>
     </div>
   );
 };
 
 export default PredictButton;
+

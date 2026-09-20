@@ -1,43 +1,45 @@
 .predict-button-container {
-  margin: 30px 0;
+  margin: 16px 0;
 }
 
 .predict-button {
   width: 100%;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
-  color: white;
+  height: 46px;
+  padding: 0 20px;
+  background-color: #2E7D32;
+  color: #FFFFFF;
   border: none;
-  border-radius: 12px;
-  font-size: 1.1em;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .predict-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #45a049 0%, #2e7d32 100%);
-  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-  transform: translateY(-2px);
+  background-color: #1B5E20;
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
 }
 
 .predict-button:active:not(:disabled) {
-  transform: translateY(0);
-  box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+  transform: translateY(1px);
 }
 
 .predict-button:disabled {
-  background: linear-gradient(135deg, #a5d6a7 0%, #81c784 100%);
+  background-color: #A5D6A7;
   cursor: not-allowed;
   opacity: 0.8;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .predict-button {
-    padding: 14px 20px;
-    font-size: 1em;
+    height: 44px;
+    font-size: 0.95rem;
   }
 }
+

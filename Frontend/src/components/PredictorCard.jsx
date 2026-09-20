@@ -8,8 +8,7 @@ import PredictButton from "./PredictButton";
 import PredictionResults from "./PredictionResults";
 import UploadSection from "./UploadSection";
 
-// Vite uses import.meta.env for env vars. Expect VITE_API_URL.
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
 const PredictorCard = () => {
   const [image, setImage] = useState(null);
@@ -28,29 +27,26 @@ const PredictorCard = () => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         setBackendOnline(true);
-        setBackendMessage(`Backend OK • TF ${data.tensorflow_version}`);
+        setBackendMessage(`Backend Online • TensorFlow ${data.tensorflow_version}`);
       } catch (e) {
         setBackendOnline(false);
-        setBackendMessage("Backend unreachable. Start API at port 5000.");
+        setBackendMessage("Backend unreachable. Ensure API is running on port 5001.");
       }
     };
     pingBackend();
   }, []);
+
   const fileInputRef = useRef(null);
 
   const handleImageSelect = (e) => {
-    const file = e.target.files[0];
+    const file = e.target?.files?.[0];
     if (file) {
       setImage(file);
-
-      // Create preview
       const reader = new FileReader();
       reader.onload = (event) => {
         setPreview(event.target.result);
       };
       reader.readAsDataURL(file);
-
-      // Reset prediction
       setPrediction(null);
       setGuidance(null);
       setError(null);
@@ -110,13 +106,13 @@ const PredictorCard = () => {
   const getStatusColor = (disease) => {
     switch (disease) {
       case "Healthy":
-        return "#4CAF50"; // Green
+        return "#2E7D32"; // Green
       case "Early Blight":
-        return "#FF9800"; // Orange
+        return "#F59E0B"; // Warm Amber
       case "Late Blight":
-        return "#F44336"; // Red
+        return "#DC2626"; // Red
       default:
-        return "#2196F3"; // Blue
+        return "#2563EB"; // Blue
     }
   };
 
@@ -135,32 +131,66 @@ const PredictorCard = () => {
 
   return (
     <div className="predictor-container">
-      <div className="predictor-card">
-        <Header />
-        <UploadSection
-          preview={preview}
-          fileInputRef={fileInputRef}
-          onSelect={handleImageSelect}
-          onClear={handleClear}
-        />
-        <BackendStatus online={backendOnline} message={backendMessage} />
-        <PredictButton
-          show={Boolean(image) && backendOnline}
-          loading={loading}
-          onPredict={handlePredict}
-        />
-        <ErrorAlert message={error} />
-        <PredictionResults
-          prediction={prediction}
-          guidance={guidance}
-          onClear={handleClear}
-          getStatusColor={getStatusColor}
-          getStatusEmoji={getStatusEmoji}
-        />
-        <LoadingState loading={loading} />
+      <div className="predictor-wrapper">
+        <div className="predictor-card">
+          <Header />
+          
+          <div id="detect" className="section-block">
+            <UploadSection
+              preview={preview}
+              fileInputRef={fileInputRef}
+              onSelect={handleImageSelect}
+              onClear={handleClear}
+            />
+            <BackendStatus online={backendOnline} message={backendMessage} />
+            <PredictButton
+              show={Boolean(image) && backendOnline}
+              loading={loading}
+              onPredict={handlePredict}
+            />
+            <ErrorAlert message={error} />
+            <PredictionResults
+              prediction={prediction}
+              guidance={guidance}
+              onClear={handleClear}
+              getStatusColor={getStatusColor}
+              getStatusEmoji={getStatusEmoji}
+            />
+            <LoadingState loading={loading} />
+          </div>
+        </div>
+
+        {/* Diseases Reference Card */}
+        <div id="diseases" className="info-card">
+          <h3 className="info-card-title">Supported Leaf Diagnoses</h3>
+          <div className="diseases-grid">
+            <div className="disease-info-item">
+              <span className="disease-badge healthy">🟢 Healthy</span>
+              <p>Leaves display uniform green coloration with no visible lesion spots or decay.</p>
+            </div>
+            <div className="disease-info-item">
+              <span className="disease-badge early">🟠 Early Blight</span>
+              <p>Characterized by concentric dark brown spots forming target-like rings on older foliage.</p>
+            </div>
+            <div className="disease-info-item">
+              <span className="disease-badge late">🔴 Late Blight</span>
+              <p>Urgent fungal condition causing water-soaked dark lesions and rapid leaf wilt.</p>
+            </div>
+          </div>
+        </div>
+
+        {/* About Section Card */}
+        <div id="about" className="info-card">
+          <h3 className="info-card-title">About This Tool</h3>
+          <p className="info-card-text">
+            Plant Disease Detector provides instant, AI-assisted analysis for potato crop leaf health.
+            Upload a clear photo of a potato leaf to evaluate condition accuracy and access targeted care recommendations.
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
 export default PredictorCard;
+
