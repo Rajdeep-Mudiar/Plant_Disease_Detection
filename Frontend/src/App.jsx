@@ -9,6 +9,7 @@ import WeatherPage from "./pages/WeatherPage";
 import CalculatorPage from "./pages/CalculatorPage";
 import EncyclopediaPage from "./pages/EncyclopediaPage";
 import HistoryPage from "./pages/HistoryPage";
+import DigitalTwinPage from "./pages/DigitalTwinPage";
 import { generateSampleLeafFile } from "./utils/sampleImages";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
@@ -32,7 +33,7 @@ function App() {
   // Navigation Route State
   const [activeRoute, setActiveRoute] = useState(() => {
     const hash = window.location.hash.replace("#", "").toLowerCase();
-    const valid = ["home", "detect", "weather", "calculator", "encyclopedia", "history"];
+    const valid = ["home", "detect", "twin", "weather", "calculator", "encyclopedia", "history"];
     return valid.includes(hash) ? hash : "home";
   });
 
@@ -52,7 +53,7 @@ function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace("#", "").toLowerCase();
-      const valid = ["home", "detect", "weather", "calculator", "encyclopedia", "history"];
+      const valid = ["home", "detect", "twin", "weather", "calculator", "encyclopedia", "history"];
       if (valid.includes(hash)) {
         setActiveRoute(hash);
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -247,6 +248,10 @@ function App() {
             onPredict={handlePredict}
             onCameraCapture={handleCameraCapture}
           />
+        )}
+
+        {activeRoute === "twin" && (
+          <DigitalTwinPage onNavigateToScanner={handleSelectSampleSpecimen} />
         )}
 
         {activeRoute === "weather" && <WeatherPage />}

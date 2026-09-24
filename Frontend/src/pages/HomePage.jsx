@@ -8,6 +8,7 @@ import {
   IconShield,
   IconCheck,
   IconSparkles,
+  IconActivity,
 } from "../components/Icons";
 
 const FAQS = [
@@ -247,7 +248,26 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
             </div>
           </div>
 
-          {/* Feature 4 */}
+          {/* Feature 4: Digital Farm Twin */}
+          <div
+            className="meta-tool-card"
+            onClick={() => onNavigate("twin")}
+          >
+            <div className="tool-icon-frame">
+              <IconActivity size={20} />
+            </div>
+            <h3 className="tool-card-title">Digital Farm Twin & IoT</h3>
+            <p className="tool-card-description">
+              Simulate 6-sector biophysical telemetry, spore dispersion contagion models,
+              precision drone spray deployments, and sub-surface fertigation.
+            </p>
+            <div className="tool-card-footer">
+              <span>Launch Twin</span>
+              <span className="arrow-glyph">→</span>
+            </div>
+          </div>
+
+          {/* Feature 5 */}
           <div
             className="meta-tool-card"
             onClick={() => onNavigate("encyclopedia")}

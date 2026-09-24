@@ -8,6 +8,7 @@ import {
   IconCalculator,
   IconBook,
   IconHistory,
+  IconActivity,
   IconSun,
   IconMoon,
 } from "./Icons";
@@ -15,6 +16,7 @@ import {
 const NAV_ITEMS = [
   { id: "home", label: "Home", icon: IconHome },
   { id: "detect", label: "Scanner", icon: IconScanner },
+  { id: "twin", label: "Digital Twin", icon: IconActivity },
   { id: "weather", label: "Radar", icon: IconRadar },
   { id: "calculator", label: "Dosage", icon: IconCalculator },
   { id: "encyclopedia", label: "Encyclopedia", icon: IconBook },
