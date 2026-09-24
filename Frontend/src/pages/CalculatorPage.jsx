@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import "./CalculatorPage.css";
 import DosageCalculator from "../components/DosageCalculator";
+import EconomicsLossEstimator from "../components/EconomicsLossEstimator";
+import SafetyCountdownTimer from "../components/SafetyCountdownTimer";
 import { IconCalculator, IconShield, IconCheck } from "../components/Icons";
 
 const PPE_ITEMS = [
@@ -60,6 +62,12 @@ const CalculatorPage = () => {
       <div className="calc-content-area">
         <DosageCalculator />
 
+        {/* Feature 6: Farm Economics & Yield Loss Estimator */}
+        <EconomicsLossEstimator />
+
+        {/* Feature 4: Pre-Harvest Interval (PHI) & Chemical Safety Tracker */}
+        <SafetyCountdownTimer />
+
         {/* Interactive Safety & PPE Protocol Card */}
         <div className="meta-safety-card">
           <div className="safety-header-row">
@@ -118,3 +126,4 @@ const CalculatorPage = () => {
 };
 
 export default CalculatorPage;
+

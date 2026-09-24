@@ -1,9 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./AgronomistChat.css";
-import { IconMessage, IconClose } from "./Icons";
+import { IconMessage, IconClose, IconMicrophone, IconMicOff, IconVolume, IconGlobe } from "./Icons";
+
+const SUPPORTED_LANGUAGES = [
+  { label: "English", code: "en-US", name: "English" },
+  { label: "हिंदी (Hindi)", code: "hi-IN", name: "Hindi" },
+  { label: "Español (Spanish)", code: "es-ES", name: "Spanish" },
+  { label: "ਪੰਜਾਬੀ (Punjabi)", code: "pa-IN", name: "Punjabi" },
+  { label: "বাংলা (Bengali)", code: "bn-IN", name: "Bengali" },
+  { label: "Français (French)", code: "fr-FR", name: "French" },
+  { label: "मराठी (Marathi)", code: "mr-IN", name: "Marathi" },
+  { label: "తెలుగు (Telugu)", code: "te-IN", name: "Telugu" },
+  { label: "Deutsch (German)", code: "de-DE", name: "German" },
+];
 
 const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState(SUPPORTED_LANGUAGES[0]);
+  const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: "bot",
@@ -15,6 +29,7 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [lastError, setLastError] = useState(null);
   const chatBottomRef = useRef(null);
+  const recognitionRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -39,11 +54,69 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
     setMessages([
       {
         sender: "bot",
-        text: "Conversation reset. How can I assist you with your potato crop or plant pathology questions today?",
+        text: `Conversation reset in ${selectedLang.label}. How can I assist you with your crop pathology today?`,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       },
     ]);
     setLastError(null);
+  };
+
+  const handleToggleVoiceInput = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert("Speech recognition is not supported in this browser. Please use Chrome or Edge.");
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = selectedLang.code;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        if (transcript) {
+          setInput(transcript);
+          handleSend(transcript);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn("Speech recognition error:", event.error);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (e) {
+      console.error("Speech recognition start failed:", e);
+      setIsListening(false);
+    }
+  };
+
+  const handleSpeakMessage = (text) => {
+    if (!window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const cleanText = text.replace(/\*\*/g, "").replace(/\*/g, "");
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.lang = selectedLang.code;
+    utterance.rate = 1.0;
+    window.speechSynthesis.speak(utterance);
   };
 
   const handleSend = async (customText = null) => {
@@ -68,6 +141,7 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: textToSend,
+          language: selectedLang.name,
           history: currentHistory.map((m) => ({ sender: m.sender, text: m.text })),
           context: {
             disease: currentDiagnosis?.disease || "General Potato Crop",
@@ -167,7 +241,27 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
                 </p>
               </div>
             </div>
+            
             <div className="messenger-header-actions">
+              {/* Language Selector */}
+              <div className="lang-picker-wrap" title="Select Voice & Text Language">
+                <IconGlobe size={13} className="lang-globe-icon" />
+                <select
+                  value={selectedLang.code}
+                  onChange={(e) => {
+                    const l = SUPPORTED_LANGUAGES.find((lang) => lang.code === e.target.value);
+                    if (l) setSelectedLang(l);
+                  }}
+                  className="chat-lang-select"
+                >
+                  {SUPPORTED_LANGUAGES.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
               <button 
                 type="button" 
                 className="messenger-clear-btn" 
@@ -192,7 +286,19 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
               <div key={idx} className={`message-row ${m.sender}`}>
                 <div className={`message-bubble ${m.sender} ${m.isError ? "error-bubble" : ""}`}>
                   <div className="message-text-content">{formatMessageText(m.text)}</div>
-                  <span className="message-time-label">{m.time}</span>
+                  <div className="bubble-footer-row">
+                    {m.sender === "bot" && (
+                      <button
+                        type="button"
+                        className="bubble-speech-btn"
+                        onClick={() => handleSpeakMessage(m.text)}
+                        title="Listen to audio"
+                      >
+                        <IconVolume size={13} />
+                      </button>
+                    )}
+                    <span className="message-time-label">{m.time}</span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -223,7 +329,7 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
             ))}
           </div>
 
-          {/* Input Bar */}
+          {/* Input Bar with Voice Mic */}
           <form
             className="messenger-input-row"
             onSubmit={(e) => {
@@ -233,11 +339,21 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
           >
             <input
               type="text"
-              placeholder="Ask about treatments, dosages, remedies..."
+              placeholder={isListening ? "Listening... speak now..." : `Ask in ${selectedLang.label}...`}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              className="messenger-text-input"
+              className={`messenger-text-input ${isListening ? "listening-pulse" : ""}`}
             />
+            
+            <button
+              type="button"
+              className={`messenger-mic-button ${isListening ? "listening" : ""}`}
+              onClick={handleToggleVoiceInput}
+              title={isListening ? "Stop Listening" : "Speak question in your language"}
+            >
+              {isListening ? <IconMicOff size={16} /> : <IconMicrophone size={16} />}
+            </button>
+
             <button
               type="submit"
               className="messenger-send-button"

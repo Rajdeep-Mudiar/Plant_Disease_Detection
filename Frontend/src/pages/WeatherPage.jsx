@@ -1,6 +1,7 @@
 import React from "react";
 import "./WeatherPage.css";
 import WeatherRiskCard from "../components/WeatherRiskCard";
+import FarmOutbreakMap from "../components/FarmOutbreakMap";
 import { IconRadar } from "../components/Icons";
 
 const WeatherPage = () => {
@@ -22,6 +23,9 @@ const WeatherPage = () => {
 
       <div className="weather-content-area">
         <WeatherRiskCard />
+
+        {/* Feature 3: Farm Plot GIS Outbreak Heatmap */}
+        <FarmOutbreakMap />
 
         <div className="weather-principles-card">
           <h3 className="principles-heading">Pathogen & Weather Correlation Principles</h3>
@@ -51,3 +55,4 @@ const WeatherPage = () => {
 };
 
 export default WeatherPage;
+

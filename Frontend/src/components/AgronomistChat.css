@@ -291,6 +291,112 @@
   border-color: #0095f6;
 }
 
+.bubble-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.bubble-speech-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #71717a);
+  padding: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.6;
+  transition: all 0.15s ease;
+}
+
+.bubble-speech-btn:hover {
+  opacity: 1;
+  color: #0095f6;
+  transform: scale(1.1);
+}
+
+.lang-picker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  background: var(--surface-secondary, #f4f4f5);
+  border: 1px solid var(--card-border, #dbdbdb);
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+[data-theme="dark"] .lang-picker-wrap {
+  background: #141c2e;
+  border-color: #1e293b;
+}
+
+.lang-globe-icon {
+  color: #0095f6;
+}
+
+.chat-lang-select {
+  background: transparent;
+  border: none;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+  outline: none;
+  cursor: pointer;
+  max-width: 90px;
+}
+
+[data-theme="dark"] .chat-lang-select {
+  color: #f8fafc;
+  background: #141c2e;
+}
+
+.messenger-mic-button {
+  background: var(--surface-secondary, #f4f4f5);
+  border: 1px solid var(--card-border, #dbdbdb);
+  color: var(--text-main, #0f172a);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.15s ease;
+}
+
+[data-theme="dark"] .messenger-mic-button {
+  background: #141c2e;
+  border-color: #1e293b;
+  color: #f8fafc;
+}
+
+.messenger-mic-button:hover {
+  background: #eff6ff;
+  border-color: #0095f6;
+  color: #0095f6;
+}
+
+.messenger-mic-button.listening {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: #ffffff;
+  animation: micPulse 1s infinite alternate ease-in-out;
+}
+
+@keyframes micPulse {
+  from { transform: scale(1); box-shadow: 0 0 0 rgba(239, 68, 68, 0.4); }
+  to { transform: scale(1.1); box-shadow: 0 0 14px rgba(239, 68, 68, 0.7); }
+}
+
+.messenger-text-input.listening-pulse {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
 .messenger-send-button {
   background: #0095f6;
   color: white;

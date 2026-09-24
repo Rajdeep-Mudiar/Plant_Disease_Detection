@@ -615,6 +615,7 @@ def agronomy_chat():
         history = data.get('history', [])
         context = data.get('context', {})
         current_disease = context.get('disease', 'General Potato Crop')
+        language = data.get('language', 'English')
         
         if not message:
             return jsonify({
@@ -628,6 +629,7 @@ def agronomy_chat():
                 "You are Dr. Flora, a world-class senior agricultural agronomist and plant pathologist. "
                 "Provide accurate, actionable, practical, and scientific advice for farmers and growers. "
                 f"The current active crop context is: {current_disease}. "
+                f"Respond in {language} language clearly and naturally for the grower. "
                 "Always structure your answers clearly with bullet points or numbered steps where appropriate. "
                 "Cover organic remedies, chemical dosages (e.g., Mancozeb, Ridomil Gold, Copper sprays), "
                 "Integrated Pest Management (IPM), and spray safety precautions. "

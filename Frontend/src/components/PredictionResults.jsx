@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import "./PredictionResults.css";
 import LesionInspector from "./LesionInspector";
 import SpeechVoiceButton from "./SpeechVoiceButton";
-import { IconDocument, IconCheck, IconShield, IconRefresh } from "./Icons";
+import CropRecoveryTracker from "./CropRecoveryTracker";
+import WorkerDispatchModal from "./WorkerDispatchModal";
+import { IconDocument, IconCheck, IconShield, IconRefresh, IconShare, IconWhatsApp } from "./Icons";
 
 const PredictionResults = ({
   prediction,
@@ -13,6 +15,7 @@ const PredictionResults = ({
   getStatusColor,
 }) => {
   const [activeTab, setActiveTab] = useState("actions"); // "actions", "chemical", "organic"
+  const [isDispatchOpen, setIsDispatchOpen] = useState(false);
 
   if (!prediction) return null;
 
@@ -60,6 +63,15 @@ const PredictionResults = ({
           >
             <IconDocument size={15} />
             <span>Generate Field Certificate</span>
+          </button>
+
+          <button
+            type="button"
+            className="dispatch-trigger-btn"
+            onClick={() => setIsDispatchOpen(true)}
+          >
+            <IconWhatsApp size={15} />
+            <span>Dispatch Crew Directives</span>
           </button>
         </div>
 
@@ -201,14 +213,33 @@ const PredictionResults = ({
             )}
           </div>
         </div>
+
+        {/* Feature 1: Multi-Day Crop Recovery Timeline */}
+        <CropRecoveryTracker
+          diseaseName={prediction.disease}
+          initialSeverity={prediction.severity?.level || "Moderate"}
+        />
       </div>
 
       <button type="button" className="scan-new-leaf-btn" onClick={onClear}>
         <IconRefresh size={16} />
         <span>Scan Another Specimen</span>
       </button>
+
+      {/* Feature 7: Worker Dispatch Modal */}
+      <WorkerDispatchModal
+        isOpen={isDispatchOpen}
+        onClose={() => setIsDispatchOpen(false)}
+        predictionData={prediction}
+        dosageData={{
+          chemical: guidance?.chemical_treatments?.[0] || "Mancozeb 75% WP",
+          recommendedDosage: guidance?.recommended_dosage || "2.5 kg / ha",
+          waterVolume: "500 L / ha",
+        }}
+      />
     </div>
   );
 };
 
 export default PredictionResults;
+

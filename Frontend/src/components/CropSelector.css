@@ -1,0 +1,90 @@
+/* Crop Selector CSS */
+.crop-selector-bar {
+  background: rgba(15, 20, 34, 0.7);
+  border: 1px solid var(--border-color, #1e293b);
+  border-radius: 12px;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.crop-selector-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+}
+
+.crop-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary, #94a3b8);
+  font-weight: 600;
+}
+
+.crop-header-title {
+  color: var(--text-primary, #f8fafc);
+}
+
+.crop-header-status {
+  font-size: 0.7rem;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.crop-pills-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.5rem;
+}
+
+.crop-pill-btn {
+  background: rgba(2, 6, 23, 0.5);
+  border: 1px solid var(--border-color, #1e293b);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.crop-pill-btn:hover {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.crop-pill-btn.active {
+  background: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+.crop-pill-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-primary, #f8fafc);
+}
+
+.crop-pill-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.crop-pill-btn.active .crop-pill-top {
+  color: #38bdf8;
+}
+
+.crop-pill-sub {
+  font-size: 0.68rem;
+  color: var(--text-secondary, #94a3b8);
+}

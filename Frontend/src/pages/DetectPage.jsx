@@ -8,6 +8,7 @@ import PredictionResults from "../components/PredictionResults";
 import LoadingState from "../components/LoadingState";
 import CameraCaptureModal from "../components/CameraCaptureModal";
 import DiagnosticReportModal from "../components/DiagnosticReportModal";
+import CropSelector from "../components/CropSelector";
 import { IconScanner } from "../components/Icons";
 
 const DetectPage = ({
@@ -24,6 +25,7 @@ const DetectPage = ({
   onPredict,
   onCameraCapture,
 }) => {
+  const [selectedCrop, setSelectedCrop] = useState("potato");
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const fileInputRef = useRef(null);
@@ -58,6 +60,8 @@ const DetectPage = ({
       </div>
 
       <div className="detect-workspace-card">
+        <CropSelector selectedCrop={selectedCrop} onSelectCrop={setSelectedCrop} />
+
         <UploadSection
           preview={preview}
           fileInputRef={fileInputRef}
