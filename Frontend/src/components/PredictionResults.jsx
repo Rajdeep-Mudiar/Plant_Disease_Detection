@@ -1,51 +1,77 @@
-import React from "react";
+import React, { useState } from "react";
 import "./PredictionResults.css";
+import LesionInspector from "./LesionInspector";
+import SpeechVoiceButton from "./SpeechVoiceButton";
+import { IconDocument, IconCheck, IconShield, IconRefresh } from "./Icons";
 
 const PredictionResults = ({
   prediction,
   guidance,
+  imagePreview,
   onClear,
+  onOpenReport,
   getStatusColor,
-  getStatusEmoji,
 }) => {
+  const [activeTab, setActiveTab] = useState("actions"); // "actions", "chemical", "organic"
+
   if (!prediction) return null;
 
+  const speechSummary = `Diagnosis: ${prediction.disease}, confidence ${
+    prediction.confidence
+  } percent. Severity: ${prediction.severity?.level || "evaluated"}. ${
+    guidance?.description || ""
+  } Recommended action: ${
+    Array.isArray(guidance?.tips) ? guidance.tips.join(". ") : ""
+  }`;
+
+  const isHealthy = prediction.disease === "Healthy";
+  const isLateBlight = prediction.disease === "Late Blight";
+
   return (
-    <div className="results-section">
-      <div
-        className="prediction-result"
-        style={{ borderTopColor: getStatusColor(prediction.disease) }}
-      >
-        <div className="result-main-header">
-          <div className="disease-title-box">
-            <span className="status-emoji">
-              {getStatusEmoji(prediction.disease)}
-            </span>
-            <div>
-              <p className="result-label">Diagnosis</p>
-              <h2 className="disease-name">{prediction.disease}</h2>
+    <div className="meta-results-container">
+      <div className="meta-diagnosis-card">
+        {/* Header */}
+        <div className="diagnosis-card-header">
+          <div className="diagnosis-heading-col">
+            <div className="diagnosis-badge-row">
+              <span className={`diagnosis-status-pill ${isHealthy ? "healthy" : isLateBlight ? "critical" : "warning"}`}>
+                <span className="status-dot-indicator"></span>
+                <span>{isHealthy ? "Healthy Foliage" : "Pathogen Detected"}</span>
+              </span>
+              <span className="specimen-id-tag">Potato Leaf</span>
             </div>
+            <h2 className="diagnosis-title-text">{prediction.disease}</h2>
           </div>
-          <div className="confidence-badge">
-            <span className="confidence-value">{prediction.confidence}%</span>
-            <span className="confidence-label">Confidence</span>
+
+          <div className="confidence-metric-pill">
+            <span className="confidence-num">{prediction.confidence}%</span>
+            <span className="confidence-sub">Confidence</span>
           </div>
         </div>
 
-        {guidance && guidance.status && (
-          <div className="status-banner">
-            <span className="banner-text">{guidance.status}</span>
-          </div>
-        )}
+        {/* Toolbar */}
+        <div className="diagnosis-actions-toolbar">
+          <SpeechVoiceButton textToRead={speechSummary} />
 
-        <div className="confidence-bar-container">
-          <div className="confidence-bar-header">
-            <span className="bar-title">Match Accuracy</span>
-            <span className="bar-percentage">{prediction.confidence}%</span>
+          <button
+            type="button"
+            className="generate-report-btn"
+            onClick={onOpenReport}
+          >
+            <IconDocument size={15} />
+            <span>Generate Field Certificate</span>
+          </button>
+        </div>
+
+        {/* Confidence Progress */}
+        <div className="accuracy-meter-block">
+          <div className="meter-label-row">
+            <span className="meter-title">Neural Classification Confidence</span>
+            <span className="meter-percent">{prediction.confidence}%</span>
           </div>
-          <div className="confidence-bar">
+          <div className="meter-track">
             <div
-              className="confidence-fill"
+              className="meter-fill"
               style={{
                 width: `${prediction.confidence}%`,
                 backgroundColor: getStatusColor(prediction.disease),
@@ -54,20 +80,27 @@ const PredictionResults = ({
           </div>
         </div>
 
-        <div className="all-predictions">
-          <h3 className="section-subtitle">Prediction Breakdown</h3>
-          <div className="predictions-list">
-            {Object.entries(prediction.all_predictions).map(
+        {/* Breakdown */}
+        <div className="probability-breakdown-section">
+          <h4 className="breakdown-heading">Class Probability Distribution</h4>
+          <div className="breakdown-list">
+            {Object.entries(prediction.all_predictions || {}).map(
               ([className, score]) => (
-                <div key={className} className="prediction-item">
-                  <div className="item-label-group">
-                    <span className="class-name">{className}</span>
-                    <span className="score">{(score * 100).toFixed(1)}%</span>
+                <div key={className} className="breakdown-row">
+                  <div className="breakdown-labels">
+                    <span className="class-label">{className}</span>
+                    <span className="class-score">{(score * 100).toFixed(1)}%</span>
                   </div>
-                  <div className="mini-bar">
+                  <div className="mini-meter-track">
                     <div
-                      className="mini-fill"
-                      style={{ width: `${score * 100}%` }}
+                      className="mini-meter-fill"
+                      style={{
+                        width: `${score * 100}%`,
+                        backgroundColor:
+                          className === prediction.disease
+                            ? getStatusColor(prediction.disease)
+                            : "#cbd5e1",
+                      }}
                     ></div>
                   </div>
                 </div>
@@ -76,47 +109,106 @@ const PredictionResults = ({
           </div>
         </div>
 
-        <div className="recommendations-card">
-          <h3 className="recommendations-title">
-            <svg
-              className="check-icon"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+        {/* Explainable AI Lesion Inspector */}
+        <LesionInspector
+          imageSrc={imagePreview}
+          prediction={prediction}
+          severity={prediction.severity}
+        />
+
+        {/* Treatment Protocol Tabs */}
+        <div className="treatment-protocol-card">
+          <div className="treatment-nav-tabs">
+            <button
+              type="button"
+              className={`protocol-tab ${activeTab === "actions" ? "active" : ""}`}
+              onClick={() => setActiveTab("actions")}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            Recommended Actions
-          </h3>
-          <ul className="checklist">
-            {Array.isArray(guidance?.tips) ? (
-              guidance.tips.map((tip, idx) => (
-                <li key={idx} className="checklist-item">
-                  <span className="check-bullet">✓</span>
-                  <span className="tip-text">{tip}</span>
-                </li>
-              ))
-            ) : (
-              <li className="checklist-item">
-                <span className="tip-text">No recommendations available</span>
-              </li>
+              Recommended Actions
+            </button>
+            <button
+              type="button"
+              className={`protocol-tab ${activeTab === "chemical" ? "active" : ""}`}
+              onClick={() => setActiveTab("chemical")}
+            >
+              Chemical Treatments
+            </button>
+            <button
+              type="button"
+              className={`protocol-tab ${activeTab === "organic" ? "active" : ""}`}
+              onClick={() => setActiveTab("organic")}
+            >
+              Organic Remedies
+            </button>
+          </div>
+
+          <div className="treatment-content-body">
+            {activeTab === "actions" && (
+              <ul className="protocol-checklist">
+                {Array.isArray(guidance?.tips) ? (
+                  guidance.tips.map((tip, idx) => (
+                    <li key={idx} className="protocol-item">
+                      <IconCheck size={16} className="check-icon-svg" />
+                      <span>{tip}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="protocol-item">
+                    <span>No specific actions needed.</span>
+                  </li>
+                )}
+              </ul>
             )}
-          </ul>
+
+            {activeTab === "chemical" && (
+              <ul className="protocol-checklist">
+                {Array.isArray(guidance?.chemical_treatments) ? (
+                  guidance.chemical_treatments.map((chem, idx) => (
+                    <li key={idx} className="protocol-item">
+                      <IconShield size={16} className="shield-icon-svg" />
+                      <span>{chem}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="protocol-item">
+                    <span>No synthetic chemical fungicides required.</span>
+                  </li>
+                )}
+              </ul>
+            )}
+
+            {activeTab === "organic" && (
+              <ul className="protocol-checklist">
+                {Array.isArray(guidance?.organic_remedies) ? (
+                  guidance.organic_remedies.map((org, idx) => (
+                    <li key={idx} className="protocol-item">
+                      <IconCheck size={16} className="check-icon-svg green" />
+                      <span>{org}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li className="protocol-item">
+                    <span>Maintain standard biological and compost foliar routine.</span>
+                  </li>
+                )}
+              </ul>
+            )}
+
+            {guidance?.recommended_dosage && (
+              <div className="dosage-guideline-box">
+                <strong>Standard Dosage:</strong> {guidance.recommended_dosage}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      <button type="button" className="try-another-button" onClick={onClear}>
-        Try Another Image
+      <button type="button" className="scan-new-leaf-btn" onClick={onClear}>
+        <IconRefresh size={16} />
+        <span>Scan Another Specimen</span>
       </button>
     </div>
   );
 };
 
 export default PredictionResults;
-

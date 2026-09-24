@@ -1,19 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap');
+
 :root {
-  --bg-color: #F6F8F4;
-  --primary-green: #2E7D32;
-  --dark-green: #1B5E20;
-  --light-green: #E8F5E9;
-  --danger-red: #DC2626;
-  --text-main: #1F2937;
-  --text-muted: #6B7280;
-  --card-bg: #FFFFFF;
-  --border-color: #E5E7EB;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --primary: #15803d;
+  --primary-hover: #166534;
+  --primary-light: #f0fdf4;
+  --primary-border: #bbf7d0;
+  --accent: #0095f6;
+  --dark: #0f172a;
+
+  /* Theme tokens - Light Mode (Default) */
+  --bg-page: #f8fafc;
+  --card-bg: #ffffff;
+  --card-border: #dbdbdb;
+  --card-border-subtle: #e4e4e7;
+  --text-main: #0f172a;
+  --text-muted: #71717a;
+  --text-sub: #52525b;
+  --surface-secondary: #f4f4f5;
+  --surface-tertiary: #f8fafc;
+  --navbar-bg: rgba(255, 255, 255, 0.92);
+  --navbar-border: #dbdbdb;
+  --btn-primary-bg: #0f172a;
+  --btn-primary-text: #ffffff;
+  --btn-secondary-bg: #ffffff;
+  --btn-secondary-text: #0f172a;
+  --input-bg: #ffffff;
+  --input-border: #dbdbdb;
+  --modal-overlay: rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="dark"] {
+  --primary-light: rgba(22, 163, 74, 0.15);
+  --primary-border: rgba(34, 197, 94, 0.3);
+
+  /* Theme tokens - Dark Mode */
+  --bg-page: #090a0f;
+  --card-bg: #12131a;
+  --card-border: #262732;
+  --card-border-subtle: #20212b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-sub: #cbd5e1;
+  --surface-secondary: #191a24;
+  --surface-tertiary: #1e202d;
+  --navbar-bg: rgba(18, 19, 26, 0.94);
+  --navbar-border: #262732;
+  --btn-primary-bg: #f8fafc;
+  --btn-primary-text: #090a0f;
+  --btn-secondary-bg: #191a24;
+  --btn-secondary-text: #f8fafc;
+  --input-bg: #181924;
+  --input-border: #2e303e;
+  --modal-overlay: rgba(0, 0, 0, 0.75);
 }
 
 * {
@@ -27,22 +65,255 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-image: linear-gradient(rgba(15, 30, 15, 0.42), rgba(15, 30, 15, 0.42)), url('/nature-background.png');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
+  background: var(--bg-page);
   color: var(--text-main);
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   min-height: 100vh;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .App {
   width: 100%;
-  margin: 0;
-  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
+  color: var(--text-main);
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
+.main-viewport-content {
+  flex: 1;
+  width: 100%;
+  animation: fadeInPage 0.25s ease-out;
+}
 
+@keyframes fadeInPage {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================================
+   DARK THEME COMPONENT OVERRIDES & HARMONIZATIONS
+   ========================================================= */
+
+[data-theme="dark"] .meta-navbar {
+  background: var(--navbar-bg);
+  border-bottom-color: var(--navbar-border);
+}
+
+[data-theme="dark"] .brand-title {
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .brand-badge-icon {
+  background: #1e202d;
+}
+
+[data-theme="dark"] .nav-button {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .nav-button:hover {
+  color: var(--text-main);
+  background: var(--surface-secondary);
+}
+
+[data-theme="dark"] .nav-button.active {
+  background: var(--surface-secondary);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .status-pill {
+  background: var(--surface-secondary);
+  border-color: var(--card-border);
+}
+
+[data-theme="dark"] .status-pill.online {
+  color: #4ade80;
+}
+
+[data-theme="dark"] .mobile-dropdown-menu {
+  background: var(--card-bg);
+  border-bottom-color: var(--card-border);
+}
+
+[data-theme="dark"] .mobile-nav-item {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .mobile-nav-item:hover,
+[data-theme="dark"] .mobile-nav-item.active {
+  background: var(--surface-secondary);
+  color: var(--text-main);
+}
+
+/* Home & Page Cards */
+[data-theme="dark"] .meta-hero-card,
+[data-theme="dark"] .meta-tool-card,
+[data-theme="dark"] .condition-preview-box,
+[data-theme="dark"] .quick-test-card,
+[data-theme="dark"] .faq-item-card,
+[data-theme="dark"] .meta-card,
+[data-theme="dark"] .meta-results-card,
+[data-theme="dark"] .meta-weather-card,
+[data-theme="dark"] .meta-calc-card,
+[data-theme="dark"] .meta-encyclopedia-card,
+[data-theme="dark"] .meta-history-card,
+[data-theme="dark"] .meta-chat-popup,
+[data-theme="dark"] .meta-modal-box {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .hero-headline,
+[data-theme="dark"] .section-main-heading,
+[data-theme="dark"] .tool-card-title,
+[data-theme="dark"] .calc-main-title,
+[data-theme="dark"] .weather-card-heading,
+[data-theme="dark"] .encyclopedia-heading,
+[data-theme="dark"] .history-main-heading,
+[data-theme="dark"] .crop-specimen-title,
+[data-theme="dark"] .disease-scientific-title,
+[data-theme="dark"] .faq-question-text,
+[data-theme="dark"] .quick-test-heading,
+[data-theme="dark"] .specimen-card-title,
+[data-theme="dark"] .ranked-disease-name,
+[data-theme="dark"] .res-card-value,
+[data-theme="dark"] .sub-num,
+[data-theme="dark"] .cell-value,
+[data-theme="dark"] .metric-number {
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .hero-description,
+[data-theme="dark"] .section-sub-heading,
+[data-theme="dark"] .tool-card-description,
+[data-theme="dark"] .calc-sub-title,
+[data-theme="dark"] .weather-location-text,
+[data-theme="dark"] .encyclopedia-subtext,
+[data-theme="dark"] .history-count-subtext,
+[data-theme="dark"] .quick-test-desc,
+[data-theme="dark"] .specimen-card-sub,
+[data-theme="dark"] .detail-text,
+[data-theme="dark"] .faq-answer-content p,
+[data-theme="dark"] .matcher-description,
+[data-theme="dark"] .ranked-symptoms-summary,
+[data-theme="dark"] .step-desc-text,
+[data-theme="dark"] .metric-subtext,
+[data-theme="dark"] .cell-label,
+[data-theme="dark"] .cell-sub {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .meta-badge-indicator,
+[data-theme="dark"] .tool-icon-frame,
+[data-theme="dark"] .crop-family-badge,
+[data-theme="dark"] .ranked-crop-tag,
+[data-theme="dark"] .step-day-pill,
+[data-theme="dark"] .weather-stat-cell,
+[data-theme="dark"] .encyclopedia-view-toggles,
+[data-theme="dark"] .weather-mode-toggle-group,
+[data-theme="dark"] .preset-pill,
+[data-theme="dark"] .crop-nav-tab,
+[data-theme="dark"] .tank-pill-btn,
+[data-theme="dark"] .history-filter-pill,
+[data-theme="dark"] .specimen-interactive-card,
+[data-theme="dark"] .result-highlight-card,
+[data-theme="dark"] .sub-metric-card,
+[data-theme="dark"] .matcher-intro-banner,
+[data-theme="dark"] .tank-visualizer-box,
+[data-theme="dark"] .simulation-sliders-box,
+[data-theme="dark"] .scenario-chip-btn,
+[data-theme="dark"] .symptom-check-chip,
+[data-theme="dark"] .ranked-disease-row,
+[data-theme="dark"] .schedule-step-card,
+[data-theme="dark"] .history-record-item {
+  background: var(--surface-secondary);
+  border-color: var(--card-border);
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .view-toggle-btn.active,
+[data-theme="dark"] .mode-toggle-btn.active {
+  background: var(--surface-tertiary);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .crop-nav-tab.active,
+[data-theme="dark"] .tank-pill-btn.active,
+[data-theme="dark"] .history-filter-pill.active,
+[data-theme="dark"] .preset-pill.active {
+  background: #38bdf8;
+  color: #090a0f;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .meta-primary-btn,
+[data-theme="dark"] .navbar-cta-btn {
+  background: #38bdf8;
+  color: #090a0f;
+}
+
+[data-theme="dark"] .meta-primary-btn:hover,
+[data-theme="dark"] .navbar-cta-btn:hover {
+  background: #7dd3fc;
+}
+
+[data-theme="dark"] .meta-secondary-btn,
+[data-theme="dark"] .history-export-btn,
+[data-theme="dark"] .test-sample-scanner-btn,
+[data-theme="dark"] .reload-specimen-btn {
+  background: var(--surface-secondary);
+  border-color: var(--card-border);
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .meta-secondary-btn:hover,
+[data-theme="dark"] .history-export-btn:hover,
+[data-theme="dark"] .test-sample-scanner-btn:hover {
+  background: var(--surface-tertiary);
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .encyclopedia-search-box,
+[data-theme="dark"] .location-input-field,
+[data-theme="dark"] .area-text-field,
+[data-theme="dark"] .unit-select-field,
+[data-theme="dark"] .formulation-picker-grid button,
+[data-theme="dark"] .chat-input-box {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .tool-card-footer,
+[data-theme="dark"] .specimen-card-cta {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .meta-footer {
+  background: var(--card-bg);
+  border-top-color: var(--card-border);
+}
+
+[data-theme="dark"] .footer-brand-title {
+  color: var(--text-main);
+}
+
+[data-theme="dark"] .footer-link-btn {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .footer-link-btn:hover {
+  color: var(--text-main);
+}

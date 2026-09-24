@@ -1,0 +1,371 @@
+.meta-weather-card {
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #dbdbdb;
+  padding: 20px;
+}
+
+.weather-card-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #efefef;
+}
+
+.weather-brand-block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.weather-radar-icon {
+  color: #0f172a;
+}
+
+.weather-card-heading {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.weather-location-text {
+  margin: 2px 0 0 0;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #737373;
+}
+
+.weather-mode-toggle-group {
+  display: flex;
+  gap: 6px;
+  background: #f4f4f5;
+  padding: 3px;
+  border-radius: 6px;
+}
+
+.mode-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #52525b;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mode-toggle-btn:hover {
+  color: #0f172a;
+}
+
+.mode-toggle-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.location-preset-pills-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.preset-pill {
+  padding: 4px 10px;
+  background: #f4f4f5;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #3f3f46;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-pill:hover {
+  background: #e4e4e7;
+}
+
+.preset-pill.active {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.location-search-box {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.location-input-field {
+  flex: 1;
+  background: #f8fafc;
+  border: 1px solid #dbdbdb;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 0.82rem;
+  outline: none;
+  transition: all 0.15s;
+}
+
+.location-input-field:focus {
+  border-color: #0095f6;
+  background: #ffffff;
+}
+
+.location-submit-btn {
+  background: #0f172a;
+  border: none;
+  color: #ffffff;
+  border-radius: 6px;
+  padding: 7px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.location-submit-btn:hover {
+  background: #334155;
+}
+
+.weather-state-loading {
+  padding: 28px;
+  text-align: center;
+  color: #737373;
+  font-size: 0.85rem;
+}
+
+.weather-error-box {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  border: 1px solid #fecaca;
+  margin-bottom: 14px;
+}
+
+.weather-layout-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.risk-status-panel {
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.risk-status-panel.low {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+.risk-status-panel.low .risk-bar-fill { background: #22c55e; }
+.risk-status-panel.low .risk-indicator-badge { background: #22c55e; }
+
+.risk-status-panel.moderate {
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  color: #92400e;
+}
+.risk-status-panel.moderate .risk-bar-fill { background: #f59e0b; }
+.risk-status-panel.moderate .risk-indicator-badge { background: #f59e0b; }
+
+.risk-status-panel.high {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  color: #9a3412;
+}
+.risk-status-panel.high .risk-bar-fill { background: #ea580c; }
+.risk-status-panel.high .risk-indicator-badge { background: #ea580c; }
+
+.risk-status-panel.critical {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+.risk-status-panel.critical .risk-bar-fill { background: #dc2626; }
+.risk-status-panel.critical .risk-indicator-badge { background: #dc2626; }
+
+.risk-level-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.risk-indicator-badge {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.risk-text-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.risk-bar-track {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.06);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.risk-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.risk-guidance-summary {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+.weather-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.weather-stat-cell {
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cell-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #737373;
+  text-transform: uppercase;
+}
+
+.cell-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 3px 0 1px 0;
+}
+
+.cell-value.high {
+  color: #ed4956;
+}
+
+.cell-sub {
+  font-size: 0.68rem;
+  color: #737373;
+}
+
+/* Simulation View */
+.interactive-simulation-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.sim-presets-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sim-preset-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #64748b;
+}
+
+.sim-preset-chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.scenario-chip-btn {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.scenario-chip-btn:hover {
+  background: #eff6ff;
+  border-color: #93c5fd;
+}
+
+.scenario-chip-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.scenario-chip-sub {
+  font-size: 0.68rem;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.simulation-sliders-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sim-slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sim-slider-label-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #334155;
+}
+
+.sim-slider-label-row strong {
+  color: #0f172a;
+}
+
+.sim-range-slider {
+  width: 100%;
+  accent-color: #0095f6;
+  cursor: pointer;
+}

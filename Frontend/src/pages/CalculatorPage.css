@@ -1,0 +1,221 @@
+.meta-calc-page-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px 60px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.calc-banner-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #dbdbdb);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.calc-title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.calc-icon-box {
+  width: 44px;
+  height: 44px;
+  background: var(--surface-secondary, #f4f4f5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main, #0f172a);
+  flex-shrink: 0;
+}
+
+.calc-main-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  letter-spacing: -0.02em;
+}
+
+.calc-sub-title {
+  margin: 3px 0 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted, #737373);
+  line-height: 1.4;
+}
+
+.calc-content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.meta-safety-card {
+  background: var(--card-bg, #ffffff);
+  border-radius: 10px;
+  padding: 22px;
+  border: 1px solid var(--card-border, #dbdbdb);
+}
+
+.safety-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--card-border-subtle, #efefef);
+}
+
+.safety-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shield-icon {
+  color: #16a34a;
+}
+
+.safety-title-text {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.safety-subtext {
+  margin: 2px 0 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted, #737373);
+}
+
+.ppe-readiness-badge-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.readiness-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted, #64748b);
+}
+
+.readiness-meter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.readiness-progress-track {
+  width: 100px;
+  height: 7px;
+  background: var(--surface-secondary, #f1f5f9);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.readiness-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.readiness-progress-fill.ready {
+  background: #16a34a;
+}
+
+.readiness-progress-fill.pending {
+  background: #0095f6;
+}
+
+.readiness-score-num {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.safety-guidelines-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.safety-guideline-item {
+  background: var(--surface-secondary, #fafafa);
+  border: 1px solid var(--card-border-subtle, #e4e4e7);
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.safety-guideline-item:hover {
+  background: var(--surface-tertiary, #f4f4f5);
+  border-color: #0095f6;
+}
+
+.safety-guideline-item.checked {
+  background: rgba(22, 163, 74, 0.06);
+  border-color: #86efac;
+}
+
+.item-check-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.ppe-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid #cbd5e1;
+  background: var(--card-bg, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.ppe-checkbox.active {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.item-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e4e4e7);
+  color: var(--text-muted, #64748b);
+}
+
+.safety-guideline-item h5 {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.safety-guideline-item p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-sub, #525252);
+}

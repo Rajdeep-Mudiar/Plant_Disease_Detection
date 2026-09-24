@@ -1,0 +1,46 @@
+.meta-speech-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.speech-action-button {
+  background: #ffffff;
+  border: 1px solid #dbdbdb;
+  color: #0f172a;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.speech-action-button:hover {
+  background: #f4f4f5;
+}
+
+.speech-action-button.speaking {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.speech-button-text {
+  font-size: 0.8rem;
+}
+
+.speech-lang-picker {
+  background: #ffffff;
+  border: 1px solid #dbdbdb;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #525252;
+  outline: none;
+  cursor: pointer;
+}

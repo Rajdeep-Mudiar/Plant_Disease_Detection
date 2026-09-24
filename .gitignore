@@ -27,6 +27,9 @@ venv/
 ENV/
 env/
 .env
+**/.env
+*.env
+.env.*
 
 # Node Frontend
 node_modules/

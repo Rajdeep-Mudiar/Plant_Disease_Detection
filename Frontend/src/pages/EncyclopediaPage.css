@@ -1,0 +1,54 @@
+.meta-encyclopedia-container {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 32px 20px 60px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.encyclopedia-banner-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #dbdbdb);
+  border-radius: 10px;
+  padding: 20px 24px;
+}
+
+.encyclopedia-title-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.encyclopedia-icon-box {
+  width: 44px;
+  height: 44px;
+  background: var(--surface-secondary, #f4f4f5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main, #0f172a);
+  flex-shrink: 0;
+}
+
+.encyclopedia-main-title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  letter-spacing: -0.02em;
+}
+
+.encyclopedia-sub-title {
+  margin: 3px 0 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted, #737373);
+  line-height: 1.4;
+}
+
+.encyclopedia-content-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

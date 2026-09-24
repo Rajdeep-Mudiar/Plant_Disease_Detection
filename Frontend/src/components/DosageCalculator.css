@@ -1,0 +1,678 @@
+.meta-calc-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #dbdbdb);
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.calc-card-header {
+  border-bottom: 1px solid var(--card-border-subtle, #efefef);
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.calc-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.calc-svg-icon {
+  color: var(--text-main, #0f172a);
+}
+
+.calc-main-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.calc-sub-title {
+  margin: 2px 0 0 0;
+  font-size: 0.85rem;
+  color: var(--text-muted, #737373);
+}
+
+.copy-recipe-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface-secondary, #f4f4f5);
+  border: 1px solid var(--card-border, #dbdbdb);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.copy-recipe-action-btn:hover {
+  background: #0095f6;
+  color: #ffffff;
+  border-color: #0095f6;
+}
+
+.calc-columns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+@media (max-width: 900px) {
+  .calc-columns-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calc-form-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.calc-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.field-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main, #262626);
+}
+
+.slider-current-val {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0095f6;
+}
+
+.meta-range-slider {
+  width: 100%;
+  accent-color: #0095f6;
+  cursor: pointer;
+  margin: 4px 0;
+}
+
+.field-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.area-text-field {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--input-border, #dbdbdb);
+  background: var(--input-bg, #ffffff);
+  color: var(--text-main, #0f172a);
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.area-text-field:focus {
+  border-color: #0095f6;
+}
+
+.unit-select-field {
+  padding: 8px 12px;
+  border: 1px solid var(--input-border, #dbdbdb);
+  background: var(--surface-secondary, #f8fafc);
+  color: var(--text-main, #0f172a);
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+}
+
+.formulation-picker-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.formulation-chip-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e4e4e7);
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.formulation-chip-btn:hover {
+  background: var(--surface-tertiary, #f1f5f9);
+  border-color: #0095f6;
+}
+
+.formulation-chip-btn.active {
+  background: rgba(0, 149, 246, 0.08);
+  border-color: #0095f6;
+}
+
+.formulation-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.formulation-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.formulation-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+}
+
+.formulation-cat {
+  font-size: 0.72rem;
+  color: var(--text-muted, #64748b);
+}
+
+.formulation-rate-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #0095f6;
+  background: var(--surface-secondary, #f1f5f9);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.tank-option-pills {
+  display: flex;
+  gap: 8px;
+}
+
+.tank-pill-btn {
+  flex: 1;
+  padding: 8px 12px;
+  background: var(--surface-secondary, #f4f4f5);
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main, #262626);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tank-pill-btn:hover {
+  background: var(--surface-tertiary, #e4e4e7);
+}
+
+.tank-pill-btn.active {
+  background: var(--btn-primary-bg, #0f172a);
+  color: var(--btn-primary-text, #ffffff);
+  border-color: var(--btn-primary-bg, #0f172a);
+}
+
+/* Tank Visualizer */
+.tank-visualizer-box {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.tank-visualizer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.visualizer-title {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted, #64748b);
+}
+
+.agitate-mix-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #0095f6;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid #93c5fd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.agitate-mix-btn:hover {
+  background: #eff6ff;
+}
+
+.agitate-mix-btn.agitating {
+  background: #0095f6;
+  color: #ffffff;
+}
+
+.spin-icon {
+  animation: spinSlow 1s linear infinite;
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.tank-graphic-container {
+  display: flex;
+  justify-content: center;
+}
+
+.knapsack-tank-body {
+  width: 100%;
+  max-width: 280px;
+  height: 96px;
+  background: var(--card-bg, #ffffff);
+  border: 2px solid var(--text-main, #0f172a);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.tank-top-manifold {
+  position: absolute;
+  top: 4px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 5;
+}
+
+.tank-cap {
+  width: 20px;
+  height: 6px;
+  background: var(--text-main, #0f172a);
+  border-radius: 2px;
+}
+
+.tank-gauge-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.gauge-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.knapsack-fluid-fill {
+  width: 100%;
+  height: 80%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.knapsack-fluid-fill.agitating {
+  animation: fluidShake 0.4s infinite ease-in-out;
+}
+
+@keyframes fluidShake {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px) rotate(0.5deg); }
+}
+
+.mixing-bubbles-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bubble {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+  animation: bubbleRise 1.2s infinite ease-in;
+}
+
+.bubble.b1 { width: 6px; height: 6px; left: 20%; bottom: 0; }
+.bubble.b2 { width: 8px; height: 8px; left: 45%; bottom: 0; animation-delay: 0.3s; }
+.bubble.b3 { width: 5px; height: 5px; left: 70%; bottom: 0; animation-delay: 0.6s; }
+.bubble.b4 { width: 7px; height: 7px; left: 85%; bottom: 0; animation-delay: 0.2s; }
+
+@keyframes bubbleRise {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  50% { opacity: 0.9; }
+  100% { transform: translateY(-60px) scale(1.2); opacity: 0; }
+}
+
+.tank-fill-label {
+  position: relative;
+  z-index: 2;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.tank-graduations {
+  position: absolute;
+  right: 6px;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--text-muted, #94a3b8);
+  padding: 4px 0;
+  pointer-events: none;
+}
+
+/* Nozzle Selection Grid */
+.nozzle-selection-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+}
+
+.nozzle-choice-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 12px;
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.nozzle-choice-btn:hover {
+  background: var(--surface-tertiary, #f1f5f9);
+  border-color: #0095f6;
+}
+
+.nozzle-choice-btn.active {
+  background: rgba(0, 149, 246, 0.08);
+  border-color: #0095f6;
+}
+
+.nozzle-btn-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nozzle-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.nozzle-pressure-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #0095f6;
+  background: var(--surface-secondary, #eff6ff);
+  padding: 1px 5px;
+  border-radius: 3px;
+}
+
+.nozzle-droplet {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+}
+
+.nozzle-use-desc {
+  margin: 2px 0 0 0;
+  font-size: 0.72rem;
+  color: var(--text-sub, #475569);
+  line-height: 1.35;
+}
+
+/* Results Column */
+.calc-results-column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.result-highlight-card {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.res-card-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted, #64748b);
+}
+
+.res-card-value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  letter-spacing: -0.02em;
+}
+
+.res-card-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted, #64748b);
+}
+
+.result-sub-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.sub-metric-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #e4e4e7);
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sub-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted, #71717a);
+}
+
+.sub-num {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.sub-caption {
+  font-size: 0.7rem;
+  color: var(--text-muted, #a1a1aa);
+}
+
+.calc-advisory-note {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  background: rgba(22, 163, 74, 0.08);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 0.78rem;
+  color: #16a34a;
+}
+
+.shield-note-icon {
+  color: #16a34a;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.calc-advisory-note p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* 3-Stage Treatment Application Schedule */
+.treatment-schedule-section {
+  border-top: 1px solid var(--card-border-subtle, #f4f4f5);
+  padding-top: 14px;
+}
+
+.schedule-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  color: var(--text-main, #0f172a);
+}
+
+.schedule-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.schedule-steps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.schedule-step-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #e4e4e7);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.schedule-step-card:hover {
+  background: var(--surface-secondary, #f8fafc);
+  border-color: #0095f6;
+}
+
+.schedule-step-card.completed {
+  background: rgba(22, 163, 74, 0.08);
+  border-color: #86efac;
+}
+
+.step-check-circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid #cbd5e1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background: var(--card-bg, #ffffff);
+  transition: all 0.15s ease;
+}
+
+.step-check-circle.done {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.step-content {
+  flex: 1;
+}
+
+.step-top-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.step-day-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  background: var(--surface-secondary, #f1f5f9);
+  color: var(--text-main, #475569);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.step-title-text {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+}
+
+.schedule-step-card.completed .step-title-text {
+  color: #166534;
+  text-decoration: line-through;
+}
+
+.step-desc-text {
+  margin: 3px 0 0 0;
+  font-size: 0.74rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.35;
+}

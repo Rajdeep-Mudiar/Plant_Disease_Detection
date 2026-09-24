@@ -7,6 +7,13 @@ import LoadingState from "./LoadingState";
 import PredictButton from "./PredictButton";
 import PredictionResults from "./PredictionResults";
 import UploadSection from "./UploadSection";
+import CameraCaptureModal from "./CameraCaptureModal";
+import DiagnosticReportModal from "./DiagnosticReportModal";
+import WeatherRiskCard from "./WeatherRiskCard";
+import DosageCalculator from "./DosageCalculator";
+import CropEncyclopedia from "./CropEncyclopedia";
+import ScanHistory from "./ScanHistory";
+import AgronomistChat from "./AgronomistChat";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
@@ -19,6 +26,13 @@ const PredictorCard = () => {
   const [guidance, setGuidance] = useState(null);
   const [backendOnline, setBackendOnline] = useState(true);
   const [backendMessage, setBackendMessage] = useState("");
+
+  // Modals state
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isReportOpen, setIsReportOpen] = useState(false);
+  const [lastScanRecord, setLastScanRecord] = useState(null);
+
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const pingBackend = async () => {
@@ -36,8 +50,6 @@ const PredictorCard = () => {
     pingBackend();
   }, []);
 
-  const fileInputRef = useRef(null);
-
   const handleImageSelect = (e) => {
     const file = e.target?.files?.[0];
     if (file) {
@@ -53,9 +65,17 @@ const PredictorCard = () => {
     }
   };
 
+  const handleCameraCapture = (file, dataUrl) => {
+    setImage(file);
+    setPreview(dataUrl);
+    setPrediction(null);
+    setGuidance(null);
+    setError(null);
+  };
+
   const handlePredict = async () => {
     if (!image) {
-      setError("Please select an image first");
+      setError("Please select or capture a leaf photo first");
       return;
     }
 
@@ -81,6 +101,11 @@ const PredictorCard = () => {
       if (data.success) {
         setPrediction(data.prediction);
         setGuidance(data.guidance || null);
+        setLastScanRecord({
+          prediction: data.prediction,
+          guidance: data.guidance,
+          preview: preview,
+        });
       } else {
         setError(data.error || "Failed to get prediction");
       }
@@ -101,6 +126,23 @@ const PredictorCard = () => {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
+  };
+
+  const handleSelectHistoryItem = (item) => {
+    setPrediction({
+      disease: item.disease,
+      confidence: item.confidence,
+      severity: item.severity,
+      all_predictions: {
+        [item.disease]: item.confidence / 100,
+      },
+    });
+    setGuidance(item.guidance);
+    if (item.preview) {
+      setPreview(item.preview);
+    }
+    // Scroll to detect view
+    document.getElementById("detect")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const getStatusColor = (disease) => {
@@ -132,15 +174,17 @@ const PredictorCard = () => {
   return (
     <div className="predictor-container">
       <div className="predictor-wrapper">
+        {/* Main AI Diagnostic Card */}
         <div className="predictor-card">
           <Header />
-          
+
           <div id="detect" className="section-block">
             <UploadSection
               preview={preview}
               fileInputRef={fileInputRef}
               onSelect={handleImageSelect}
               onClear={handleClear}
+              onOpenCamera={() => setIsCameraOpen(true)}
             />
             <BackendStatus online={backendOnline} message={backendMessage} />
             <PredictButton
@@ -152,7 +196,9 @@ const PredictorCard = () => {
             <PredictionResults
               prediction={prediction}
               guidance={guidance}
+              imagePreview={preview}
               onClear={handleClear}
+              onOpenReport={() => setIsReportOpen(true)}
               getStatusColor={getStatusColor}
               getStatusEmoji={getStatusEmoji}
             />
@@ -160,37 +206,54 @@ const PredictorCard = () => {
           </div>
         </div>
 
-        {/* Diseases Reference Card */}
-        <div id="diseases" className="info-card">
-          <h3 className="info-card-title">Supported Leaf Diagnoses</h3>
-          <div className="diseases-grid">
-            <div className="disease-info-item">
-              <span className="disease-badge healthy">🟢 Healthy</span>
-              <p>Leaves display uniform green coloration with no visible lesion spots or decay.</p>
-            </div>
-            <div className="disease-info-item">
-              <span className="disease-badge early">🟠 Early Blight</span>
-              <p>Characterized by concentric dark brown spots forming target-like rings on older foliage.</p>
-            </div>
-            <div className="disease-info-item">
-              <span className="disease-badge late">🔴 Late Blight</span>
-              <p>Urgent fungal condition causing water-soaked dark lesions and rapid leaf wilt.</p>
-            </div>
-          </div>
-        </div>
+        {/* Feature 3: Real-Time Weather & Blight Outbreak Radar */}
+        <WeatherRiskCard />
+
+        {/* Feature 5 Part 1: Farm Dosage & Sprayer Tank Calculator */}
+        <DosageCalculator />
+
+        {/* Feature 5 Part 2: Multi-Crop Disease Encyclopedia */}
+        <CropEncyclopedia />
+
+        {/* Feature 4: Field Scan History & Journal */}
+        <ScanHistory
+          onSelectHistoryItem={handleSelectHistoryItem}
+          currentScan={lastScanRecord}
+        />
 
         {/* About Section Card */}
         <div id="about" className="info-card">
-          <h3 className="info-card-title">About This Tool</h3>
+          <h3 className="info-card-title">About AgroAI Platform</h3>
           <p className="info-card-text">
-            Plant Disease Detector provides instant, AI-assisted analysis for potato crop leaf health.
-            Upload a clear photo of a potato leaf to evaluate condition accuracy and access targeted care recommendations.
+            Plant Disease Detector provides real-time, AI-assisted foliar pathology analysis for potato and vegetable crops.
+            Integrated with neural explainability heatmaps, microclimate infection radars, automated knapsack dosage calculators, and instant voice-guided agronomic advisories.
           </p>
         </div>
       </div>
+
+      {/* Feature 1: Live Camera Capture Modal */}
+      <CameraCaptureModal
+        isOpen={isCameraOpen}
+        onClose={() => setIsCameraOpen(false)}
+        onCapture={handleCameraCapture}
+      />
+
+      {/* Feature 4: Printable / PDF Diagnostic Report Certificate */}
+      <DiagnosticReportModal
+        isOpen={isReportOpen}
+        onClose={() => setIsReportOpen(false)}
+        prediction={prediction}
+        guidance={guidance}
+        imagePreview={preview}
+      />
+
+      {/* Feature 2: Interactive AI Agronomist Chatbot */}
+      <AgronomistChat
+        currentDiagnosis={prediction}
+        apiBaseUrl={API_BASE_URL}
+      />
     </div>
   );
 };
 
 export default PredictorCard;
-
