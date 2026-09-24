@@ -243,6 +243,68 @@ GUIDANCE = {
     }
 }
 
+def generate_dynamic_groq_guidance(disease_name, confidence, severity):
+    """
+    Dynamically generates personalized Recommended Actions (tips), Chemical Treatments,
+    Organic Remedies, and Recommended Dosage via Groq AI based on the live foliar scan.
+    Falls back gracefully to standard agronomy knowledge base if Groq is unreachable.
+    """
+    fallback_guidance = GUIDANCE.get(disease_name, GUIDANCE["Healthy"]).copy()
+    
+    if not GROQ_API_KEY:
+        return fallback_guidance
+
+    sev_level = severity.get("level", "Moderate") if isinstance(severity, dict) else "Moderate"
+    sev_pct = severity.get("percentage", 15.0) if isinstance(severity, dict) else 15.0
+    stage = severity.get("stage", "Active") if isinstance(severity, dict) else "Active"
+
+    prompt = (
+        f"A potato crop leaf scan has been diagnosed with: {disease_name}.\n"
+        f"Classification Confidence: {confidence}%.\n"
+        f"Pathology Severity Assessment: {sev_level} ({sev_pct}% necrotic surface coverage, Stage: {stage}).\n\n"
+        "Generate a tailored, scientifically sound agronomy prescription JSON object with EXACTLY the following keys:\n"
+        "- description: A concise 1-2 sentence pathology summary of this specific scan condition.\n"
+        "- tips: A list of exactly 3 practical, bullet-pointed recommended field actions for the farmer.\n"
+        "- chemical_treatments: A list of 2-3 specific chemical fungicides with recommended commercial names and application rates per liter.\n"
+        "- organic_remedies: A list of 2-3 specific organic, biological, or bio-fungicide alternatives.\n"
+        "- recommended_dosage: A single actionable sentence detailing the exact knapsack tank or per-acre spray dosage.\n\n"
+        "RULES:\n"
+        "1. Response MUST be a single valid JSON object.\n"
+        "2. DO NOT use emojis anywhere in the text.\n"
+        "3. Output raw JSON only with no conversational prefix or suffix."
+    )
+
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a senior agricultural plant pathologist and agronomist. Output only valid JSON without emojis."
+        },
+        {"role": "user", "content": prompt}
+    ]
+
+    try:
+        raw_text, model_name = query_groq_llm(messages)
+        if raw_text:
+            brace_match = re.search(r'(\{[\s\S]*\})', raw_text)
+            if brace_match:
+                parsed = json.loads(brace_match.group(1))
+                if isinstance(parsed, dict) and "tips" in parsed:
+                    return {
+                        "status": f"{disease_name} Diagnosis",
+                        "severity_level": f"{sev_level} ({sev_pct}%)",
+                        "urgency": "High - Immediate Action" if disease_name == "Late Blight" else ("Moderate - Monitor & Treat" if disease_name == "Early Blight" else "Low - Routine Maintenance"),
+                        "description": strip_emojis(str(parsed.get("description", fallback_guidance.get("description", "")))),
+                        "tips": [strip_emojis(str(t)) for t in parsed.get("tips", fallback_guidance.get("tips", []))],
+                        "chemical_treatments": [strip_emojis(str(c)) for c in parsed.get("chemical_treatments", fallback_guidance.get("chemical_treatments", []))],
+                        "organic_remedies": [strip_emojis(str(o)) for o in parsed.get("organic_remedies", fallback_guidance.get("organic_remedies", []))],
+                        "recommended_dosage": strip_emojis(str(parsed.get("recommended_dosage", fallback_guidance.get("recommended_dosage", "")))),
+                        "generated_by": "Groq AI Engine"
+                    }
+    except Exception as e:
+        print(f"[WARN] Dynamic Groq guidance generation error: {e}")
+
+    return fallback_guidance
+
 # Global Model Reference
 model = None
 
@@ -439,8 +501,8 @@ def predict():
         else:
             disease_name, confidence, all_preds = classify_foliage_cv(opencv_image)
         
-        guidance = GUIDANCE.get(disease_name, {})
         severity = estimate_leaf_severity(opencv_image, disease_name)
+        guidance = generate_dynamic_groq_guidance(disease_name, round(confidence, 2), severity)
         
         prediction_payload = {
             'disease': disease_name,
@@ -507,8 +569,8 @@ def predict_base64():
         else:
             disease_name, confidence, all_preds = classify_foliage_cv(opencv_image)
         
-        guidance = GUIDANCE.get(disease_name, {})
         severity = estimate_leaf_severity(opencv_image, disease_name)
+        guidance = generate_dynamic_groq_guidance(disease_name, round(confidence, 2), severity)
         
         prediction_payload = {
             'disease': disease_name,
