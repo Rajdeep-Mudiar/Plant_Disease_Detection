@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./DigitalTwinPage.css";
+import VisualFarmCanvas from "../components/VisualFarmCanvas";
 import {
   IconActivity,
   IconLayers,
@@ -378,6 +379,14 @@ const DigitalTwinPage = ({ onNavigateToScanner }) => {
           </button>
         </div>
       </div>
+
+      {/* Visual Farm 2D/Topographical Graphical Canvas */}
+      <VisualFarmCanvas
+        sectors={sectors}
+        selectedSectorId={selectedSectorId}
+        onSelectSector={setSelectedSectorId}
+        activeScenario={activeScenario}
+      />
 
       {/* Main Twin Layout: 3D Grid + Deep Telemetry Inspector */}
       <div className="twin-main-grid">
