@@ -676,3 +676,190 @@
   color: var(--text-muted, #64748b);
   line-height: 1.35;
 }
+
+/* =========================================================
+   DARK THEME ENHANCEMENTS FOR DOSAGE CALCULATOR
+   ========================================================= */
+
+[data-theme="dark"] .meta-calc-card {
+  background: var(--card-bg, #0f1422);
+  border-color: var(--card-border, #1e293b);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .copy-recipe-action-btn {
+  background: #141c2e;
+  border-color: #1e293b;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .copy-recipe-action-btn:hover {
+  background: #38bdf8;
+  color: #080c14;
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+[data-theme="dark"] .treatment-choice-btn {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .treatment-choice-btn:hover {
+  background: #182238;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .treatment-choice-btn.active {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.15), inset 0 0 12px rgba(56, 189, 248, 0.05);
+}
+
+[data-theme="dark"] .tank-pill-btn {
+  background: #141c2e;
+  border-color: #1e293b;
+  color: var(--text-muted, #94a3b8);
+}
+
+[data-theme="dark"] .tank-pill-btn:hover {
+  background: #1c2740;
+  color: var(--text-main, #f8fafc);
+}
+
+[data-theme="dark"] .tank-pill-btn.active {
+  background: #38bdf8;
+  color: #080c14;
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
+}
+
+[data-theme="dark"] .tank-visualizer-box {
+  background: #111728;
+  border-color: #1e293b;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .knapsack-tank-body {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid #334155;
+  box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.08);
+}
+
+[data-theme="dark"] .tank-cap {
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
+}
+
+[data-theme="dark"] .tank-gauge-pill {
+  background: rgba(15, 23, 42, 0.88);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+[data-theme="dark"] .tank-fill-label {
+  color: #f8fafc;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .agitate-mix-btn {
+  background: #141c2e;
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .agitate-mix-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="dark"] .agitate-mix-btn.agitating {
+  background: #38bdf8;
+  color: #080c14;
+}
+
+[data-theme="dark"] .nozzle-choice-btn {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .nozzle-choice-btn:hover {
+  background: #182238;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .nozzle-choice-btn.active {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: #38bdf8;
+  box-shadow: 0 0 16px rgba(56, 189, 248, 0.15);
+}
+
+[data-theme="dark"] .nozzle-pressure-tag {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .result-highlight-card {
+  background: linear-gradient(145deg, #131b2e 0%, #0f1524 100%);
+  border-color: #24324d;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .res-card-value {
+  color: #38bdf8;
+  text-shadow: 0 0 24px rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="dark"] .sub-metric-card {
+  background: #111728;
+  border-color: #1e293b;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .sub-num {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .calc-advisory-note {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.25);
+  color: #4ade80;
+}
+
+[data-theme="dark"] .shield-note-icon {
+  color: #4ade80;
+}
+
+[data-theme="dark"] .schedule-step-card {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .schedule-step-card:hover {
+  background: #182238;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .schedule-step-card.completed {
+  background: rgba(34, 197, 94, 0.08);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+[data-theme="dark"] .step-day-pill {
+  background: #1c2740;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .step-check-circle {
+  background: #141c2e;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .step-check-circle.done {
+  background: #22c55e;
+  border-color: #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+}

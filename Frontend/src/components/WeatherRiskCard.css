@@ -369,3 +369,90 @@
   accent-color: #0095f6;
   cursor: pointer;
 }
+
+/* =========================================================
+   DARK THEME OVERRIDES FOR WEATHER RISK CARD
+   ========================================================= */
+
+[data-theme="dark"] .meta-weather-card {
+  background: var(--card-bg, #0f1422);
+  border-color: var(--card-border, #1e293b);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .weather-radar-icon {
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .weather-card-heading {
+  color: var(--text-main, #f8fafc);
+}
+
+[data-theme="dark"] .weather-mode-toggle-group {
+  background: #141c2e;
+}
+
+[data-theme="dark"] .mode-toggle-btn {
+  color: var(--text-muted, #94a3b8);
+}
+
+[data-theme="dark"] .mode-toggle-btn.active {
+  background: #1e2942;
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+}
+
+[data-theme="dark"] .preset-pill {
+  background: #141c2e;
+  border-color: #1e293b;
+  color: var(--text-muted, #94a3b8);
+}
+
+[data-theme="dark"] .preset-pill:hover {
+  background: #1c2740;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .preset-pill.active {
+  background: #38bdf8;
+  color: #080c14;
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
+}
+
+[data-theme="dark"] .weather-stat-cell {
+  background: #111728;
+  border-color: #1e293b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .cell-value {
+  color: var(--text-main, #f8fafc);
+}
+
+[data-theme="dark"] .scenario-chip-btn {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .scenario-chip-btn:hover {
+  background: #182238;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .scenario-chip-title {
+  color: var(--text-main, #f8fafc);
+}
+
+[data-theme="dark"] .simulation-sliders-box {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .sim-slider-label-row {
+  color: var(--text-muted, #94a3b8);
+}
+
+[data-theme="dark"] .sim-slider-label-row strong {
+  color: #38bdf8;
+}

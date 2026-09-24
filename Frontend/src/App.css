@@ -11,47 +11,49 @@
   /* Theme tokens - Light Mode (Default) */
   --bg-page: #f8fafc;
   --card-bg: #ffffff;
-  --card-border: #dbdbdb;
-  --card-border-subtle: #e4e4e7;
+  --card-border: #e2e8f0;
+  --card-border-subtle: #f1f5f9;
   --text-main: #0f172a;
-  --text-muted: #71717a;
-  --text-sub: #52525b;
-  --surface-secondary: #f4f4f5;
-  --surface-tertiary: #f8fafc;
+  --text-muted: #64748b;
+  --text-sub: #475569;
+  --surface-secondary: #f8fafc;
+  --surface-tertiary: #f1f5f9;
   --navbar-bg: rgba(255, 255, 255, 0.92);
-  --navbar-border: #dbdbdb;
+  --navbar-border: #e2e8f0;
   --btn-primary-bg: #0f172a;
   --btn-primary-text: #ffffff;
   --btn-secondary-bg: #ffffff;
   --btn-secondary-text: #0f172a;
   --input-bg: #ffffff;
-  --input-border: #dbdbdb;
-  --modal-overlay: rgba(0, 0, 0, 0.55);
+  --input-border: #cbd5e1;
+  --modal-overlay: rgba(15, 23, 42, 0.6);
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 [data-theme="dark"] {
-  --primary-light: rgba(22, 163, 74, 0.15);
-  --primary-border: rgba(34, 197, 94, 0.3);
+  --primary-light: rgba(34, 197, 94, 0.15);
+  --primary-border: rgba(34, 197, 94, 0.35);
 
-  /* Theme tokens - Dark Mode */
-  --bg-page: #090a0f;
-  --card-bg: #12131a;
-  --card-border: #262732;
-  --card-border-subtle: #20212b;
+  /* Theme tokens - Premium Dark Mode */
+  --bg-page: #080c14;
+  --card-bg: #0f1422;
+  --card-border: #1e293b;
+  --card-border-subtle: #172033;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --text-sub: #cbd5e1;
-  --surface-secondary: #191a24;
-  --surface-tertiary: #1e202d;
-  --navbar-bg: rgba(18, 19, 26, 0.94);
-  --navbar-border: #262732;
-  --btn-primary-bg: #f8fafc;
-  --btn-primary-text: #090a0f;
-  --btn-secondary-bg: #191a24;
+  --surface-secondary: #141c2e;
+  --surface-tertiary: #1c2740;
+  --navbar-bg: rgba(11, 16, 28, 0.88);
+  --navbar-border: #1e293b;
+  --btn-primary-bg: #38bdf8;
+  --btn-primary-text: #080c14;
+  --btn-secondary-bg: #141c2e;
   --btn-secondary-text: #f8fafc;
-  --input-bg: #181924;
-  --input-border: #2e303e;
-  --modal-overlay: rgba(0, 0, 0, 0.75);
+  --input-bg: #111728;
+  --input-border: #24324d;
+  --modal-overlay: rgba(3, 6, 12, 0.82);
+  --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 * {

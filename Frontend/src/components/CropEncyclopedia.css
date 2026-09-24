@@ -550,3 +550,94 @@
   border-radius: 6px;
   cursor: pointer;
 }
+
+/* =========================================================
+   DARK THEME OVERRIDES FOR CROP ENCYCLOPEDIA
+   ========================================================= */
+
+[data-theme="dark"] .crop-specimen-card {
+  background: var(--card-bg, #0f1422);
+  border-color: var(--card-border, #1e293b);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .crop-specimen-card:hover {
+  border-color: #38bdf8;
+  box-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.12);
+}
+
+[data-theme="dark"] .crop-family-badge {
+  background: #141c2e;
+  border-color: #1e293b;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .pathology-meta-grid {
+  border-top-color: #172033;
+  border-bottom-color: #172033;
+}
+
+[data-theme="dark"] .test-sample-scanner-btn {
+  background: #141c2e;
+  border-color: #1e293b;
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .test-sample-scanner-btn:hover {
+  background: #38bdf8;
+  color: #080c14;
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.35);
+}
+
+[data-theme="dark"] .matcher-intro-banner {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .symptom-check-chip {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .symptom-check-chip:hover {
+  background: #182238;
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .symptom-check-chip.selected {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: #38bdf8;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.15);
+}
+
+[data-theme="dark"] .custom-checkbox {
+  background: #141c2e;
+  border-color: #334155;
+}
+
+[data-theme="dark"] .custom-checkbox.checked {
+  background: #38bdf8;
+  border-color: #38bdf8;
+  color: #080c14;
+}
+
+[data-theme="dark"] .ranked-disease-row {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .ranked-disease-row:hover {
+  border-color: #38bdf8;
+}
+
+[data-theme="dark"] .ranked-test-scanner-btn {
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .ranked-test-scanner-btn:hover {
+  background: #38bdf8;
+  color: #080c14;
+}
