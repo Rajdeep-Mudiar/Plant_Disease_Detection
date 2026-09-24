@@ -7,8 +7,7 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
   const [messages, setMessages] = useState([
     {
       sender: "bot",
-      text: "Hello, I am Dr. Flora, your AI Agronomist powered by Groq AI. Ask any question regarding foliar infections, chemical dosages, organic alternatives, or prevention schedules.",
-      source: "Groq AI Agronomist",
+      text: "Hello, I am Dr. Flora, your AI Agronomist. Ask any question regarding foliar infections, chemical dosages, organic alternatives, or prevention schedules.",
       time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
     },
   ]);
@@ -30,7 +29,6 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
         {
           sender: "bot",
           text: `Loaded diagnosis: **${currentDiagnosis.disease}** (${currentDiagnosis.confidence}% confidence). How would you like to treat this crop?`,
-          source: "Groq AI Agronomist",
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
@@ -42,7 +40,6 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
       {
         sender: "bot",
         text: "Conversation reset. How can I assist you with your potato crop or plant pathology questions today?",
-        source: "Groq AI Agronomist",
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       },
     ]);
@@ -90,7 +87,6 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
         {
           sender: "bot",
           text: data.reply || "I am available to assist with crop treatment recommendations.",
-          source: data.source || "Groq AI",
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
@@ -98,13 +94,11 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
       console.error("AgronomistChat request failed:", err);
       setLastError(err.message);
       
-      // Informative offline diagnostic response
       setMessages((prev) => [
         ...prev,
         {
           sender: "bot",
           text: "**Backend Connection Notice:**\nUnable to reach the Python Flask backend at `" + apiBaseUrl + "`. Please ensure the backend is running by running `python app.py` in the `Backend/` folder.\n\n*Temporary Offline Guidance:* For " + (currentDiagnosis?.disease || "blight management") + ", maintain good aeration, avoid overhead watering, and apply protective copper or Mancozeb sprays at early symptoms.",
-          source: "Offline Diagnostic Mode",
           isError: true,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
@@ -169,7 +163,7 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
                 <p className="agent-status-line">
                   {currentDiagnosis?.disease
                     ? `Active Context: ${currentDiagnosis.disease}`
-                    : "Groq LLM Engine • Online"}
+                    : "AI Agronomist • Online"}
                 </p>
               </div>
             </div>
@@ -198,10 +192,7 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
               <div key={idx} className={`message-row ${m.sender}`}>
                 <div className={`message-bubble ${m.sender} ${m.isError ? "error-bubble" : ""}`}>
                   <div className="message-text-content">{formatMessageText(m.text)}</div>
-                  <div className="message-meta-footer">
-                    {m.source && <span className="message-source-tag">{m.source}</span>}
-                    <span className="message-time-label">{m.time}</span>
-                  </div>
+                  <span className="message-time-label">{m.time}</span>
                 </div>
               </div>
             ))}
