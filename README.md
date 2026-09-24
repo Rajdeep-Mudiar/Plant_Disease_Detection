@@ -1,346 +1,199 @@
-# 🌱 Potato Leaf Disease Detection
+# AgroPath: AI-Powered Plant Pathology & Crop Agronomist Platform
 
-A full-stack machine learning application that detects potato leaf diseases using deep learning, featuring a Flask REST API backend and a modern React frontend.
+AgroPath is a full-stack, deep-learning agricultural diagnostic platform designed to detect, classify, and prescribe treatments for foliar crop diseases (Potato Early Blight, Late Blight, and Healthy Foliage) in real time.
 
-## 🎯 Overview
-
-This project provides an intelligent system to detect and classify potato leaf diseases in real-time. Users can upload leaf images, and the application will:
-
-- Identify the disease type (Early Blight, Late Blight, or Healthy)
-- Provide confidence scores
-- Deliver disease-specific crop management recommendations
-
-## ✨ Features
-
-- **Real-time Disease Detection**: Instantly identify potato leaf diseases from images
-- **High Accuracy Model**: Pre-trained deep learning model for disease classification
-- **Dual Input Methods**: Support for both multipart form-data and base64 encoded images
-- **REST API Backend**: Flask-based API with health checks and model info endpoints
-- **Modern Frontend**: React application with intuitive UI and real-time feedback
-- **Disease Guidance**: Actionable recommendations for each disease type
-- **CORS Enabled**: Full cross-origin support for frontend-backend communication
-- **Responsive Design**: Works on desktop and mobile devices
-
-## 🏗️ Project Structure
-
-```
-01_leaf__disease_detection_main/
-├── Plant Disease React App/
-│   └── Plant_Disease/
-│       ├── Backend/                              # Flask API Server
-│       │   ├── app.py                           # Main Flask application
-│       │   ├── requirements.txt                  # Python dependencies
-│       │   └── README.md                         # Backend documentation
-│       ├── Frontend/                             # React Web Application
-│       │   ├── src/
-│       │   │   ├── components/
-│       │   │   │   ├── PredictorCard.jsx        # Main prediction component
-│       │   │   │   ├── PredictorCard.css        # Component styling
-│       │   │   │   ├── Header.jsx               # App header
-│       │   │   │   ├── UploadSection.jsx        # Image upload interface
-│       │   │   │   ├── PredictionResults.jsx    # Results display
-│       │   │   │   ├── LoadingState.jsx         # Loading indicator
-│       │   │   │   ├── BackendStatus.jsx        # Server status checker
-│       │   │   │   └── ErrorAlert.jsx           # Error display
-│       │   │   ├── App.jsx                      # Main App component
-│       │   │   ├── App.css                      # App styling
-│       │   │   └── main.jsx                     # React entry point
-│       │   ├── index.html
-│       │   ├── package.json
-│       │   ├── vite.config.js
-│       │   └── README.md                         # Frontend documentation
-│       ├── models/                              # Pre-trained Models
-│       │   ├── potato_disease_detection_model.h5
-│       │   └── potato_disease_detection_model.keras
-│       ├── potato_disease_detection_model.json   # Model architecture
-│       ├── potato_disease_detection_model_weights.weights.h5  # Weights
-│       ├── Plant_Disease_Detection.ipynb        # Training notebook
-│       ├── main_app.py                          # Streamlit alternative
-│       ├── README.md                            # Project documentation
-│       └── SETUP_GUIDE.md                       # Detailed setup guide
-└── README.md                                     # This file
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.8+
-- Node.js 14+
-- Conda or venv for Python environment management
-- Git
-
-### Backend Setup
-
-1. **Navigate to the backend directory:**
-
-```bash
-cd "Plant Disease React App\Plant_Disease\Backend"
-```
-
-2. **Create a Python environment:**
-
-```bash
-conda create -n potato_disease python=3.10
-conda activate potato_disease
-```
-
-3. **Install dependencies:**
-
-```bash
-pip install -r requirements.txt
-```
-
-4. **Run the Flask server:**
-
-```bash
-python app.py
-```
-
-Expected output:
-
-```
-==================================================
-Plant Disease Detection API Server
-==================================================
-✓ Model loaded from ./potato_disease_detection_model.keras
-
-✓ Starting Flask server...
-Available endpoints:
-  - GET  /health
-  - GET  /info
-  - GET  /classes
-  - POST /predict (multipart/form-data)
-  - POST /predict_base64 (base64 image in JSON)
-
-Server running on http://localhost:5000
-==================================================
-```
-
-### Frontend Setup
-
-1. **Open a new terminal and navigate to the frontend directory:**
-
-```bash
-cd "Plant Disease React App\Plant_Disease\Frontend"
-```
-
-2. **Install dependencies:**
-
-```bash
-npm install
-```
-
-3. **Create `.env` file:**
-
-```bash
-VITE_API_URL=http://localhost:5000
-```
-
-4. **Start the development server:**
-
-```bash
-npm run dev
-```
-
-The application will open at `http://localhost:5173`
-
-## 📚 API Endpoints
-
-### Health Check
-
-```http
-GET /health
-```
-
-Returns server and model status.
-
-**Response:**
-
-```json
-{
-  "status": "healthy",
-  "model_loaded": true,
-  "tensorflow_version": "2.20.0",
-  "keras_version": "3.12.0"
-}
-```
-
-### Model Information
-
-```http
-GET /info
-```
-
-Returns detailed model information.
-
-### Get Class Names
-
-```http
-GET /classes
-```
-
-Returns available disease classes.
-
-**Response:**
-
-```json
-{
-  "classes": ["Early Blight", "Healthy", "Late Blight"]
-}
-```
-
-### Predict from Image (Form Data)
-
-```http
-POST /predict
-Content-Type: multipart/form-data
-
-image: <image_file>
-```
-
-**Response:**
-
-```json
-{
-  "success": true,
-  "prediction": {
-    "disease": "Early Blight",
-    "confidence": 94.57,
-    "all_predictions": {
-      "Early Blight": 0.9457,
-      "Healthy": 0.0432,
-      "Late Blight": 0.0111
-    }
-  },
-  "guidance": {
-    "status": "🟠 Early Blight Detected",
-    "tips": [
-      "Remove infected leaves immediately.",
-      "Apply fungicides (Chlorothalonil).",
-      "Improve air circulation."
-    ]
-  },
-  "image_info": {
-    "height": 512,
-    "width": 512,
-    "channels": 3
-  }
-}
-```
-
-### Predict from Base64 Image
-
-```http
-POST /predict_base64
-Content-Type: application/json
-
-{
-  "image": "<base64_encoded_image>"
-}
-```
-
-## 🧠 Model Details
-
-- **Architecture**: Deep Convolutional Neural Network (CNN)
-- **Input Size**: 256×256 RGB images
-- **Classes**:
-  - Early Blight
-  - Healthy
-  - Late Blight
-- **Framework**: TensorFlow/Keras
-- **Preprocessing**: Resizing and rescaling layers built-in
-
-## 📊 Supported Image Formats
-
-- PNG
-- JPG
-- JPEG
-- GIF
-
-## 🛠️ Technology Stack
-
-### Backend
-
-- **Flask** - Web framework
-- **TensorFlow** - Deep learning framework
-- **Keras** - Neural network API
-- **OpenCV** - Image processing
-- **NumPy** - Numerical computing
-
-### Frontend
-
-- **React** - UI framework
-- **Vite** - Build tool
-- **CSS3** - Styling
-- **Axios** - HTTP client
-
-## 📖 Documentation
-
-For detailed setup instructions, see:
-
-- [Setup Guide](Plant%20Disease%20React%20App/Plant_Disease/SETUP_GUIDE.md)
-- [Backend README](Plant%20Disease%20React%20App/Plant_Disease/Backend/README.md)
-- [Frontend README](Plant%20Disease%20React%20App/Plant_Disease/Frontend/README.md)
-
-## 🎓 Model Training
-
-The model was trained using the PlantVillage dataset. For training details and the notebook, see:
-
-- [Training Notebook](Plant%20Disease%20React%20App/Plant_Disease/Plant_Disease_Detection.ipynb)
-
-## 💡 Disease Management Tips
-
-### Early Blight
-
-- Remove infected leaves immediately
-- Apply fungicides (Chlorothalonil)
-- Improve air circulation
-
-### Late Blight (URGENT)
-
-- Destroy infected plants
-- Spray Metalaxyl or Mancozeb immediately
-- Isolate infected area
-
-### Healthy Crop
-
-- Maintain proper irrigation
-- Apply balanced fertilizers
-- Monitor for signs of disease
-
-## 🔧 Troubleshooting
-
-### Model Won't Load
-
-- Ensure model files exist in the Plant_Disease directory:
-  - `potato_disease_detection_model.keras`
-  - `potato_disease_detection_model.json`
-  - `potato_disease_detection_model_weights.weights.h5`
-
-### CORS Errors
-
-- Verify Flask CORS is enabled
-- Check frontend API URL in `.env` file
-
-### Port Already in Use
-
-- Backend default: 5000
-- Frontend default: 5173
-- Change ports in Flask `app.run()` and Vite config if needed
-
-## 📝 License
-
-This project is provided as-is for educational and research purposes.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit issues or pull requests.
-
-## 📧 Contact
-
-For questions or support, please refer to the documentation files included in the project.
+The platform combines convolutional neural network (CNN) inference, computer vision necrotic segmentation (OpenCV), LLM-powered agronomist advisory (Groq AI API), cloud record persistence (MongoDB Atlas), and an interactive React web application featuring a Meta-inspired design system with dark and light themes.
 
 ---
 
-**Last Updated**: January 2026
+## System Architecture
+
+```
+Plant_Disease_Detection/
+├── Backend/
+│   ├── app.py                     # Flask REST API, Groq LLM engine, MongoDB Atlas client
+│   ├── requirements.txt           # Python dependency specifications
+│   └── .env                       # API keys and connection strings (Protected)
+├── Frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx / .css          # Top navigation with theme switch & status
+│   │   │   ├── AgronomistChat.jsx / .css  # Groq AI multi-turn agronomist copilot
+│   │   │   ├── LesionInspector.jsx / .css # XAI foliar lesion viewer with 2.5x magnifier
+│   │   │   ├── DosageCalculator.jsx / .css# Knapsack tank physics mixer & nozzle selector
+│   │   │   ├── WeatherRiskCard.jsx / .css # Microclimate disease forecast matrix
+│   │   │   ├── CropEncyclopedia.jsx / .css# Diagnostic differential library
+│   │   │   ├── ScanHistory.jsx / .css     # Field journal cloud-synced to MongoDB
+│   │   │   ├── SpeechVoiceButton.jsx      # Audio readout synthesizer
+│   │   │   ├── UploadSection.jsx / .css   # File dropzone & specimen loader
+│   │   │   ├── CameraCaptureModal.jsx     # Live webcam foliar capture
+│   │   │   └── DiagnosticReportModal.jsx  # Printable agronomic PDF/certificate
+│   │   ├── pages/
+│   │   │   ├── HomePage.jsx / .css        # Executive dashboard & system overview
+│   │   │   ├── DetectPage.jsx / .css      # Foliar diagnostic workbench
+│   │   │   ├── WeatherPage.jsx / .css     # Agro-meteorology advisories
+│   │   │   ├── CalculatorPage.jsx / .css  # Knapsack sprayer & PPE safety checklist
+│   │   │   ├── EncyclopediaPage.jsx / .css# Crop pathology reference guides
+│   │   │   └── HistoryPage.jsx / .css     # Cloud field records & CSV exporter
+│   │   ├── App.jsx / App.css              # Main application router and design tokens
+│   │   └── main.jsx                       # React DOM entry point
+│   ├── package.json                       # Frontend dependencies & scripts
+│   ├── vite.config.js                     # Vite build configuration
+│   └── .env                               # Frontend environment variables
+├── models/                                # Deep learning model files
+│   ├── potato_disease_detection_model.h5
+│   └── potato_disease_detection_model.keras
+├── potato_disease_detection_model.json    # Model architecture JSON
+├── potato_disease_detection_model_weights.weights.h5 # Model weights
+├── Plant_Disease_Detection.ipynb          # Model training notebook
+├── requirements.txt                       # Project root dependencies
+├── .gitignore                             # Git ignore rules protecting .env
+└── README.md                              # Project documentation
+```
+
+---
+
+## Key Platform Features
+
+### 1. Foliar Pathology Deep Learning Inference
+- Pre-trained Convolutional Neural Network (CNN) trained on high-resolution crop foliage datasets.
+- Classifies specimens into **Early Blight (*Alternaria solani*)**, **Late Blight (*Phytophthora infestans*)**, and **Healthy Foliage**.
+- Colorimetric computer vision fallback engine using HSV necrotic lesion ratio extraction.
+
+### 2. Explainable AI (XAI) Lesion Inspector
+- Interactive **2.5x Zoom Magnifier Loupe** for detailed leaf examination.
+- Four diagnostic inspection modes:
+  - **Split View:** Real-time before/after wipe slider.
+  - **Thermal XAI:** High-contrast pseudo-thermal spectrum mapping.
+  - **Heatmap Overlay:** Necrotic density gradient mask.
+  - **Hotspot Boxes:** Pathogen spore cluster boundary detection.
+
+### 3. Groq AI Agronomist Copilot (Dr. Flora)
+- Multi-turn conversational AI powered by **Groq Cloud LLM** (`openai/gpt-oss-20b`, `openai/gpt-oss-120b`, `qwen/qwen3.8-27b`).
+- Zero-dependency HTTPS REST engine ensures immediate execution even in minimal Python environments.
+- Automatically contextualizes advice based on the active leaf scan diagnosis and severity metrics.
+
+### 4. Interactive Knapsack Sprayer Simulator
+- Physics-based liquid tank fill animation with live volumetric dilution calculations.
+- "Agitate & Mix" wave trigger animation for tank suspension verification.
+- Integrated nozzle geometry selector (Hollow Cone, Flat Fan, Air Induction).
+- PPE Safety Protocol checklist with real-time Safety Readiness Meter.
+- One-click "Export Spray Recipe" card.
+
+### 5. MongoDB Atlas Cloud Database
+- Automatically records all field scans, severity distributions, and treatment plans in `agropath_db.scans`.
+- Archives multi-turn farmer chat sessions in `agropath_db.chat_history`.
+- Bi-directional sync with local storage cache and CSV export capabilities.
+
+### 6. Meta-Inspired Design System & Theme Engine
+- Clean, professional UI inspired by modern design standards.
+- Persistent **Dark Mode / Light Mode** toggle synced to CSS variables.
+- Vector SVG icon system without emojis.
+- Audio speech synthesis for field voice readout.
+
+---
+
+## Technology Stack
+
+| Layer | Technologies |
+|---|---|
+| **Frontend** | React 18, Vite, Vanilla CSS Design System, Web Speech API |
+| **Backend** | Python 3.10+, Flask, Flask-CORS, Werkzeug |
+| **AI / ML** | TensorFlow 2.x, Keras 3.x, OpenCV (cv2), NumPy, Groq LLM API |
+| **Database** | MongoDB Atlas Cloud, PyMongo, Certifi |
+| **Environment** | Python-Dotenv, Git, npm |
+
+---
+
+## Installation & Setup Guide
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Rajdeep-Mudiar/Plant_Disease_Detection.git
+cd Plant_Disease_Detection
+```
+
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory and in `Backend/.env`:
+
+```env
+GROQ_API_KEY="your_groq_api_key_here"
+MONGO_DB_URI="mongodb+srv://<username>:<password>@cluster0.mongodb.net/?appName=Cluster0"
+PORT=5001
+```
+
+In `Frontend/.env`:
+```env
+VITE_API_URL=http://localhost:5001
+```
+
+---
+
+### 3. Backend Setup
+
+```bash
+cd Backend
+
+# Create and activate virtual environment (optional)
+conda create -n plant_disease python=3.10 -y
+conda activate plant_disease
+
+# Install required dependencies
+pip install -r requirements.txt
+
+# Start the Flask API server
+python app.py
+```
+
+*Server starts on `http://localhost:5001`.*
+
+---
+
+### 4. Frontend Setup
+
+```bash
+cd Frontend
+
+# Install node dependencies
+npm install
+
+# Start Vite development server
+npm run dev
+```
+
+*Frontend starts on `http://localhost:3000`.*
+
+---
+
+## API Documentation
+
+### Foliar Diagnostics
+- `POST /predict` — Classify uploaded image file (multipart/form-data).
+- `POST /predict_base64` — Classify image payload (JSON base64).
+- `GET /classes` — List supported crop pathogen classes.
+
+### AI Agronomist Copilot
+- `POST /chat` — Multi-turn conversation with Dr. Flora Groq AI engine.
+  ```json
+  {
+    "message": "What is the recommended dosage for Mancozeb?",
+    "history": [],
+    "context": { "disease": "Late Blight", "confidence": 94.5 }
+  }
+  ```
+
+### Cloud Field Journal (MongoDB Atlas)
+- `GET /api/history` — Fetch recent scans (supports `limit` and `filter` query params).
+- `POST /api/history` — Archive custom field inspection record.
+- `DELETE /api/history/clear` — Clear historical scan collection.
+- `GET /api/stats` — Aggregate disease outbreak counters.
+
+### System Diagnostics
+- `GET /health` — Reports status of TensorFlow, Groq LLM, and MongoDB connections.
+- `GET /info` — API metadata, active model versions, and engine specifications.
+
+---
+
+## License
+
+This project is licensed under the MIT License.
