@@ -1,13 +1,14 @@
-/* Crop Selector CSS */
+/* Crop Selector CSS - Instagram Theme */
 .crop-selector-bar {
-  background: rgba(15, 20, 34, 0.7);
-  border: 1px solid var(--border-color, #1e293b);
-  border-radius: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
   padding: 0.85rem 1rem;
   margin-bottom: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  box-shadow: var(--card-shadow);
 }
 
 .crop-selector-header {
@@ -21,21 +22,21 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--text-secondary, #94a3b8);
-  font-weight: 600;
+  color: var(--text-muted);
+  font-weight: 700;
 }
 
 .crop-header-title {
-  color: var(--text-primary, #f8fafc);
+  color: var(--text-main);
 }
 
 .crop-header-status {
   font-size: 0.7rem;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 600;
+  color: var(--ig-blue);
+  background: var(--ig-blue-subtle);
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
 }
 
 .crop-pills-row {
@@ -45,46 +46,48 @@
 }
 
 .crop-pill-btn {
-  background: rgba(2, 6, 23, 0.5);
-  border: 1px solid var(--border-color, #1e293b);
-  border-radius: 8px;
-  padding: 0.5rem 0.75rem;
+  background: var(--surface-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  padding: 0.6rem 0.85rem;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
   text-align: left;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .crop-pill-btn:hover {
-  background: rgba(15, 23, 42, 0.8);
-  border-color: rgba(56, 189, 248, 0.3);
+  background: var(--surface-hover);
+  border-color: var(--ig-blue);
+  transform: translateY(-1px);
 }
 
 .crop-pill-btn.active {
-  background: rgba(56, 189, 248, 0.15);
-  border-color: #38bdf8;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+  background: var(--ig-blue-subtle);
+  border-color: var(--ig-blue);
+  box-shadow: 0 0 0 1px var(--ig-blue);
 }
 
 .crop-pill-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--text-primary, #f8fafc);
+  color: var(--text-main);
 }
 
 .crop-pill-name {
-  font-size: 0.82rem;
-  font-weight: 700;
+  font-size: 0.85rem;
+  font-weight: 800;
 }
 
 .crop-pill-btn.active .crop-pill-top {
-  color: #38bdf8;
+  color: var(--ig-blue);
 }
 
 .crop-pill-sub {
-  font-size: 0.68rem;
-  color: var(--text-secondary, #94a3b8);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
 }

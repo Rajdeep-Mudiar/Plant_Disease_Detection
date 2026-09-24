@@ -1,11 +1,11 @@
-/* Farm Outbreak Map GIS CSS - Midnight Dark Theme */
+/* Farm Outbreak Map GIS CSS - Instagram Theme */
 .gis-outbreak-card {
-  background: var(--bg-card, #0f1422);
-  border: 1px solid var(--border-color, #1e293b);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 14px;
   padding: 1.25rem;
   margin-top: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -18,7 +18,7 @@
   flex-wrap: wrap;
   gap: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-color, #1e293b);
+  border-bottom: 1px solid var(--card-border-subtle);
 }
 
 .gis-title-group {
@@ -31,26 +31,26 @@
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
+  background: var(--ig-blue-subtle);
+  color: var(--ig-blue);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(56, 189, 248, 0.25);
+  border: 1px solid rgba(0, 149, 246, 0.25);
 }
 
 .gis-main-title {
   margin: 0;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-primary, #f8fafc);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
   letter-spacing: -0.01em;
 }
 
 .gis-sub-title {
   margin: 0.2rem 0 0 0;
   font-size: 0.8rem;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-muted);
 }
 
 .gis-controls-cluster {
@@ -64,28 +64,27 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.45rem 0.85rem;
+  padding: 0.5rem 0.9rem;
   border-radius: 8px;
   font-size: 0.8rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: 1px solid var(--border-color, #1e293b);
-  background: rgba(15, 23, 42, 0.6);
-  color: var(--text-secondary, #94a3b8);
+  transition: all 0.15s ease;
+  border: 1px solid var(--card-border);
+  background: var(--surface-secondary);
+  color: var(--text-main);
 }
 
 .gis-toggle-btn:hover,
 .gis-gps-btn:hover {
-  background: rgba(56, 189, 248, 0.12);
-  color: #38bdf8;
-  border-color: rgba(56, 189, 248, 0.3);
+  background: var(--surface-hover);
+  border-color: var(--ig-blue);
 }
 
 .gis-toggle-btn.active {
-  background: rgba(56, 189, 248, 0.18);
-  color: #38bdf8;
-  border-color: #38bdf8;
+  background: var(--ig-blue);
+  color: #ffffff;
+  border-color: var(--ig-blue);
 }
 
 .gis-map-layout-grid {
@@ -102,11 +101,11 @@
 
 .map-viewport-frame {
   height: 420px;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--border-color, #1e293b);
+  border: 1px solid var(--card-border);
   position: relative;
-  background: #0b101c;
+  background: var(--surface-secondary);
 }
 
 .leaflet-actual-map {
@@ -115,17 +114,17 @@
   z-index: 1;
 }
 
-/* Custom Leaflet Dark/Sleek adjustments */
+/* Custom Leaflet Dark/Light adjustments */
 .leaflet-popup-content-wrapper {
-  background: #0f172a !important;
-  color: #f8fafc !important;
-  border: 1px solid #334155 !important;
-  border-radius: 8px !important;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+  background: var(--card-bg) !important;
+  color: var(--text-main) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3) !important;
 }
 
 .leaflet-popup-tip {
-  background: #0f172a !important;
+  background: var(--card-bg) !important;
 }
 
 .plot-inspector-sidebar {
@@ -136,16 +135,17 @@
 
 .inspector-heading {
   margin: 0;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-muted);
+  font-weight: 700;
 }
 
 .inspected-plot-card {
-  background: rgba(15, 23, 42, 0.7);
-  border: 1px solid var(--border-color, #1e293b);
-  border-radius: 10px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -153,15 +153,15 @@
 }
 
 .inspected-plot-card.critical {
-  border-left: 4px solid #ef4444;
+  border-left: 4px solid var(--ig-red);
 }
 
 .inspected-plot-card.warning {
-  border-left: 4px solid #f59e0b;
+  border-left: 4px solid var(--ig-amber);
 }
 
 .inspected-plot-card.healthy {
-  border-left: 4px solid #22c55e;
+  border-left: 4px solid var(--ig-green);
 }
 
 .inspector-status-badge {
@@ -169,22 +169,22 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   width: fit-content;
 }
 
 .inspected-plot-card.critical .inspector-status-badge {
-  color: #f87171;
+  color: var(--ig-red);
 }
 
 .inspected-plot-card.warning .inspector-status-badge {
-  color: #fbbf24;
+  color: var(--ig-amber);
 }
 
 .inspected-plot-card.healthy .inspector-status-badge {
-  color: #4ade80;
+  color: var(--ig-green);
 }
 
 .dot-pulse {
@@ -198,8 +198,8 @@
 .plot-sector-name {
   margin: 0;
   font-size: 0.95rem;
-  color: var(--text-primary, #f8fafc);
-  font-weight: 600;
+  color: var(--text-main);
+  font-weight: 800;
 }
 
 .plot-info-table {
@@ -213,26 +213,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+  border-bottom: 1px dashed var(--card-border-subtle);
   padding-bottom: 0.25rem;
 }
 
 .info-k {
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-muted);
 }
 
 .info-v {
-  color: var(--text-primary, #f8fafc);
-  font-weight: 600;
+  color: var(--text-main);
+  font-weight: 700;
 }
 
 .outbreak-containment-note {
   font-size: 0.75rem;
-  color: #cbd5e1;
-  background: rgba(2, 6, 23, 0.6);
-  padding: 0.6rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  background: var(--card-bg);
+  padding: 0.65rem;
+  border-radius: 8px;
+  border: 1px solid var(--card-border-subtle);
   line-height: 1.4;
 }
 
@@ -240,8 +240,8 @@
   padding: 1.5rem;
   text-align: center;
   font-size: 0.85rem;
-  color: var(--text-secondary, #94a3b8);
-  border: 1px dashed var(--border-color, #1e293b);
+  color: var(--text-muted);
+  border: 1px dashed var(--card-border);
   border-radius: 10px;
 }
 
@@ -258,30 +258,31 @@
   align-items: center;
   text-align: center;
   padding: 0.6rem 0.3rem;
-  border-radius: 8px;
-  background: rgba(15, 23, 42, 0.6);
-  border: 1px solid var(--border-color, #1e293b);
+  border-radius: 10px;
+  background: var(--surface-secondary);
+  border: 1px solid var(--card-border);
 }
 
 .mini-stat-card .num {
-  font-size: 1.1rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 900;
 }
 
 .mini-stat-card .lbl {
   font-size: 0.65rem;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-muted);
   margin-top: 0.15rem;
+  font-weight: 600;
 }
 
 .mini-stat-card.critical .num {
-  color: #ef4444;
+  color: var(--ig-red);
 }
 
 .mini-stat-card.warning .num {
-  color: #f59e0b;
+  color: var(--ig-amber);
 }
 
 .mini-stat-card.healthy .num {
-  color: #22c55e;
+  color: var(--ig-green);
 }
