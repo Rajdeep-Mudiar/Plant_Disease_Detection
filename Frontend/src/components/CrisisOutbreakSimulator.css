@@ -1,0 +1,322 @@
+/* Crisis Outbreak Simulator Component CSS */
+.crisis-simulator-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow, 0 4px 20px -2px rgba(15, 23, 42, 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.crisis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid var(--card-border-subtle, #f1f5f9);
+  padding-bottom: 1rem;
+}
+
+.crisis-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.crisis-icon-frame {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+  flex-shrink: 0;
+}
+
+.crisis-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.crisis-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.crisis-sub-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  background: var(--surface-secondary, #f1f5f9);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.crisis-main-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.crisis-sub-title {
+  margin: 4px 0 0 0;
+  font-size: 0.84rem;
+  color: var(--text-muted, #64748b);
+  max-width: 650px;
+  line-height: 1.4;
+}
+
+.start-crisis-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+  transition: all 0.18s ease;
+}
+
+.start-crisis-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(239, 68, 68, 0.45);
+}
+
+.crisis-hud-strip {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.hud-metric-pill {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 10px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+}
+
+.hud-metric-pill.timer strong {
+  color: #ef4444;
+  font-size: 1.1rem;
+}
+
+.hud-metric-pill.budget strong {
+  color: #10b981;
+  font-size: 1.1rem;
+}
+
+.hud-metric-pill.score strong.green { color: #16a34a; }
+.hud-metric-pill.score strong.red { color: #dc2626; }
+
+.crisis-outcome-banner {
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.crisis-outcome-banner.won {
+  background: rgba(34, 197, 94, 0.15);
+  border: 2px solid #22c55e;
+  color: #15803d;
+}
+
+.crisis-outcome-banner.lost {
+  background: rgba(239, 68, 68, 0.15);
+  border: 2px solid #ef4444;
+  color: #991b1b;
+}
+
+.crisis-outcome-banner h4 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.crisis-outcome-banner p {
+  margin: 0;
+  font-size: 0.88rem;
+  max-width: 500px;
+}
+
+.retry-btn {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.crisis-actions-layout {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 850px) {
+  .crisis-actions-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.payload-selection-card,
+.defense-countermeasures-card {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card-lbl {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.payload-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.payload-btn {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.payload-btn:hover {
+  border-color: #ef4444;
+}
+
+.payload-btn.active {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  box-shadow: 0 0 0 1px #ef4444;
+}
+
+.deploy-spray-now-btn {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.deploy-spray-now-btn:hover {
+  background: #0369a1;
+}
+
+.countermeasure-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cm-btn {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #cbd5e1);
+  color: var(--text-main, #0f172a);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.cm-btn:hover:not(:disabled) {
+  border-color: #10b981;
+}
+
+.cm-btn.done {
+  background: rgba(34, 197, 94, 0.12);
+  border-color: #10b981;
+  color: #15803d;
+  cursor: default;
+}
+
+.crisis-live-log-box {
+  background: #0f172a;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.log-hdr {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #38bdf8;
+  letter-spacing: 0.05em;
+}
+
+.log-items {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.log-line {
+  font-size: 0.72rem;
+  color: #e2e8f0;
+  line-height: 1.35;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .crisis-simulator-card,
+[data-theme="dark"] .payload-btn,
+[data-theme="dark"] .cm-btn {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .hud-metric-pill,
+[data-theme="dark"] .payload-selection-card,
+[data-theme="dark"] .defense-countermeasures-card {
+  background: #0d121f;
+  border-color: #1e293b;
+}

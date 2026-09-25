@@ -259,7 +259,83 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
             </div>
           </div>
 
-          {/* Feature 4: Digital Farm Twin */}
+          {/* Feature 4: Crop Science & Physiology Suite */}
+          <div
+            className="meta-tool-card"
+            onClick={() => onNavigate("agronomy")}
+          >
+            <div className="tool-icon-frame">
+              <IconPlant size={20} />
+            </div>
+            <h3 className="tool-card-title">🔬 Crop Science & Physiology</h3>
+            <p className="tool-card-description">
+              14-day disease progression time-lapse, 4-season biological crop rotation,
+              and chemical burn phytotoxicity risk indices.
+            </p>
+            <div className="tool-card-footer">
+              <span>Open Science Lab</span>
+              <span className="arrow-glyph">→</span>
+            </div>
+          </div>
+
+          {/* Feature 5: IoT Hardware & Sensor Network */}
+          <div
+            className="meta-tool-card"
+            onClick={() => onNavigate("iot")}
+          >
+            <div className="tool-icon-frame">
+              <IconRadar size={20} />
+            </div>
+            <h3 className="tool-card-title">🌐 Virtual IoT Hardware Suite</h3>
+            <p className="tool-card-description">
+              Multi-depth soil NPK/EC probes at 5–30cm, optical camera pheromone insect traps,
+              and ground rover sub-canopy robotic feeds.
+            </p>
+            <div className="tool-card-footer">
+              <span>Open IoT Suite</span>
+              <span className="arrow-glyph">→</span>
+            </div>
+          </div>
+
+          {/* Feature 6: Agri-Market & Government Grants */}
+          <div
+            className="meta-tool-card"
+            onClick={() => onNavigate("market")}
+          >
+            <div className="tool-icon-frame">
+              <IconCalculator size={20} />
+            </div>
+            <h3 className="tool-card-title">💰 Agri-Market & Subsidies</h3>
+            <p className="tool-card-description">
+              Live Mandi commodity prices with AI harvest timing recommendations,
+              cold storage shelf-life clocks, and government subsidy matchers.
+            </p>
+            <div className="tool-card-footer">
+              <span>Open Market Hub</span>
+              <span className="arrow-glyph">→</span>
+            </div>
+          </div>
+
+          {/* Feature 7: 60-Second Outbreak Crisis Simulator */}
+          <div
+            className="meta-tool-card"
+            onClick={() => onNavigate("crisis")}
+          >
+            <div className="tool-icon-frame">
+              <IconActivity size={20} />
+            </div>
+            <h3 className="tool-card-title">🎮 60-Sec Outbreak Crisis Sim</h3>
+            <p className="tool-card-description">
+              Fast-paced tactical crisis response scenario. Manage emergency budgets,
+              drone chemical payloads, and containment barriers.
+            </p>
+            <div className="tool-card-footer">
+              <span>Play Challenge</span>
+              <span className="arrow-glyph">→</span>
+            </div>
+          </div>
+
+          {/* Feature 8: Digital Farm Twin */}
           <div
             className="meta-tool-card"
             onClick={() => onNavigate("twin")}
@@ -267,7 +343,7 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
             <div className="tool-icon-frame">
               <IconActivity size={20} />
             </div>
-            <h3 className="tool-card-title">Digital Farm Twin & IoT</h3>
+            <h3 className="tool-card-title">Digital Farm Twin & GIS</h3>
             <p className="tool-card-description">
               Simulate 6-sector biophysical telemetry, spore dispersion contagion models,
               precision drone spray deployments, and sub-surface fertigation.
@@ -278,7 +354,7 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
             </div>
           </div>
 
-          {/* Feature 5 */}
+          {/* Feature 9: Pathology Library */}
           <div
             className="meta-tool-card"
             onClick={() => onNavigate("encyclopedia")}

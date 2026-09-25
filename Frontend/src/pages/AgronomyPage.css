@@ -1,0 +1,58 @@
+/* Agronomy Page CSS */
+.agronomy-page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.agronomy-hero {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%);
+  border: 1px solid var(--card-border, #e2e8f0);
+  border-radius: 20px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+}
+
+.hero-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+.hero-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-main, #0f172a);
+}
+
+.hero-subtitle {
+  margin: 0;
+  font-size: 1rem;
+  color: var(--text-muted, #64748b);
+  max-width: 750px;
+  line-height: 1.5;
+}
+
+.agronomy-modules-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Dark Mode */
+[data-theme="dark"] .agronomy-hero {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(2, 132, 199, 0.12) 100%);
+  border-color: #1e293b;
+}

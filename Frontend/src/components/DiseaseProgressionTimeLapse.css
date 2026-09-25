@@ -1,0 +1,552 @@
+/* Disease Progression Time-Lapse Component CSS */
+.disease-timelapse-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow, 0 4px 20px -2px rgba(15, 23, 42, 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.timelapse-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid var(--card-border-subtle, #f1f5f9);
+  padding-bottom: 1rem;
+}
+
+.timelapse-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.timelapse-icon-badge {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
+  flex-shrink: 0;
+}
+
+.timelapse-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.timelapse-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #8b5cf6;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.timelapse-sub-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  background: var(--surface-secondary, #f1f5f9);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.timelapse-main-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.timelapse-desc {
+  margin: 4px 0 0 0;
+  font-size: 0.84rem;
+  color: var(--text-muted, #64748b);
+  max-width: 650px;
+  line-height: 1.4;
+}
+
+.disease-selector-pills {
+  display: flex;
+  background: var(--surface-secondary, #f8fafc);
+  padding: 4px;
+  border-radius: 30px;
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  gap: 4px;
+}
+
+.disease-pill-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+}
+
+.disease-pill-btn:hover {
+  color: var(--text-main, #0f172a);
+}
+
+.disease-pill-btn.active {
+  background: #8b5cf6;
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.35);
+}
+
+/* Scrubber Slider */
+.timelapse-scrubber-box {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(56, 189, 248, 0.06) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.scrubber-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.scrubber-day-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.day-number {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.14);
+  padding: 3px 10px;
+  border-radius: 8px;
+}
+
+.day-phase {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.scrubber-controls-help {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+}
+
+.timeline-range-input {
+  width: 100%;
+  height: 8px;
+  border-radius: 5px;
+  background: #e2e8f0;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+.timeline-range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.6);
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  transition: transform 0.15s ease;
+}
+
+.timeline-range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+.timeline-ticks-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.tick-mark {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.tick-mark:hover,
+.tick-mark.active {
+  color: #8b5cf6;
+  background: rgba(139, 92, 246, 0.12);
+  font-weight: 800;
+}
+
+/* Body Grid */
+.timelapse-body-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .timelapse-body-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Left Canvas Container */
+.leaf-canvas-container {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.leaf-canvas-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.canvas-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #64748b);
+}
+
+.leaf-health-pill {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.leaf-health-pill.optimal { background: rgba(34, 197, 94, 0.15); color: #16a34a; }
+.leaf-health-pill.warning { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+.leaf-health-pill.critical { background: rgba(239, 68, 68, 0.15); color: #dc2626; }
+
+.leaf-svg-wrapper {
+  width: 260px;
+  height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaf-morph-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,0.12));
+  transition: all 0.3s ease;
+}
+
+.halo-pulse {
+  animation: haloPulseAnim 2s infinite ease-in-out;
+}
+
+@keyframes haloPulseAnim {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.04); }
+}
+
+.canvas-footer-stats {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 10px;
+  padding: 8px 12px;
+}
+
+.c-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.76rem;
+}
+
+.c-stat-label {
+  color: var(--text-muted, #64748b);
+  font-weight: 600;
+}
+
+.c-stat-val {
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+/* Right Details Column */
+.timelapse-details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stage-description-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.1rem;
+}
+
+.stage-card-header {
+  margin-bottom: 6px;
+}
+
+.stage-tag {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #8b5cf6;
+  letter-spacing: 0.06em;
+}
+
+.stage-title {
+  margin: 2px 0 0 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.stage-narrative {
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.45;
+  margin: 6px 0 12px 0;
+}
+
+.symptoms-checklist ul {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.symptoms-checklist li {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main, #0f172a);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bullet-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #8b5cf6;
+  flex-shrink: 0;
+}
+
+/* Intervention Simulator */
+.intervention-simulator-card {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.06) 0%, rgba(2, 132, 199, 0.06) 100%);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  border-radius: 12px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.intervention-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.intervention-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #15803d;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.intervention-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  background: #22c55e;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.intervention-prompt {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+}
+
+.intervention-button-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 600px) {
+  .intervention-button-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.intervene-btn {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 8px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.intervene-btn span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+}
+
+.intervene-btn strong {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #16a34a;
+}
+
+.intervene-btn:hover {
+  border-color: #22c55e;
+  transform: translateY(-1px);
+}
+
+.intervene-btn.active {
+  background: #16a34a;
+  border-color: #15803d;
+}
+
+.intervene-btn.active span,
+.intervene-btn.active strong {
+  color: #ffffff;
+}
+
+.rescue-outcome-hud {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--card-bg, #ffffff);
+  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.outcome-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+}
+
+.metric-val {
+  font-size: 0.92rem;
+  font-weight: 900;
+}
+
+.metric-val.green { color: #16a34a; }
+.metric-val.yellow { color: #d97706; }
+.metric-val.red { color: #dc2626; }
+
+.recommended-rx-box {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-top: 1px solid var(--card-border-subtle, #f1f5f9);
+  padding-top: 6px;
+}
+
+.rx-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+}
+
+.rx-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .disease-timelapse-card,
+[data-theme="dark"] .stage-description-card,
+[data-theme="dark"] .canvas-footer-stats,
+[data-theme="dark"] .rescue-outcome-hud,
+[data-theme="dark"] .intervene-btn {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .leaf-canvas-container {
+  background: #0d121f;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .disease-selector-pills {
+  background: #0d121f;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .timelapse-scrubber-box {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(56, 189, 248, 0.12) 100%);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+[data-theme="dark"] .intervention-simulator-card {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(2, 132, 199, 0.1) 100%);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+[data-theme="dark"] .timeline-range-input {
+  background: #1e293b;
+}

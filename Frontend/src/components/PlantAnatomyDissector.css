@@ -1,0 +1,305 @@
+/* Plant Anatomy Dissector Component CSS */
+.plant-anatomy-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow, 0 4px 20px -2px rgba(15, 23, 42, 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.anatomy-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid var(--card-border-subtle, #f1f5f9);
+  padding-bottom: 1rem;
+}
+
+.anatomy-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.anatomy-icon-frame {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  flex-shrink: 0;
+}
+
+.anatomy-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.anatomy-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #0284c7;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.anatomy-sub-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  background: var(--surface-secondary, #f1f5f9);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.anatomy-main-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.anatomy-sub-title {
+  margin: 4px 0 0 0;
+  font-size: 0.84rem;
+  color: var(--text-muted, #64748b);
+  max-width: 650px;
+  line-height: 1.4;
+}
+
+.anatomy-mode-pills {
+  display: flex;
+  background: var(--surface-secondary, #f8fafc);
+  padding: 4px;
+  border-radius: 30px;
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  gap: 4px;
+}
+
+.mode-pill {
+  border: none;
+  background: transparent;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.mode-pill:hover {
+  color: var(--text-main, #0f172a);
+}
+
+.mode-pill.active {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.35);
+}
+
+/* Body Grid */
+.anatomy-body-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .anatomy-body-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.anatomy-svg-column {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.svg-frame-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.frame-title {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--text-muted, #64748b);
+}
+
+.frame-hint {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #0284c7;
+}
+
+.plant-svg-box {
+  width: 280px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.anatomy-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.spore-pulse-ring {
+  animation: sporePulseAnim 1.4s infinite ease-out;
+}
+
+@keyframes sporePulseAnim {
+  0% { transform: scale(0.6); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+/* Right Details Column */
+.anatomy-details-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dissected-layer-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.layer-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--card-border-subtle, #f1f5f9);
+  padding-bottom: 0.75rem;
+}
+
+.layer-big-icon {
+  font-size: 2rem;
+}
+
+.layer-part-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #0284c7;
+  text-transform: uppercase;
+}
+
+.layer-title {
+  margin: 2px 0 0 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.dissection-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dissection-field.alert {
+  background: rgba(239, 68, 68, 0.06);
+  border-left: 3px solid #ef4444;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+.dissection-field.rx {
+  background: rgba(2, 132, 199, 0.06);
+  border-left: 3px solid #0284c7;
+  padding: 8px 10px;
+  border-radius: 4px;
+}
+
+.field-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted, #64748b);
+}
+
+.field-label.red { color: #dc2626; }
+.field-label.blue { color: #0284c7; }
+
+.field-text {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-main, #0f172a);
+  line-height: 1.45;
+}
+
+.field-text.bold {
+  font-weight: 700;
+}
+
+.quick-layer-switcher {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-layer-btn {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.quick-layer-btn:hover {
+  color: var(--text-main, #0f172a);
+  border-color: #0284c7;
+}
+
+.quick-layer-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0369a1;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .plant-anatomy-card,
+[data-theme="dark"] .dissected-layer-card {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .anatomy-svg-column,
+[data-theme="dark"] .quick-layer-btn,
+[data-theme="dark"] .anatomy-mode-pills {
+  background: #0d121f;
+  border-color: #1e293b;
+}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./CalculatorPage.css";
 import DosageCalculator from "../components/DosageCalculator";
+import TankMixCompatibilityChecker from "../components/TankMixCompatibilityChecker";
 import EconomicsLossEstimator from "../components/EconomicsLossEstimator";
 import SafetyCountdownTimer from "../components/SafetyCountdownTimer";
 import SoilNutrientAdvisor from "../components/SoilNutrientAdvisor";
@@ -64,6 +65,9 @@ const CalculatorPage = () => {
 
       <div className="calc-content-area">
         <DosageCalculator />
+
+        {/* Feature: Chemical Tank-Mix Compatibility Matrix & Jar Tester */}
+        <TankMixCompatibilityChecker />
 
         {/* Feature: Soil Chemistry & N-P-K Fertilizer Deficit Rebalancing */}
         <SoilNutrientAdvisor />

@@ -13,12 +13,18 @@ import {
   IconActivity,
   IconSun,
   IconMoon,
+  IconTrendingUp,
+  IconShield,
 } from "./Icons";
 
 const NAV_ITEMS = [
   { id: "home", translationKey: "nav_home", defaultLabel: "Home", icon: IconHome },
   { id: "detect", translationKey: "nav_scanner", defaultLabel: "Scanner", icon: IconScanner },
   { id: "twin", translationKey: "nav_twin", defaultLabel: "Digital Twin", icon: IconActivity },
+  { id: "agronomy", translationKey: "nav_agronomy", defaultLabel: "Crop Science", icon: IconPlant },
+  { id: "iot", translationKey: "nav_iot", defaultLabel: "IoT Sensors", icon: IconRadar },
+  { id: "market", translationKey: "nav_market", defaultLabel: "Agri-Market", icon: IconTrendingUp },
+  { id: "crisis", translationKey: "nav_crisis", defaultLabel: "Crisis Sim", icon: IconShield },
   { id: "weather", translationKey: "nav_radar", defaultLabel: "Radar", icon: IconRadar },
   { id: "calculator", translationKey: "nav_dosage", defaultLabel: "Dosage", icon: IconCalculator },
   { id: "encyclopedia", translationKey: "nav_encyclopedia", defaultLabel: "Encyclopedia", icon: IconBook },

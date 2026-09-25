@@ -12,6 +12,7 @@ import CropSelector from "../components/CropSelector";
 import LiveVideoArScanner from "../components/LiveVideoArScanner";
 import CropInsuranceAssessor from "../components/CropInsuranceAssessor";
 import AgriDealerLocator from "../components/AgriDealerLocator";
+import AiModelConsensus from "../components/AiModelConsensus";
 import { IconScanner, IconCamera, IconSparkles } from "../components/Icons";
 
 const DetectPage = ({
@@ -102,6 +103,9 @@ const DetectPage = ({
           onOpenReport={() => setIsReportOpen(true)}
           getStatusColor={getStatusColor}
         />
+
+        {/* Feature: Multi-Model Ensemble Second Opinion Consensus */}
+        <AiModelConsensus prediction={prediction} />
 
         {/* Economic Yield Loss & Insurance Risk Assessor */}
         <CropInsuranceAssessor

@@ -1,0 +1,288 @@
+/* Crop Rotation Planner Component CSS */
+.crop-rotation-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: var(--card-shadow, 0 4px 20px -2px rgba(15, 23, 42, 0.06));
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.rotation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-bottom: 1px solid var(--card-border-subtle, #f1f5f9);
+  padding-bottom: 1rem;
+}
+
+.rotation-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.rotation-icon-frame {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #10b981 0%, #047857 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+  flex-shrink: 0;
+}
+
+.rotation-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.rotation-badge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #10b981;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.rotation-sub-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #64748b;
+  background: var(--surface-secondary, #f1f5f9);
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.rotation-main-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.rotation-sub-title {
+  margin: 4px 0 0 0;
+  font-size: 0.84rem;
+  color: var(--text-muted, #64748b);
+  max-width: 650px;
+  line-height: 1.4;
+}
+
+/* 4 Season Cards Grid */
+.seasons-carousel-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .seasons-carousel-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .seasons-carousel-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.season-slot-card {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 14px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.season-slot-card:hover {
+  transform: translateY(-2px);
+  border-color: #10b981;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.12);
+}
+
+.season-slot-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.slot-step {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #10b981;
+  letter-spacing: 0.06em;
+}
+
+.slot-name {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.crop-selector-dropdown-box {
+  width: 100%;
+}
+
+.crop-select-native {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--card-border-subtle, #cbd5e1);
+  background: var(--card-bg, #ffffff);
+  color: var(--text-main, #0f172a);
+  font-size: 0.8rem;
+  font-weight: 700;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.crop-select-native:focus {
+  border-color: #10b981;
+}
+
+.slot-crop-preview {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+}
+
+.crop-huge-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.crop-preview-name {
+  font-size: 0.86rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.crop-family-tag {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  background: var(--surface-secondary, #f1f5f9);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.slot-agronomic-specs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-top: 1px solid var(--card-border-subtle, #f1f5f9);
+  padding-top: 8px;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.74rem;
+}
+
+.s-label {
+  color: var(--text-muted, #64748b);
+  font-weight: 600;
+}
+
+.s-val {
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.s-val.green { color: #16a34a; }
+.s-val.orange { color: #d97706; }
+.s-val.neutral { color: var(--text-muted, #64748b); }
+
+/* Rotation Evaluation Dashboard */
+.rotation-analytics-dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 850px) {
+  .rotation-analytics-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+.analytic-card {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.analytic-card.highlight {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(2, 132, 199, 0.08) 100%);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.an-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted, #64748b);
+  letter-spacing: 0.04em;
+}
+
+.an-metric-row {
+  display: flex;
+  align-items: center;
+}
+
+.an-val {
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.an-val.green { color: #16a34a; }
+.an-val.yellow { color: #d97706; }
+.an-val.orange { color: #f59e0b; }
+.an-val.red { color: #dc2626; }
+
+.an-desc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.4;
+}
+
+/* Dark Mode Harmonization */
+[data-theme="dark"] .crop-rotation-card,
+[data-theme="dark"] .slot-crop-preview,
+[data-theme="dark"] .crop-select-native {
+  background: #111728;
+  border-color: #1e293b;
+}
+
+[data-theme="dark"] .season-slot-card,
+[data-theme="dark"] .analytic-card {
+  background: #0d121f;
+  border-color: #1e293b;
+}

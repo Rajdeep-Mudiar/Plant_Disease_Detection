@@ -10,6 +10,10 @@ import CalculatorPage from "./pages/CalculatorPage";
 import EncyclopediaPage from "./pages/EncyclopediaPage";
 import HistoryPage from "./pages/HistoryPage";
 import DigitalTwinPage from "./pages/DigitalTwinPage";
+import AgronomyPage from "./pages/AgronomyPage";
+import IoTHubPage from "./pages/IoTHubPage";
+import MarketPage from "./pages/MarketPage";
+import CrisisSimPage from "./pages/CrisisSimPage";
 import { generateSampleLeafFile } from "./utils/sampleImages";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
@@ -33,7 +37,7 @@ function App() {
   // Navigation Route State
   const [activeRoute, setActiveRoute] = useState(() => {
     const hash = window.location.hash.replace("#", "").toLowerCase();
-    const valid = ["home", "detect", "twin", "weather", "calculator", "encyclopedia", "history"];
+    const valid = ["home", "detect", "twin", "agronomy", "iot", "market", "crisis", "weather", "calculator", "encyclopedia", "history"];
     return valid.includes(hash) ? hash : "home";
   });
 
@@ -53,7 +57,7 @@ function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace("#", "").toLowerCase();
-      const valid = ["home", "detect", "twin", "weather", "calculator", "encyclopedia", "history"];
+      const valid = ["home", "detect", "twin", "agronomy", "iot", "market", "crisis", "weather", "calculator", "encyclopedia", "history"];
       if (valid.includes(hash)) {
         setActiveRoute(hash);
         window.scrollTo({ top: 0, behavior: "smooth" });
@@ -253,6 +257,14 @@ function App() {
         {activeRoute === "twin" && (
           <DigitalTwinPage onNavigateToScanner={handleSelectSampleSpecimen} />
         )}
+
+        {activeRoute === "agronomy" && <AgronomyPage />}
+
+        {activeRoute === "iot" && <IoTHubPage />}
+
+        {activeRoute === "market" && <MarketPage />}
+
+        {activeRoute === "crisis" && <CrisisSimPage />}
 
         {activeRoute === "weather" && <WeatherPage />}
 
