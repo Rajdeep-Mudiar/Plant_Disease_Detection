@@ -1239,10 +1239,51 @@ export const LanguageProvider = ({ children }) => {
 
   const changeLanguage = (langCode) => {
     const found = SUPPORTED_LANGUAGES.find((l) => l.code === langCode);
-    if (found) {
-      setCurrentLang(langCode);
+    if (!found) return;
+
+    setCurrentLang(langCode);
+    localStorage.setItem("agropath_language", langCode);
+
+    const googleLangCode = langCode === "zh" ? "zh-CN" : langCode;
+
+    // Set translation cookies
+    if (langCode === "en") {
+      document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; domain=${window.location.hostname}; path=/;`;
+    } else {
+      document.cookie = `googtrans=/en/${googleLangCode}; path=/;`;
+      document.cookie = `googtrans=/en/${googleLangCode}; domain=${window.location.hostname}; path=/;`;
+    }
+
+    // Trigger universal translation element
+    const tryTriggerCombo = () => {
+      const selectElem = document.querySelector(".goog-te-combo");
+      if (selectElem) {
+        selectElem.value = langCode === "en" ? "" : googleLangCode;
+        selectElem.dispatchEvent(new Event("change", { bubbles: true }));
+        return true;
+      }
+      return false;
+    };
+
+    if (!tryTriggerCombo()) {
+      let attempts = 0;
+      const interval = setInterval(() => {
+        attempts++;
+        if (tryTriggerCombo() || attempts > 20) {
+          clearInterval(interval);
+        }
+      }, 100);
     }
   };
+
+  // On initial mount, sync saved language with universal translator
+  useEffect(() => {
+    const saved = localStorage.getItem("agropath_language");
+    if (saved && saved !== "en") {
+      changeLanguage(saved);
+    }
+  }, []);
 
   const activeLanguageObj =
     SUPPORTED_LANGUAGES.find((l) => l.code === currentLang) || SUPPORTED_LANGUAGES[0];
