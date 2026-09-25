@@ -183,24 +183,20 @@
   flex-wrap: wrap;
 }
 
-.latex-pdf-btn,
-.latex-tex-btn {
+.latex-pdf-btn {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 18px;
+  padding: 10px 20px;
   border-radius: 9px;
-  font-size: 0.82rem;
+  font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.latex-pdf-btn {
   background: linear-gradient(135deg, #0e7490, #0284c7);
   color: #ffffff;
   border: none;
   box-shadow: 0 4px 14px rgba(14, 116, 144, 0.35);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .latex-pdf-btn:hover {
@@ -209,23 +205,4 @@
   box-shadow: 0 6px 20px rgba(14, 116, 144, 0.45);
 }
 
-.latex-tex-btn {
-  background: var(--surface-primary, #ffffff);
-  color: var(--text-main, #0f172a);
-  border: 1px solid var(--card-border, #cbd5e1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="dark"] .latex-tex-btn {
-  background: #182234;
-  border-color: rgba(255, 255, 255, 0.15);
-  color: #f1f5f9;
-}
-
-.latex-tex-btn:hover {
-  background: var(--surface-hover, #f1f5f9);
-  border-color: #0e7490;
-  color: #0e7490;
-  transform: translateY(-2px);
-}
 
