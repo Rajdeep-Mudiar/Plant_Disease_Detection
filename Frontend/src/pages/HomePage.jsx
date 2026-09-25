@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./HomePage.css";
+import { useTranslation } from "../context/LanguageContext";
 import {
   IconScanner,
   IconRadar,
@@ -31,6 +32,7 @@ const FAQS = [
 ];
 
 const HomePage = ({ onNavigate, onSelectSample }) => {
+  const { t } = useTranslation();
   const [openFaq, setOpenFaq] = useState(null);
 
   const toggleFaq = (index) => {
@@ -51,15 +53,16 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
         <div className="hero-inner-content">
           <div className="meta-badge-indicator">
             <span className="badge-live-dot"></span>
-            <span>Agricultural Computer Vision Platform</span>
+            <span>{t("tagline", "Agricultural Computer Vision Platform")}</span>
           </div>
           <h1 className="hero-headline">
-            Plant Pathology & Diagnostic Intelligence
+            {t("hero_title", "Plant Pathology & Diagnostic Intelligence")}
           </h1>
           <p className="hero-description">
-            Identify foliar plant diseases with deep learning classification, inspect
-            neural lesion attention heatmaps, calculate knapsack chemical dosages, and track
-            atmospheric blight outbreak risks in real time.
+            {t(
+              "hero_subtitle",
+              "Identify foliar plant diseases with deep learning classification, inspect neural lesion attention heatmaps, calculate knapsack chemical dosages, and track atmospheric blight outbreak risks in real time."
+            )}
           </p>
 
           <div className="hero-action-buttons">
@@ -69,7 +72,15 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
               onClick={() => onNavigate("detect")}
             >
               <IconScanner size={16} />
-              <span>Launch Leaf Scanner</span>
+              <span>{t("start_diagnosis", "Launch Leaf Scanner")}</span>
+            </button>
+            <button
+              type="button"
+              className="meta-secondary-btn"
+              onClick={() => onNavigate("twin")}
+            >
+              <IconActivity size={16} />
+              <span>{t("explore_twin", "Digital Twin Farm")}</span>
             </button>
             <button
               type="button"
@@ -77,7 +88,7 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
               onClick={() => onNavigate("weather")}
             >
               <IconRadar size={16} />
-              <span>Blight Outbreak Radar</span>
+              <span>{t("spore_radar", "Blight Outbreak Radar")}</span>
             </button>
             <button
               type="button"
@@ -85,7 +96,7 @@ const HomePage = ({ onNavigate, onSelectSample }) => {
               onClick={() => onNavigate("calculator")}
             >
               <IconCalculator size={16} />
-              <span>Dosage Simulator</span>
+              <span>{t("dosage_calc", "Dosage Simulator")}</span>
             </button>
           </div>
 

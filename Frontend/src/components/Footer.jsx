@@ -1,8 +1,11 @@
 import React from "react";
 import "./Footer.css";
-import { IconPlant } from "./Icons";
+import { IconPlant, IconGlobe } from "./Icons";
+import { useTranslation } from "../context/LanguageContext";
 
 const Footer = ({ onNavigate }) => {
+  const { t, activeLanguageObj } = useTranslation();
+
   return (
     <footer className="meta-footer">
       <div className="footer-inner-container">
@@ -12,7 +15,10 @@ const Footer = ({ onNavigate }) => {
             <span className="footer-app-name">AgroPath</span>
           </div>
           <p className="footer-summary-text">
-            Agricultural computer vision and agronomic intelligence platform dedicated to early foliar disease detection and crop protection.
+            {t(
+              "footer_summary",
+              "Agricultural computer vision and agronomic intelligence platform dedicated to early foliar disease detection and crop protection."
+            )}
           </p>
           <div className="footer-active-status">
             <span className="status-live-dot"></span>
@@ -23,12 +29,13 @@ const Footer = ({ onNavigate }) => {
         <div className="footer-links-segment">
           <h4 className="footer-segment-heading">Platform</h4>
           <ul className="footer-links-list">
-            <li><button onClick={() => onNavigate("home")}>Home Dashboard</button></li>
-            <li><button onClick={() => onNavigate("detect")}>Diagnostic Scanner</button></li>
-            <li><button onClick={() => onNavigate("weather")}>Blight Outbreak Radar</button></li>
-            <li><button onClick={() => onNavigate("calculator")}>Dosage & Tank Calculator</button></li>
-            <li><button onClick={() => onNavigate("encyclopedia")}>Pathology Reference</button></li>
-            <li><button onClick={() => onNavigate("history")}>Field Scan Journal</button></li>
+            <li><button onClick={() => onNavigate("home")}>{t("nav_home", "Home Dashboard")}</button></li>
+            <li><button onClick={() => onNavigate("detect")}>{t("nav_scanner", "Diagnostic Scanner")}</button></li>
+            <li><button onClick={() => onNavigate("twin")}>{t("nav_twin", "Digital Twin Farm")}</button></li>
+            <li><button onClick={() => onNavigate("weather")}>{t("nav_radar", "Blight Outbreak Radar")}</button></li>
+            <li><button onClick={() => onNavigate("calculator")}>{t("nav_dosage", "Dosage & Tank Calculator")}</button></li>
+            <li><button onClick={() => onNavigate("encyclopedia")}>{t("nav_encyclopedia", "Pathology Reference")}</button></li>
+            <li><button onClick={() => onNavigate("history")}>{t("nav_journal", "Field Scan Journal")}</button></li>
           </ul>
         </div>
 

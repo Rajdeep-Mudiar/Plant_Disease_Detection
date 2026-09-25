@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
+import LanguageSelector from "./LanguageSelector";
+import { useTranslation } from "../context/LanguageContext";
 import {
   IconPlant,
   IconHome,
@@ -14,13 +16,13 @@ import {
 } from "./Icons";
 
 const NAV_ITEMS = [
-  { id: "home", label: "Home", icon: IconHome },
-  { id: "detect", label: "Scanner", icon: IconScanner },
-  { id: "twin", label: "Digital Twin", icon: IconActivity },
-  { id: "weather", label: "Radar", icon: IconRadar },
-  { id: "calculator", label: "Dosage", icon: IconCalculator },
-  { id: "encyclopedia", label: "Encyclopedia", icon: IconBook },
-  { id: "history", label: "Journal", icon: IconHistory },
+  { id: "home", translationKey: "nav_home", defaultLabel: "Home", icon: IconHome },
+  { id: "detect", translationKey: "nav_scanner", defaultLabel: "Scanner", icon: IconScanner },
+  { id: "twin", translationKey: "nav_twin", defaultLabel: "Digital Twin", icon: IconActivity },
+  { id: "weather", translationKey: "nav_radar", defaultLabel: "Radar", icon: IconRadar },
+  { id: "calculator", translationKey: "nav_dosage", defaultLabel: "Dosage", icon: IconCalculator },
+  { id: "encyclopedia", translationKey: "nav_encyclopedia", defaultLabel: "Encyclopedia", icon: IconBook },
+  { id: "history", translationKey: "nav_journal", defaultLabel: "Journal", icon: IconHistory },
 ];
 
 const Navbar = ({
@@ -31,6 +33,7 @@ const Navbar = ({
   theme = "light",
   onToggleTheme,
 }) => {
+  const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -57,7 +60,7 @@ const Navbar = ({
           </div>
           <div className="brand-text-column">
             <span className="brand-title">AgroPath</span>
-            <span className="brand-subtitle">Plant Pathology System</span>
+            <span className="brand-subtitle">{t("tagline", "Plant Pathology System")}</span>
           </div>
         </div>
 
@@ -74,7 +77,7 @@ const Navbar = ({
                 onClick={() => handleNavClick(item.id)}
               >
                 <IconComp size={16} className="nav-button-icon" />
-                <span>{item.label}</span>
+                <span>{t(item.translationKey, item.defaultLabel)}</span>
                 {item.id === "history" && scanCount > 0 && (
                   <span className="nav-counter">{scanCount}</span>
                 )}
@@ -85,6 +88,9 @@ const Navbar = ({
 
         {/* Right Status & Actions */}
         <div className="navbar-actions-right">
+          {/* Language Switcher Dropdown */}
+          <LanguageSelector />
+
           {/* Light / Dark Mode Toggle Button */}
           <button
             type="button"
@@ -103,7 +109,7 @@ const Navbar = ({
           <div className={`status-pill ${backendOnline ? "online" : "offline"}`}>
             <span className="status-indicator-dot"></span>
             <span className="status-label-text">
-              {backendOnline ? "System Ready" : "API Offline"}
+              {backendOnline ? t("system_ready", "System Ready") : t("api_offline", "API Offline")}
             </span>
           </div>
 
@@ -113,7 +119,7 @@ const Navbar = ({
             onClick={() => handleNavClick("detect")}
           >
             <IconScanner size={15} />
-            <span>Scan Leaf</span>
+            <span>{t("nav_scan_leaf", "Scan Leaf")}</span>
           </button>
 
           {/* Mobile Menu Button */}
@@ -144,7 +150,7 @@ const Navbar = ({
                 onClick={() => handleNavClick(item.id)}
               >
                 <IconComp size={18} />
-                <span>{item.label}</span>
+                <span>{t(item.translationKey, item.defaultLabel)}</span>
                 {item.id === "history" && scanCount > 0 && (
                   <span className="mobile-counter-pill">{scanCount}</span>
                 )}
@@ -152,8 +158,9 @@ const Navbar = ({
             );
           })}
 
-          <div className="mobile-theme-row">
-            <span className="mobile-theme-label">Theme Mode:</span>
+          <div className="mobile-controls-row">
+            <LanguageSelector />
+
             <button
               type="button"
               className="mobile-theme-toggle-btn"
@@ -179,3 +186,4 @@ const Navbar = ({
 };
 
 export default Navbar;
+

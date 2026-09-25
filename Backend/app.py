@@ -796,9 +796,89 @@ def get_info():
         'name': 'AgroPath Plant Pathology & Diagnosis API',
         'version': '2.0.0',
         'llm_provider': 'Groq AI (Fast LLaMA / Qwen Inference)',
+        'translation_provider': 'LibreTranslate Open-Source Machine Translation',
         'database': 'MongoDB Atlas Cloud',
         'classes': CLASS_NAMES
     })
+
+# LibreTranslate Open-Source Integration
+LIBRE_TRANSLATE_MIRRORS = [
+    "https://translate.argosopentech.com/translate",
+    "https://libretranslate.de/translate",
+    "https://translate.fedilab.app/translate",
+    "https://libretranslate.com/translate"
+]
+TRANSLATION_CACHE = {}
+
+@app.route('/api/translate', methods=['POST'])
+def translate_text():
+    """
+    LibreTranslate API Integration with Multi-Mirror Fallback and In-Memory Caching
+    Supports single strings and array of strings.
+    """
+    try:
+        data = request.get_json() or {}
+        q = data.get('q', '')
+        source_lang = data.get('source', 'auto')
+        target_lang = data.get('target', 'en')
+        text_format = data.get('format', 'text')
+        
+        if not q or target_lang == source_lang or target_lang == 'en' and source_lang == 'en':
+            return jsonify({'translatedText': q, 'translatedTexts': q if isinstance(q, list) else [q]}), 200
+
+        is_list = isinstance(q, list)
+        items_to_translate = q if is_list else [q]
+        translated_results = []
+
+        for text_item in items_to_translate:
+            if not text_item or not isinstance(text_item, str) or not text_item.strip():
+                translated_results.append(text_item)
+                continue
+                
+            cache_key = f"{source_lang}_{target_lang}_{text_item.strip()}"
+            if cache_key in TRANSLATION_CACHE:
+                translated_results.append(TRANSLATION_CACHE[cache_key])
+                continue
+
+            # Attempt translation using LibreTranslate API mirrors
+            translated = None
+            payload = json.dumps({
+                "q": text_item,
+                "source": source_lang,
+                "target": target_lang,
+                "format": text_format
+            }).encode('utf-8')
+
+            for mirror in LIBRE_TRANSLATE_MIRRORS:
+                try:
+                    req = urllib.request.Request(
+                        mirror,
+                        data=payload,
+                        headers={
+                            "Content-Type": "application/json",
+                            "User-Agent": "AgroPath-Translator/2.0"
+                        }
+                    )
+                    with urllib.request.urlopen(req, timeout=3.5) as response:
+                        res_json = json.loads(response.read().decode('utf-8'))
+                        translated = res_json.get('translatedText')
+                        if translated:
+                            break
+                except Exception:
+                    continue
+
+            final_text = translated if translated else text_item
+            TRANSLATION_CACHE[cache_key] = final_text
+            translated_results.append(final_text)
+
+        if is_list:
+            return jsonify({'translatedTexts': translated_results, 'translatedText': translated_results[0] if translated_results else ""}), 200
+        else:
+            return jsonify({'translatedText': translated_results[0] if translated_results else q}), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e), 'translatedText': q if not isinstance(q, list) else q}), 500
+
 
 if __name__ == '__main__':
     print("=" * 60)
