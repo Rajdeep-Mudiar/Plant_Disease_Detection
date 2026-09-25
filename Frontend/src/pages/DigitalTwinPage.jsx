@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./DigitalTwinPage.css";
 import VisualFarmCanvas from "../components/VisualFarmCanvas";
+import SatelliteNdviExplorer from "../components/SatelliteNdviExplorer";
 import {
   IconActivity,
   IconLayers,
@@ -578,6 +579,14 @@ const DigitalTwinPage = ({ onNavigateToScanner }) => {
           </div>
         </div>
       </div>
+
+      {/* Multispectral Satellite NDVI & Canopy Vegetation Index Explorer */}
+      <SatelliteNdviExplorer
+        onDispatchDrone={(sectorId) => {
+          setSelectedSectorId(sectorId);
+          triggerScenarioPrecisionSpray();
+        }}
+      />
     </div>
   );
 };

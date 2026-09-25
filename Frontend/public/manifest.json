@@ -1,0 +1,18 @@
+{
+  "short_name": "AgroPath",
+  "name": "AgroPath AI • Plant Pathology & Agronomy Intelligence",
+  "description": "Deep learning foliar disease diagnosis, digital farm twin simulation, and microclimate blight outbreak radar.",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#0095f6",
+  "background_color": "#fafafa",
+  "orientation": "portrait-primary",
+  "categories": ["agriculture", "productivity", "utilities"]
+}
