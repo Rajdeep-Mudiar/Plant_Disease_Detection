@@ -83,6 +83,11 @@ const CropSprayCalendar = ({ diseaseName = "Late Blight", cropName = "Potato" })
   const [startDate, setStartDate] = useState(
     new Date().toISOString().split("T")[0]
   );
+  const [viewMode, setViewMode] = useState("calendar"); // "calendar" | "timeline"
+  const [selectedTaskIndex, setSelectedTaskIndex] = useState(0);
+
+  // Month navigation offset
+  const [monthOffset, setMonthOffset] = useState(0);
 
   const toggleTask = (index) => {
     setSchedule((prev) =>
@@ -96,6 +101,44 @@ const CropSprayCalendar = ({ diseaseName = "Late Blight", cropName = "Potato" })
 
   const completedCount = schedule.filter((s) => s.status === "done").length;
   const progressPercent = Math.round((completedCount / schedule.length) * 100);
+
+  // Helper to map task days to real Date objects
+  const getTaskForDate = (year, month, dayNumber) => {
+    const targetDateStr = new Date(year, month, dayNumber).toDateString();
+    const baseDate = new Date(startDate);
+
+    return schedule.map((task, idx) => {
+      const taskDate = new Date(baseDate);
+      taskDate.setDate(baseDate.getDate() + (task.day - 1));
+      return { ...task, originalIndex: idx, dateStr: taskDate.toDateString() };
+    }).find((t) => t.dateStr === targetDateStr);
+  };
+
+  // Calendar generation logic
+  const baseStart = new Date(startDate);
+  const displayDate = new Date(baseStart.getFullYear(), baseStart.getMonth() + monthOffset, 1);
+  const year = displayDate.getFullYear();
+  const month = displayDate.getMonth();
+  const monthName = displayDate.toLocaleString("default", { month: "long" });
+
+  const firstDayIndex = new Date(year, month, 1).getDay(); // 0 = Sun
+  const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // Create array of grid cells (including empty padding before day 1)
+  const calendarDays = [];
+  for (let i = 0; i < firstDayIndex; i++) {
+    calendarDays.push({ type: "empty", key: `empty-${i}` });
+  }
+  for (let d = 1; d <= totalDaysInMonth; d++) {
+    const task = getTaskForDate(year, month, d);
+    calendarDays.push({
+      type: "day",
+      dayNumber: d,
+      date: new Date(year, month, d),
+      task: task || null,
+      key: `day-${d}`,
+    });
+  }
 
   // Generate .ICS Calendar File
   const handleExportIcs = () => {
@@ -121,8 +164,13 @@ const CropSprayCalendar = ({ diseaseName = "Late Blight", cropName = "Potato" })
     URL.revokeObjectURL(url);
   };
 
+  const selectedTask = schedule[selectedTaskIndex] || schedule[0];
+  const selectedTaskDate = new Date(baseStart);
+  selectedTaskDate.setDate(baseStart.getDate() + (selectedTask.day - 1));
+
   return (
     <div className="crop-calendar-card">
+      {/* Header Row */}
       <div className="calendar-header-row">
         <div className="cal-header-left">
           <div className="cal-badge">
@@ -138,12 +186,32 @@ const CropSprayCalendar = ({ diseaseName = "Late Blight", cropName = "Potato" })
         </div>
 
         <div className="cal-header-actions">
+          <div className="view-toggle-pill">
+            <button
+              type="button"
+              className={`view-btn ${viewMode === "calendar" ? "active" : ""}`}
+              onClick={() => setViewMode("calendar")}
+            >
+              📅 Month Calendar View
+            </button>
+            <button
+              type="button"
+              className={`view-btn ${viewMode === "timeline" ? "active" : ""}`}
+              onClick={() => setViewMode("timeline")}
+            >
+              📋 Timeline List
+            </button>
+          </div>
+
           <div className="date-picker-wrap">
             <label>Treatment Start Date:</label>
             <input
               type="date"
               value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                setMonthOffset(0);
+              }}
             />
           </div>
           <button type="button" className="cal-export-btn" onClick={handleExportIcs}>
@@ -164,75 +232,229 @@ const CropSprayCalendar = ({ diseaseName = "Late Blight", cropName = "Potato" })
         </div>
       </div>
 
-      {/* Timeline Schedule Grid */}
-      <div className="cal-timeline-list">
-        {schedule.map((item, idx) => {
-          const taskDate = new Date(startDate);
-          taskDate.setDate(taskDate.getDate() + (item.day - 1));
-          const formattedDate = taskDate.toLocaleDateString("en-US", {
-            weekday: "short",
-            month: "short",
-            day: "numeric",
-          });
+      {/* VIEW 1: MONTHLY CALENDAR GRID */}
+      {viewMode === "calendar" && (
+        <div className="cal-month-view-container">
+          {/* Calendar Month Navigation Header */}
+          <div className="cal-month-nav-bar">
+            <div className="cmn-month-title">
+              <h4>{monthName} {year}</h4>
+              <span className="cmn-sub">Active Spraying &amp; Foliar Protection Cycle</span>
+            </div>
+            <div className="cmn-nav-buttons">
+              <button
+                type="button"
+                className="cmn-nav-btn"
+                onClick={() => setMonthOffset((prev) => prev - 1)}
+              >
+                ◀ Prev Month
+              </button>
+              <button
+                type="button"
+                className="cmn-nav-btn reset"
+                onClick={() => setMonthOffset(0)}
+              >
+                Today
+              </button>
+              <button
+                type="button"
+                className="cmn-nav-btn"
+                onClick={() => setMonthOffset((prev) => prev + 1)}
+              >
+                Next Month ▶
+              </button>
+            </div>
+          </div>
 
-          return (
-            <div
-              key={idx}
-              className={`cal-timeline-item ${item.status === "done" ? "completed" : ""} ${item.type}`}
-            >
-              <div className="cal-day-col">
-                <span className="cal-day-badge">Day {item.day}</span>
-                <span className="cal-date-label">{formattedDate}</span>
-              </div>
+          {/* Weekday Labels */}
+          <div className="cal-weekdays-grid">
+            <span>SUN</span>
+            <span>MON</span>
+            <span>TUE</span>
+            <span>WED</span>
+            <span>THU</span>
+            <span>FRI</span>
+            <span>SAT</span>
+          </div>
 
-              <div className="cal-info-col">
-                <div className="cal-item-title-row">
-                  <h4 className="cal-item-heading">{item.title}</h4>
-                  <span className={`cal-type-tag ${item.type}`}>
-                    {item.type.toUpperCase()}
+          {/* 7-Column Days Grid */}
+          <div className="cal-days-grid">
+            {calendarDays.map((cell) => {
+              if (cell.type === "empty") {
+                return <div key={cell.key} className="cal-day-cell empty"></div>;
+              }
+
+              const hasTask = Boolean(cell.task);
+              const isSelected = hasTask && cell.task.originalIndex === selectedTaskIndex;
+
+              return (
+                <div
+                  key={cell.key}
+                  className={`cal-day-cell ${hasTask ? "has-event" : ""} ${
+                    hasTask ? cell.task.type : ""
+                  } ${isSelected ? "selected-cell" : ""} ${
+                    hasTask && cell.task.status === "done" ? "event-done" : ""
+                  }`}
+                  onClick={() => {
+                    if (hasTask) {
+                      setSelectedTaskIndex(cell.task.originalIndex);
+                    }
+                  }}
+                >
+                  <div className="cell-top-row">
+                    <span className="cell-day-num">{cell.dayNumber}</span>
+                    {hasTask && (
+                      <span className={`cell-status-dot ${cell.task.status}`}>
+                        {cell.task.status === "done" ? "✓" : `D${cell.task.day}`}
+                      </span>
+                    )}
+                  </div>
+
+                  {hasTask && (
+                    <div className="cell-event-pill">
+                      <span className="event-title-short">
+                        {cell.task.title}
+                      </span>
+                      <span className="event-product-short">
+                        {cell.task.product.split("(")[0]}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Selected Day Event Drawer / Detail Inspector */}
+          {selectedTask && (
+            <div className={`cal-event-detail-drawer ${selectedTask.type}`}>
+              <div className="ced-left">
+                <div className="ced-badge-row">
+                  <span className="ced-day-pill">Day {selectedTask.day}</span>
+                  <span className="ced-date-text">
+                    {selectedTaskDate.toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <span className={`ced-type-badge ${selectedTask.type}`}>
+                    {selectedTask.type.toUpperCase()} PROTOCOL
                   </span>
                 </div>
-
-                <div className="cal-details-grid">
-                  <div className="c-detail">
-                    <span className="cd-label">Prescription</span>
-                    <span className="cd-val">{item.product}</span>
+                <h3 className="ced-title">{selectedTask.title}</h3>
+                
+                <div className="ced-spec-grid">
+                  <div className="ced-spec">
+                    <span className="cs-label">Prescription Agrochemical / Bio</span>
+                    <span className="cs-val">{selectedTask.product}</span>
                   </div>
-                  <div className="c-detail">
-                    <span className="cd-label">Recommended Dosage</span>
-                    <span className="cd-val">{item.dosage}</span>
+                  <div className="ced-spec">
+                    <span className="cs-label">Recommended Tank Dosage</span>
+                    <span className="cs-val">{selectedTask.dosage}</span>
                   </div>
-                  <div className="c-detail">
-                    <span className="cd-label">Application Window</span>
-                    <span className="cd-val">{item.timing}</span>
+                  <div className="ced-spec">
+                    <span className="cs-label">Application Window</span>
+                    <span className="cs-val">{selectedTask.timing}</span>
                   </div>
-                  <div className="c-detail">
-                    <span className="cd-label">Weather Radar Status</span>
-                    <span className={`cd-val weather-status ${item.rainRisk.includes("Moderate") ? "rain-warn" : ""}`}>
-                      {item.rainRisk}
-                    </span>
+                  <div className="ced-spec">
+                    <span className="cs-label">Weather Radar</span>
+                    <span className="cs-val">{selectedTask.rainRisk}</span>
                   </div>
                 </div>
 
-                <p className="cal-note-text">
-                  <em>💡 Protocol Note:</em> {item.notes}
+                <p className="ced-protocol-note">
+                  <strong>Agronomist Directive:</strong> {selectedTask.notes}
                 </p>
               </div>
 
-              <div className="cal-action-col">
+              <div className="ced-right">
                 <button
                   type="button"
-                  className={`task-check-btn ${item.status === "done" ? "checked" : ""}`}
-                  onClick={() => toggleTask(idx)}
+                  className={`ced-toggle-btn ${selectedTask.status === "done" ? "done" : ""}`}
+                  onClick={() => toggleTask(selectedTaskIndex)}
                 >
-                  <IconCheck size={16} />
-                  <span>{item.status === "done" ? "Completed" : "Mark Done"}</span>
+                  <IconCheck size={18} />
+                  <span>{selectedTask.status === "done" ? "Task Completed" : "Mark as Completed"}</span>
                 </button>
               </div>
             </div>
-          );
-        })}
-      </div>
+          )}
+        </div>
+      )}
+
+      {/* VIEW 2: TIMELINE LIST */}
+      {viewMode === "timeline" && (
+        <div className="cal-timeline-list">
+          {schedule.map((item, idx) => {
+            const taskDate = new Date(startDate);
+            taskDate.setDate(taskDate.getDate() + (item.day - 1));
+            const formattedDate = taskDate.toLocaleDateString("en-US", {
+              weekday: "short",
+              month: "short",
+              day: "numeric",
+            });
+
+            return (
+              <div
+                key={idx}
+                className={`cal-timeline-item ${item.status === "done" ? "completed" : ""} ${item.type}`}
+              >
+                <div className="cal-day-col">
+                  <span className="cal-day-badge">Day {item.day}</span>
+                  <span className="cal-date-label">{formattedDate}</span>
+                </div>
+
+                <div className="cal-info-col">
+                  <div className="cal-item-title-row">
+                    <h4 className="cal-item-heading">{item.title}</h4>
+                    <span className={`cal-type-tag ${item.type}`}>
+                      {item.type.toUpperCase()}
+                    </span>
+                  </div>
+
+                  <div className="cal-details-grid">
+                    <div className="c-detail">
+                      <span className="cd-label">Prescription</span>
+                      <span className="cd-val">{item.product}</span>
+                    </div>
+                    <div className="c-detail">
+                      <span className="cd-label">Recommended Dosage</span>
+                      <span className="cd-val">{item.dosage}</span>
+                    </div>
+                    <div className="c-detail">
+                      <span className="cd-label">Application Window</span>
+                      <span className="cd-val">{item.timing}</span>
+                    </div>
+                    <div className="c-detail">
+                      <span className="cd-label">Weather Radar Status</span>
+                      <span className={`cd-val weather-status ${item.rainRisk.includes("Moderate") ? "rain-warn" : ""}`}>
+                        {item.rainRisk}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p className="cal-note-text">
+                    <em>💡 Protocol Note:</em> {item.notes}
+                  </p>
+                </div>
+
+                <div className="cal-action-col">
+                  <button
+                    type="button"
+                    className={`task-check-btn ${item.status === "done" ? "checked" : ""}`}
+                    onClick={() => toggleTask(idx)}
+                  >
+                    <IconCheck size={16} />
+                    <span>{item.status === "done" ? "Completed" : "Mark Done"}</span>
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
