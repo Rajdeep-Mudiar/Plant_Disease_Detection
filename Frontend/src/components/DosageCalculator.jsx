@@ -103,8 +103,18 @@ const DosageCalculator = () => {
   const [tankSize, setTankSize] = useState(16);
   const [selectedNozzleId, setSelectedNozzleId] = useState("hollow_cone");
   const [isAgitating, setIsAgitating] = useState(false);
+  const [fillLevelLiters, setFillLevelLiters] = useState(16);
+  const [pressureBar, setPressureBar] = useState(3.5);
+  const [isPumping, setIsPumping] = useState(false);
+  const [isSpraying, setIsSpraying] = useState(false);
+  const [chemicalAdded, setChemicalAdded] = useState(true);
   const [completedSteps, setCompletedSteps] = useState([]);
   const [copiedRecipe, setCopiedRecipe] = useState(false);
+
+  // Sync fill level when tank size changes
+  useEffect(() => {
+    setFillLevelLiters(tankSize);
+  }, [tankSize]);
 
   const formulation =
     FORMULATIONS.find((f) => f.id === selectedFormulationId) || FORMULATIONS[0];
@@ -132,9 +142,42 @@ const DosageCalculator = () => {
     );
   };
 
+  // Interactive Tank Actions
   const handleAgitateMix = () => {
     setIsAgitating(true);
     setTimeout(() => setIsAgitating(false), 2500);
+  };
+
+  const handlePumpLever = () => {
+    setIsPumping(true);
+    setPressureBar((prev) => Math.min(5.8, Number((prev + 0.8).toFixed(1))));
+    setTimeout(() => setIsPumping(false), 400);
+  };
+
+  const handleSqueezeTrigger = () => {
+    if (fillLevelLiters <= 0) {
+      alert("Tank is empty! Refill with clean water first.");
+      return;
+    }
+    if (pressureBar <= 0.5) {
+      alert("Pressure too low! Pump the hand lever to pressurize the tank.");
+      return;
+    }
+
+    setIsSpraying(true);
+    setFillLevelLiters((prev) => Math.max(0, Number((prev - 1.5).toFixed(1))));
+    setPressureBar((prev) => Math.max(0.4, Number((prev - 0.5).toFixed(1))));
+    setTimeout(() => setIsSpraying(false), 1500);
+  };
+
+  const handleRefillWater = () => {
+    setFillLevelLiters(tankSize);
+    setChemicalAdded(false);
+  };
+
+  const handleAddChemical = () => {
+    setChemicalAdded(true);
+    handleAgitateMix();
   };
 
   const handleCopyRecipe = () => {
@@ -282,452 +325,391 @@ Pre-Harvest Interval (PHI): ${formulation.phiDays} Days
           <div className="tank-visualizer-box">
             <div className="tank-visualizer-header">
               <div className="visualizer-header-title-wrap">
-                <span className="visualizer-live-badge">LIVE SIMULATION</span>
-                <h5 className="visualizer-title">Knapsack Sprayer Tank ({tankSize}L)</h5>
+                <span className="visualizer-live-badge">LIVE TACTILE SIMULATION</span>
+                <h5 className="visualizer-title">Knapsack Sprayer Tank ({fillLevelLiters.toFixed(1)}L / {tankSize}L)</h5>
               </div>
+              <div className="tank-quick-controls">
+                <button
+                  type="button"
+                  className={`agitate-mix-btn ${isAgitating ? "agitating" : ""}`}
+                  onClick={handleAgitateMix}
+                  title="Simulate mechanical agitation & tank vortex"
+                >
+                  <IconRefresh size={13} className={isAgitating ? "spin-icon" : ""} />
+                  <span>{isAgitating ? "Agitating..." : "Agitate & Mix"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Interactive Tactile Action Bar */}
+            <div className="tank-interactive-action-bar">
               <button
                 type="button"
-                className={`agitate-mix-btn ${isAgitating ? "agitating" : ""}`}
-                onClick={handleAgitateMix}
-                title="Simulate mechanical agitation & tank pressure priming"
+                className={`tactile-btn pump-btn ${isPumping ? "active" : ""}`}
+                onClick={handlePumpLever}
+                title="Pump the manual hand lever to build pressure"
               >
-                <IconRefresh size={13} className={isAgitating ? "spin-icon" : ""} />
-                <span>{isAgitating ? "Agitating & Priming..." : "Agitate & Mix"}</span>
+                <span>🕹️ Pump Lever (+0.8 Bar)</span>
+              </button>
+
+              <button
+                type="button"
+                className={`tactile-btn spray-btn ${isSpraying ? "spraying" : ""}`}
+                onClick={handleSqueezeTrigger}
+                title="Squeeze trigger lance to spray foliar mist"
+              >
+                <span>💦 Squeeze Spray Lance</span>
+              </button>
+
+              <button
+                type="button"
+                className="tactile-btn refill-btn"
+                onClick={handleRefillWater}
+                title="Fill tank with clean water"
+              >
+                <span>💧 Fill Water ({tankSize}L)</span>
+              </button>
+
+              <button
+                type="button"
+                className={`tactile-btn chem-btn ${chemicalAdded ? "added" : ""}`}
+                onClick={handleAddChemical}
+                title="Dose active agrochemical / bio formulation"
+              >
+                <span>🧪 Add {formulation.name.split(" ")[0]}</span>
               </button>
             </div>
 
             <div className="realistic-sprayer-viewport">
-              <svg
-                viewBox="0 0 380 270"
-                className={`realistic-knapsack-svg ${isAgitating ? "tank-sloshing" : ""}`}
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <defs>
-                  {/* HDPE Translucent Shell Shading */}
-                  <linearGradient id="tankShellGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.8" />
-                    <stop offset="8%" stopColor="#f8fafc" stopOpacity="0.95" />
-                    <stop offset="25%" stopColor="#ffffff" stopOpacity="0.85" />
-                    <stop offset="75%" stopColor="#f1f5f9" stopOpacity="0.75" />
-                    <stop offset="92%" stopColor="#e2e8f0" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.95" />
-                  </linearGradient>
+              {(() => {
+                const fillPct = Math.max(0, Math.min(1, fillLevelLiters / tankSize));
+                const fluidY = 224 - fillPct * 146;
+                const fluidHeight = fillPct * 146;
+                const activeLiquidColor = chemicalAdded ? formulation.color : "#38bdf8";
 
-                  {/* Dark Mode HDPE Shell Shading */}
-                  <linearGradient id="tankShellGradDark" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#1e293b" stopOpacity="0.9" />
-                    <stop offset="12%" stopColor="#334155" stopOpacity="0.8" />
-                    <stop offset="50%" stopColor="#1e293b" stopOpacity="0.65" />
-                    <stop offset="88%" stopColor="#334155" stopOpacity="0.8" />
-                    <stop offset="100%" stopColor="#0f172a" stopOpacity="0.95" />
-                  </linearGradient>
+                return (
+                  <svg
+                    viewBox="0 0 380 270"
+                    className={`realistic-knapsack-svg ${isAgitating ? "tank-sloshing" : ""}`}
+                    preserveAspectRatio="xMidYMid meet"
+                  >
+                    <defs>
+                      {/* HDPE Translucent Shell Shading */}
+                      <linearGradient id="tankShellGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#cbd5e1" stopOpacity="0.8" />
+                        <stop offset="8%" stopColor="#f8fafc" stopOpacity="0.95" />
+                        <stop offset="25%" stopColor="#ffffff" stopOpacity="0.85" />
+                        <stop offset="75%" stopColor="#f1f5f9" stopOpacity="0.75" />
+                        <stop offset="92%" stopColor="#e2e8f0" stopOpacity="0.9" />
+                        <stop offset="100%" stopColor="#94a3b8" stopOpacity="0.95" />
+                      </linearGradient>
 
-                  {/* Dynamic Fluid Gradient */}
-                  <linearGradient id="liquidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor={formulation.color} stopOpacity="0.85" />
-                    <stop offset="35%" stopColor={formulation.color} stopOpacity="0.92" />
-                    <stop offset="100%" stopColor={formulation.color} stopOpacity="1" />
-                  </linearGradient>
+                      {/* Dynamic Fluid Gradient */}
+                      <linearGradient id="liquidGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor={activeLiquidColor} stopOpacity="0.85" />
+                        <stop offset="35%" stopColor={activeLiquidColor} stopOpacity="0.92" />
+                        <stop offset="100%" stopColor={activeLiquidColor} stopOpacity="1" />
+                      </linearGradient>
 
-                  {/* Deep Fluid Shadow */}
-                  <linearGradient id="liquidDepthGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#000000" stopOpacity="0.3" />
-                    <stop offset="15%" stopColor="#000000" stopOpacity="0.0" />
-                    <stop offset="85%" stopColor="#000000" stopOpacity="0.0" />
-                    <stop offset="100%" stopColor="#000000" stopOpacity="0.35" />
-                  </linearGradient>
+                      {/* Deep Fluid Shadow */}
+                      <linearGradient id="liquidDepthGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#000000" stopOpacity="0.3" />
+                        <stop offset="15%" stopColor="#000000" stopOpacity="0.0" />
+                        <stop offset="85%" stopColor="#000000" stopOpacity="0.0" />
+                        <stop offset="100%" stopColor="#000000" stopOpacity="0.35" />
+                      </linearGradient>
 
-                  {/* Glass / Plastic Specular Sheen */}
-                  <linearGradient id="sheenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
-                    <stop offset="20%" stopColor="#ffffff" stopOpacity="0.15" />
-                    <stop offset="50%" stopColor="#ffffff" stopOpacity="0.0" />
-                    <stop offset="80%" stopColor="#ffffff" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.5" />
-                  </linearGradient>
+                      {/* Glass / Plastic Specular Sheen */}
+                      <linearGradient id="sheenGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#ffffff" stopOpacity="0.4" />
+                        <stop offset="20%" stopColor="#ffffff" stopOpacity="0.15" />
+                        <stop offset="50%" stopColor="#ffffff" stopOpacity="0.0" />
+                        <stop offset="80%" stopColor="#ffffff" stopOpacity="0.2" />
+                        <stop offset="100%" stopColor="#ffffff" stopOpacity="0.5" />
+                      </linearGradient>
 
-                  {/* Cap & Hardware Metallic Gradient */}
-                  <linearGradient id="hardwareGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#334155" />
-                    <stop offset="30%" stopColor="#64748b" />
-                    <stop offset="70%" stopColor="#475569" />
-                    <stop offset="100%" stopColor="#1e293b" />
-                  </linearGradient>
+                      {/* Cap & Hardware Metallic Gradient */}
+                      <linearGradient id="hardwareGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stopColor="#334155" />
+                        <stop offset="30%" stopColor="#64748b" />
+                        <stop offset="70%" stopColor="#475569" />
+                        <stop offset="100%" stopColor="#1e293b" />
+                      </linearGradient>
 
-                  {/* Brass Connector Gradient */}
-                  <linearGradient id="brassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#fbbf24" />
-                    <stop offset="50%" stopColor="#d97706" />
-                    <stop offset="100%" stopColor="#92400e" />
-                  </linearGradient>
+                      {/* Brass Connector Gradient */}
+                      <linearGradient id="brassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#fbbf24" />
+                        <stop offset="50%" stopColor="#d97706" />
+                        <stop offset="100%" stopColor="#92400e" />
+                      </linearGradient>
 
-                  {/* Gauge Bezel Gradient */}
-                  <linearGradient id="gaugeBezelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#e2e8f0" />
-                    <stop offset="50%" stopColor="#94a3b8" />
-                    <stop offset="100%" stopColor="#475569" />
-                  </linearGradient>
+                      {/* Gauge Bezel Gradient */}
+                      <linearGradient id="gaugeBezelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stopColor="#e2e8f0" />
+                        <stop offset="50%" stopColor="#94a3b8" />
+                        <stop offset="100%" stopColor="#475569" />
+                      </linearGradient>
 
-                  {/* Tank Inner Fluid Clip Path */}
-                  <clipPath id="tankLiquidCavity">
-                    <path d="M 112 78 C 112 70 120 64 130 64 L 230 64 C 240 64 248 70 248 78 L 250 216 C 250 226 242 234 232 234 L 128 234 C 118 234 110 226 110 216 Z" />
-                  </clipPath>
+                      {/* Tank Inner Fluid Clip Path */}
+                      <clipPath id="tankLiquidCavity">
+                        <path d="M 112 78 C 112 70 120 64 130 64 L 230 64 C 240 64 248 70 248 78 L 250 216 C 250 226 242 234 232 234 L 128 234 C 118 234 110 226 110 216 Z" />
+                      </clipPath>
 
-                  {/* Filter for Drop Shadows */}
-                  <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
-                    <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.18" />
-                  </filter>
-                </defs>
+                      {/* Filter for Drop Shadows */}
+                      <filter id="softShadow" x="-10%" y="-10%" width="130%" height="130%">
+                        <feDropShadow dx="0" dy="4" stdDeviation="4" floodOpacity="0.18" />
+                      </filter>
+                    </defs>
 
-                {/* --- BACKPACK TANK BASE STAND & SHADOW --- */}
-                <ellipse cx="180" cy="252" rx="85" ry="8" fill="rgba(15, 23, 42, 0.12)" className="tank-ground-shadow" />
+                    {/* --- BACKPACK TANK BASE STAND & SHADOW --- */}
+                    <ellipse cx="180" cy="252" rx="85" ry="8" fill="rgba(15, 23, 42, 0.12)" className="tank-ground-shadow" />
 
-                {/* --- SIDE PUMP LEVER ASSEMBLY (Pistons + Handle) --- */}
-                <g className={`pump-lever-group ${isAgitating ? "pump-pumping" : ""}`}>
-                  {/* Lever Pivot Knuckle */}
-                  <circle cx="82" cy="192" r="8" fill="url(#hardwareGrad)" stroke="#1e293b" strokeWidth="1.5" />
-                  <circle cx="82" cy="192" r="3.5" fill="#94a3b8" />
+                    {/* --- SIDE PUMP LEVER ASSEMBLY (Clickable Lever) --- */}
+                    <g
+                      className={`pump-lever-group ${isPumping ? "pump-lever-stroke" : ""}`}
+                      onClick={handlePumpLever}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {/* Lever Pivot Knuckle */}
+                      <circle cx="82" cy="192" r="8" fill="url(#hardwareGrad)" stroke="#1e293b" strokeWidth="1.5" />
+                      <circle cx="82" cy="192" r="3.5" fill="#94a3b8" />
 
-                  {/* Metal Lever Bar */}
-                  <path
-                    d="M 82 192 L 64 125 L 48 115"
-                    fill="none"
-                    stroke="url(#hardwareGrad)"
-                    strokeWidth="6"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M 82 192 L 64 125 L 48 115"
-                    fill="none"
-                    stroke="#94a3b8"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray="2 10"
-                  />
+                      {/* Metal Lever Bar */}
+                      <path
+                        d="M 82 192 L 64 125 L 48 115"
+                        fill="none"
+                        stroke="url(#hardwareGrad)"
+                        strokeWidth="6"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                      <path
+                        d="M 82 192 L 64 125 L 48 115"
+                        fill="none"
+                        stroke="#94a3b8"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeDasharray="2 10"
+                      />
 
-                  {/* Textured Grip Handle */}
-                  <rect
-                    x="30"
-                    y="104"
-                    width="26"
-                    height="18"
-                    rx="6"
-                    fill="#1e293b"
-                    stroke="#0f172a"
-                    strokeWidth="1.5"
-                  />
-                  <line x1="36" y1="107" x2="36" y2="119" stroke="#64748b" strokeWidth="1.5" />
-                  <line x1="42" y1="107" x2="42" y2="119" stroke="#64748b" strokeWidth="1.5" />
-                  <line x1="48" y1="107" x2="48" y2="119" stroke="#64748b" strokeWidth="1.5" />
-                </g>
+                      {/* Textured Grip Handle */}
+                      <rect
+                        x="30"
+                        y="104"
+                        width="26"
+                        height="18"
+                        rx="6"
+                        fill="#1e293b"
+                        stroke="#0f172a"
+                        strokeWidth="1.5"
+                      />
+                      <line x1="36" y1="107" x2="36" y2="119" stroke="#64748b" strokeWidth="1.5" />
+                      <line x1="42" y1="107" x2="42" y2="119" stroke="#64748b" strokeWidth="1.5" />
+                      <line x1="48" y1="107" x2="48" y2="119" stroke="#64748b" strokeWidth="1.5" />
+                    </g>
 
-                {/* --- MAIN TANK CONTAINER BODY --- */}
-                {/* Rear Dark Inner Shadow */}
-                <path
-                  d="M 110 74 C 110 58 122 52 136 52 L 224 52 C 238 52 250 58 250 74 L 254 220 C 254 236 242 244 228 244 L 132 244 C 118 244 106 236 106 220 Z"
-                  fill="#0f172a"
-                  fillOpacity="0.08"
-                />
-
-                {/* Main Molded Backpack HDPE Tank Outer Shell */}
-                <path
-                  d="M 108 72 C 108 55 120 48 138 48 L 222 48 C 240 48 252 55 252 72 L 256 220 C 256 238 242 246 226 246 L 134 246 C 118 246 104 238 104 220 Z"
-                  className="tank-hdpe-shell"
-                  fill="url(#tankShellGrad)"
-                  stroke="#64748b"
-                  strokeWidth="2"
-                  filter="url(#softShadow)"
-                />
-
-                {/* Molded Stiffening Ribs on Tank Surface */}
-                <path
-                  d="M 112 110 Q 180 116 248 110"
-                  fill="none"
-                  stroke="rgba(100, 116, 139, 0.25)"
-                  strokeWidth="2"
-                />
-                <path
-                  d="M 112 165 Q 180 171 248 165"
-                  fill="none"
-                  stroke="rgba(100, 116, 139, 0.25)"
-                  strokeWidth="2"
-                />
-
-                {/* --- INNER CHEMICAL FLUID (CLIPPED) --- */}
-                <g clipPath="url(#tankLiquidCavity)">
-                  {/* Fluid Base Fill */}
-                  <rect
-                    x="100"
-                    y="76"
-                    width="160"
-                    height="165"
-                    fill="url(#liquidGrad)"
-                  />
-
-                  {/* Dynamic Dark Depth Shading */}
-                  <rect
-                    x="100"
-                    y="76"
-                    width="160"
-                    height="165"
-                    fill="url(#liquidDepthGrad)"
-                  />
-
-                  {/* Animated Wave Surface Layer 1 */}
-                  <g className="wave-anim-group wave-layer-1">
+                    {/* --- MAIN TANK CONTAINER BODY --- */}
                     <path
-                      d="M 80 82 Q 115 76, 150 82 T 220 82 T 290 82 L 290 98 L 80 98 Z"
-                      fill="rgba(255, 255, 255, 0.3)"
+                      d="M 110 74 C 110 58 122 52 136 52 L 224 52 C 238 52 250 58 250 74 L 254 220 C 254 236 242 244 228 244 L 132 244 C 118 244 106 236 106 220 Z"
+                      fill="#0f172a"
+                      fillOpacity="0.08"
                     />
-                  </g>
 
-                  {/* Animated Wave Surface Layer 2 */}
-                  <g className="wave-anim-group wave-layer-2">
+                    {/* Main Molded Backpack HDPE Tank Outer Shell */}
                     <path
-                      d="M 70 80 Q 105 85, 140 80 T 210 80 T 280 80 L 280 95 L 70 95 Z"
-                      fill={formulation.color}
-                      opacity="0.95"
+                      d="M 108 72 C 108 55 120 48 138 48 L 222 48 C 240 48 252 55 252 72 L 256 220 C 256 238 242 246 226 246 L 134 246 C 118 246 104 238 104 220 Z"
+                      className="tank-hdpe-shell"
+                      fill="url(#tankShellGrad)"
+                      stroke="#64748b"
+                      strokeWidth="2"
+                      filter="url(#softShadow)"
                     />
-                  </g>
 
-                  {/* Surface Foam / Agitation Froth Layer */}
-                  <ellipse
-                    cx="180"
-                    cy="80"
-                    rx="62"
-                    ry="4.5"
-                    fill="rgba(255, 255, 255, 0.45)"
-                    className={isAgitating ? "foam-active" : "foam-resting"}
-                  />
+                    {/* Molded Stiffening Ribs on Tank Surface */}
+                    <path
+                      d="M 112 110 Q 180 116 248 110"
+                      fill="none"
+                      stroke="rgba(100, 116, 139, 0.25)"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M 112 165 Q 180 171 248 165"
+                      fill="none"
+                      stroke="rgba(100, 116, 139, 0.25)"
+                      strokeWidth="2"
+                    />
 
-                  {/* Agitation Bubbles & Micro-Turbulence */}
-                  {isAgitating && (
-                    <g className="active-agitation-particles">
-                      <circle cx="140" cy="180" r="4.5" className="svg-bubble b-1" />
-                      <circle cx="165" cy="200" r="6" className="svg-bubble b-2" />
-                      <circle cx="195" cy="175" r="3.5" className="svg-bubble b-3" />
-                      <circle cx="215" cy="195" r="5" className="svg-bubble b-4" />
-                      <circle cx="150" cy="130" r="4" className="svg-bubble b-5" />
-                      <circle cx="180" cy="140" r="5.5" className="svg-bubble b-6" />
-                      <circle cx="210" cy="120" r="3" className="svg-bubble b-7" />
-
-                      {/* Swirling Vortex Lines */}
-                      <path
-                        d="M 155 170 C 170 190 200 170 185 140 C 175 120 150 140 165 160"
-                        fill="none"
-                        stroke="rgba(255, 255, 255, 0.5)"
-                        strokeWidth="1.8"
-                        strokeDasharray="6 4"
-                        className="swirl-path"
+                    {/* --- INNER CHEMICAL FLUID (CLIPPED DYNAMICALLY) --- */}
+                    <g clipPath="url(#tankLiquidCavity)">
+                      {/* Fluid Base Fill */}
+                      <rect
+                        x="100"
+                        y={fluidY}
+                        width="160"
+                        height={fluidHeight + 10}
+                        fill="url(#liquidGrad)"
+                        style={{ transition: "all 0.5s ease" }}
                       />
+
+                      {/* Dynamic Dark Depth Shading */}
+                      <rect
+                        x="100"
+                        y={fluidY}
+                        width="160"
+                        height={fluidHeight + 10}
+                        fill="url(#liquidDepthGrad)"
+                        style={{ transition: "all 0.5s ease" }}
+                      />
+
+                      {/* Animated Wave Surface Layer 1 */}
+                      {fillPct > 0.05 && (
+                        <>
+                          <g className="wave-anim-group wave-layer-1" style={{ transform: `translateY(${fluidY - 78}px)` }}>
+                            <path
+                              d="M 80 82 Q 115 76, 150 82 T 220 82 T 290 82 L 290 98 L 80 98 Z"
+                              fill="rgba(255, 255, 255, 0.3)"
+                            />
+                          </g>
+
+                          <g className="wave-anim-group wave-layer-2" style={{ transform: `translateY(${fluidY - 78}px)` }}>
+                            <path
+                              d="M 70 80 Q 105 85, 140 80 T 210 80 T 280 80 L 280 95 L 70 95 Z"
+                              fill={activeLiquidColor}
+                              opacity="0.95"
+                            />
+                          </g>
+                        </>
+                      )}
+
+                      {/* Agitation Bubbles & Micro-Turbulence */}
+                      {isAgitating && (
+                        <g className="active-agitation-particles">
+                          <circle cx="140" cy="180" r="4.5" className="svg-bubble b-1" />
+                          <circle cx="165" cy="200" r="6" className="svg-bubble b-2" />
+                          <circle cx="195" cy="175" r="3.5" className="svg-bubble b-3" />
+                          <circle cx="215" cy="195" r="5" className="svg-bubble b-4" />
+                          <circle cx="150" cy="130" r="4" className="svg-bubble b-5" />
+                          <circle cx="180" cy="140" r="5.5" className="svg-bubble b-6" />
+                          <circle cx="210" cy="120" r="3" className="svg-bubble b-7" />
+                        </g>
+                      )}
+
+                      {/* Internal Submerged Suction Filter Tube */}
+                      <line x1="228" y1="70" x2="228" y2="225" stroke="rgba(255, 255, 255, 0.45)" strokeWidth="4" />
+                      <line x1="228" y1="70" x2="228" y2="225" stroke="rgba(15, 23, 42, 0.25)" strokeWidth="1" />
+                      <rect x="222" y="215" width="12" height="12" rx="2" fill="#475569" opacity="0.8" />
                     </g>
-                  )}
 
-                  {/* Internal Submerged Suction Filter Tube */}
-                  <line x1="228" y1="70" x2="228" y2="225" stroke="rgba(255, 255, 255, 0.45)" strokeWidth="4" />
-                  <line x1="228" y1="70" x2="228" y2="225" stroke="rgba(15, 23, 42, 0.25)" strokeWidth="1" />
-                  <rect x="222" y="215" width="12" height="12" rx="2" fill="#475569" opacity="0.8" />
-                </g>
+                    {/* --- TRANSLUCENT FRONT SHEEN & HIGHLIGHT --- */}
+                    <path
+                      d="M 114 74 L 114 218 C 114 228 120 234 130 234 L 145 234 L 145 74 Z"
+                      fill="url(#sheenGrad)"
+                      opacity="0.6"
+                      pointerEvents="none"
+                    />
 
-                {/* --- TRANSLUCENT FRONT SHEEN & HIGHLIGHT --- */}
-                <path
-                  d="M 114 74 L 114 218 C 114 228 120 234 130 234 L 145 234 L 145 74 Z"
-                  fill="url(#sheenGrad)"
-                  opacity="0.6"
-                  pointerEvents="none"
-                />
-
-                {/* --- EMBOSSED METRIC GRADUATION SCALE ON TANK WALL --- */}
-                <g className="tank-metric-scale" pointerEvents="none">
-                  {/* Vertical Ruler Baseline */}
-                  <line x1="236" y1="84" x2="236" y2="224" stroke="rgba(15, 23, 42, 0.45)" strokeWidth="1.5" />
-
-                  {/* 100% Mark (Tank Max) */}
-                  <line x1="226" y1="88" x2="236" y2="88" stroke="#0f172a" strokeWidth="2" />
-                  <text x="222" y="91" textAnchor="end" className="graduation-label-main">{tankSize}L</text>
-
-                  {/* 75% Mark */}
-                  <line x1="228" y1="122" x2="236" y2="122" stroke="#0f172a" strokeWidth="1.8" />
-                  <text x="224" y="125" textAnchor="end" className="graduation-label">{Math.round(tankSize * 0.75)}L</text>
-
-                  {/* Sub ticks */}
-                  <line x1="232" y1="105" x2="236" y2="105" stroke="rgba(15, 23, 42, 0.4)" strokeWidth="1" />
-                  <line x1="232" y1="139" x2="236" y2="139" stroke="rgba(15, 23, 42, 0.4)" strokeWidth="1" />
-
-                  {/* 50% Mark */}
-                  <line x1="228" y1="156" x2="236" y2="156" stroke="#0f172a" strokeWidth="1.8" />
-                  <text x="224" y="159" textAnchor="end" className="graduation-label">{Math.round(tankSize * 0.5)}L</text>
-
-                  {/* Sub ticks */}
-                  <line x1="232" y1="173" x2="236" y2="173" stroke="rgba(15, 23, 42, 0.4)" strokeWidth="1" />
-
-                  {/* 25% Mark */}
-                  <line x1="228" y1="190" x2="236" y2="190" stroke="#0f172a" strokeWidth="1.8" />
-                  <text x="224" y="193" textAnchor="end" className="graduation-label">{Math.round(tankSize * 0.25)}L</text>
-
-                  {/* Sub ticks */}
-                  <line x1="232" y1="207" x2="236" y2="207" stroke="rgba(15, 23, 42, 0.4)" strokeWidth="1" />
-
-                  {/* 0L Base Mark */}
-                  <line x1="226" y1="224" x2="236" y2="224" stroke="#0f172a" strokeWidth="2" />
-                  <text x="222" y="227" textAnchor="end" className="graduation-label-main">0L</text>
-                </g>
-
-                {/* --- TOP HARDWARE: FILLER NECK, THREADED CAP & CARRY HANDLE --- */}
-                {/* Backpack Top Carry Handle Arch */}
-                <path
-                  d="M 148 48 C 148 24, 212 24, 212 48"
-                  fill="none"
-                  stroke="url(#hardwareGrad)"
-                  strokeWidth="8"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 152 48 C 152 30, 208 30, 208 48"
-                  fill="none"
-                  stroke="#1e293b"
-                  strokeWidth="3"
-                  strokeLinecap="round"
-                />
-
-                {/* Filler Neck Rim */}
-                <rect x="160" y="38" width="40" height="12" rx="2" fill="url(#hardwareGrad)" stroke="#1e293b" strokeWidth="1.5" />
-
-                {/* Threaded Screw Cap */}
-                <rect x="156" y="28" width="48" height="12" rx="4" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
-                {/* Cap Grip Ribs */}
-                <line x1="164" y1="30" x2="164" y2="38" stroke="#94a3b8" strokeWidth="2" />
-                <line x1="172" y1="30" x2="172" y2="38" stroke="#94a3b8" strokeWidth="2" />
-                <line x1="180" y1="30" x2="180" y2="38" stroke="#ef4444" strokeWidth="3" title="Pressure vent valve" />
-                <line x1="188" y1="30" x2="188" y2="38" stroke="#94a3b8" strokeWidth="2" />
-                <line x1="196" y1="30" x2="196" y2="38" stroke="#94a3b8" strokeWidth="2" />
-
-                {/* Backpack Harness Anchors (Left/Right) */}
-                <rect x="94" y="90" width="8" height="16" rx="2" fill="#334155" />
-                <rect x="258" y="90" width="8" height="16" rx="2" fill="#334155" />
-
-                {/* --- BOTTOM OUTLET, HOSE & SPRAY LANCE --- */}
-                {/* Brass Outlet Fitting */}
-                <rect x="246" y="218" width="14" height="10" rx="2" fill="url(#brassGrad)" stroke="#78350f" strokeWidth="1" />
-                <circle cx="258" cy="223" r="3" fill="#451a03" />
-
-                {/* Reinforced Black High-Pressure Hose */}
-                <path
-                  d="M 258 224 C 275 228, 305 240, 318 200 C 324 180, 332 150, 336 120"
-                  fill="none"
-                  stroke="#0f172a"
-                  strokeWidth="5.5"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 258 224 C 275 228, 305 240, 318 200 C 324 180, 332 150, 336 120"
-                  fill="none"
-                  stroke="#475569"
-                  strokeWidth="1.5"
-                  strokeDasharray="4 8"
-                  strokeLinecap="round"
-                />
-
-                {/* Spray Lance Trigger & Brass Wand */}
-                <g transform="translate(336, 120) rotate(-15)">
-                  {/* Trigger Handle */}
-                  <rect x="-4" y="-2" width="8" height="24" rx="3" fill="#1e293b" stroke="#0f172a" strokeWidth="1" />
-                  <path d="M 4 4 Q 10 10 4 16" fill="none" stroke="#e2e8f0" strokeWidth="2" />
-
-                  {/* Brass Lance Tube */}
-                  <line x1="0" y1="-2" x2="0" y2="-45" stroke="url(#brassGrad)" strokeWidth="3" />
-
-                  {/* Nozzle Tip */}
-                  <polygon points="-4,-45 4,-45 2,-52 -2,-52" fill="url(#brassGrad)" stroke="#78350f" strokeWidth="0.8" />
-
-                  {/* Fine Spray Cone Mist (Active when agitating) */}
-                  {isAgitating && (
-                    <g className="spray-mist-cone">
-                      <polygon
-                        points="0,-52 -28,-90 28,-90"
-                        fill="rgba(56, 189, 248, 0.22)"
-                      />
-                      <circle cx="-12" cy="-75" r="1.5" fill="#38bdf8" opacity="0.8" />
-                      <circle cx="0" cy="-82" r="1.8" fill="#38bdf8" opacity="0.9" />
-                      <circle cx="14" cy="-72" r="1.2" fill="#38bdf8" opacity="0.7" />
-                      <circle cx="-20" cy="-88" r="1" fill="#38bdf8" opacity="0.6" />
-                      <circle cx="22" cy="-86" r="1" fill="#38bdf8" opacity="0.6" />
+                    {/* --- EMBOSSED METRIC GRADUATION SCALE ON TANK WALL --- */}
+                    <g className="tank-metric-scale" pointerEvents="none">
+                      <line x1="236" y1="84" x2="236" y2="224" stroke="rgba(15, 23, 42, 0.45)" strokeWidth="1.5" />
+                      <line x1="226" y1="88" x2="236" y2="88" stroke="#0f172a" strokeWidth="2" />
+                      <text x="222" y="91" textAnchor="end" className="graduation-label-main">{tankSize}L</text>
+                      <line x1="228" y1="122" x2="236" y2="122" stroke="#0f172a" strokeWidth="1.8" />
+                      <text x="224" y="125" textAnchor="end" className="graduation-label">{Math.round(tankSize * 0.75)}L</text>
+                      <line x1="228" y1="156" x2="236" y2="156" stroke="#0f172a" strokeWidth="1.8" />
+                      <text x="224" y="159" textAnchor="end" className="graduation-label">{Math.round(tankSize * 0.5)}L</text>
+                      <line x1="228" y1="190" x2="236" y2="190" stroke="#0f172a" strokeWidth="1.8" />
+                      <text x="224" y="193" textAnchor="end" className="graduation-label">{Math.round(tankSize * 0.25)}L</text>
+                      <line x1="226" y1="224" x2="236" y2="224" stroke="#0f172a" strokeWidth="2" />
+                      <text x="222" y="227" textAnchor="end" className="graduation-label-main">0L</text>
                     </g>
-                  )}
-                </g>
 
-                {/* --- PRECISION ANALOG MANOMETER PRESSURE GAUGE --- */}
-                {(() => {
-                  const currentBar = parseFloat(nozzle.pressure) || 3.0;
-                  // Map 0 to 6 bar to -125deg -> +125deg
-                  const needleAngle = -125 + (currentBar / 6.0) * 250;
+                    {/* --- TOP HARDWARE: FILLER NECK, THREADED CAP & CARRY HANDLE --- */}
+                    <path
+                      d="M 148 48 C 148 24, 212 24, 212 48"
+                      fill="none"
+                      stroke="url(#hardwareGrad)"
+                      strokeWidth="8"
+                      strokeLinecap="round"
+                    />
+                    <rect x="160" y="38" width="40" height="12" rx="2" fill="url(#hardwareGrad)" stroke="#1e293b" strokeWidth="1.5" />
+                    <rect x="156" y="28" width="48" height="12" rx="4" fill="#0f172a" stroke="#334155" strokeWidth="1.5" />
 
-                  return (
-                    <g className="analog-manometer" transform="translate(295, 48)">
-                      {/* Brass Mounting Stem */}
-                      <rect x="-3" y="18" width="6" height="14" fill="url(#brassGrad)" stroke="#78350f" strokeWidth="0.8" />
+                    {/* --- BOTTOM OUTLET, HOSE & SPRAY LANCE (Clickable Trigger) --- */}
+                    <rect x="246" y="218" width="14" height="10" rx="2" fill="url(#brassGrad)" stroke="#78350f" strokeWidth="1" />
+                    <path
+                      d="M 258 224 C 275 228, 305 240, 318 200 C 324 180, 332 150, 336 120"
+                      fill="none"
+                      stroke="#0f172a"
+                      strokeWidth="5.5"
+                      strokeLinecap="round"
+                    />
 
-                      {/* Outer Steel Bezel with Shadow */}
-                      <circle cx="0" cy="0" r="26" fill="url(#gaugeBezelGrad)" stroke="#334155" strokeWidth="1.5" />
-                      {/* Inner Dial Face */}
-                      <circle cx="0" cy="0" r="22" fill="#ffffff" className="gauge-dial-face" stroke="#cbd5e1" strokeWidth="1" />
+                    {/* Spray Lance Trigger & Brass Wand */}
+                    <g
+                      transform="translate(336, 120) rotate(-15)"
+                      onClick={handleSqueezeTrigger}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <rect x="-4" y="-2" width="8" height="24" rx="3" fill="#1e293b" stroke="#0f172a" strokeWidth="1" />
+                      <path d="M 4 4 Q 10 10 4 16" fill="none" stroke="#e2e8f0" strokeWidth="2" />
+                      <line x1="0" y1="-2" x2="0" y2="-45" stroke="url(#brassGrad)" strokeWidth="3" />
+                      <polygon points="-4,-45 4,-45 2,-52 -2,-52" fill="url(#brassGrad)" stroke="#78350f" strokeWidth="0.8" />
 
-                      {/* Pressure Range Color Arcs */}
-                      {/* Yellow Low Range (0 - 2 bar) */}
-                      <path
-                        d="M -16 11 A 20 20 0 0 1 -17 -10"
-                        fill="none"
-                        stroke="#eab308"
-                        strokeWidth="2.5"
-                      />
-                      {/* Green Optimal Operating Range (2 - 4 bar) */}
-                      <path
-                        d="M -17 -10 A 20 20 0 0 1 14 -14"
-                        fill="none"
-                        stroke="#22c55e"
-                        strokeWidth="3.5"
-                      />
-                      {/* Red High/Overpressure Range (4 - 6 bar) */}
-                      <path
-                        d="M 14 -14 A 20 20 0 0 1 16 11"
-                        fill="none"
-                        stroke="#ef4444"
-                        strokeWidth="2.5"
-                      />
-
-                      {/* Dial Metric Labels */}
-                      <text x="0" y="-8" textAnchor="middle" fontSize="6.5" fontWeight="800" fill="#0f172a" className="gauge-brand-text">BAR</text>
-                      <text x="-12" y="14" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#64748b">0</text>
-                      <text x="-14" y="-3" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#64748b">2</text>
-                      <text x="0" y="-13" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#22c55e">3.5</text>
-                      <text x="14" y="-3" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#64748b">4</text>
-                      <text x="12" y="14" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#ef4444">6</text>
-
-                      {/* Precision Calibrated Needle */}
-                      <g
-                        transform={`rotate(${needleAngle})`}
-                        className={`gauge-needle-arm ${isAgitating ? "needle-pulse" : ""}`}
-                        style={{ transition: "transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)" }}
-                      >
-                        <polygon points="-1.5,4 1.5,4 0.5,-18 -0.5,-18" fill="#ef4444" />
-                        <line x1="0" y1="4" x2="0" y2="-18" stroke="#b91c1c" strokeWidth="0.5" />
-                      </g>
-                      {/* Center Needle Pin Cap */}
-                      <circle cx="0" cy="0" r="3" fill="#0f172a" />
-                      <circle cx="0" cy="0" r="1.2" fill="#ef4444" />
-
-                      {/* Glass Lens Reflection */}
-                      <path
-                        d="M -18 -10 A 21 21 0 0 1 15 -14 A 20 20 0 0 0 -18 -10 Z"
-                        fill="#ffffff"
-                        opacity="0.45"
-                      />
+                      {/* Fine Spray Cone Mist (Active when spraying) */}
+                      {(isSpraying || isAgitating) && (
+                        <g className="spray-mist-cone">
+                          <polygon
+                            points="0,-52 -32,-96 32,-96"
+                            fill="rgba(56, 189, 248, 0.35)"
+                          />
+                          <circle cx="-14" cy="-78" r="1.8" fill="#38bdf8" />
+                          <circle cx="0" cy="-86" r="2.2" fill="#38bdf8" />
+                          <circle cx="16" cy="-74" r="1.6" fill="#38bdf8" />
+                          <circle cx="-24" cy="-92" r="1.4" fill="#38bdf8" />
+                          <circle cx="26" cy="-90" r="1.4" fill="#38bdf8" />
+                        </g>
+                      )}
                     </g>
-                  );
-                })()}
-              </svg>
+
+                    {/* --- PRECISION ANALOG MANOMETER PRESSURE GAUGE --- */}
+                    {(() => {
+                      const needleAngle = -125 + (Math.max(0, Math.min(6, pressureBar)) / 6.0) * 250;
+
+                      return (
+                        <g className="analog-manometer" transform="translate(295, 48)">
+                          <rect x="-3" y="18" width="6" height="14" fill="url(#brassGrad)" stroke="#78350f" strokeWidth="0.8" />
+                          <circle cx="0" cy="0" r="26" fill="url(#gaugeBezelGrad)" stroke="#334155" strokeWidth="1.5" />
+                          <circle cx="0" cy="0" r="22" fill="#ffffff" className="gauge-dial-face" stroke="#cbd5e1" strokeWidth="1" />
+
+                          {/* Pressure Arcs */}
+                          <path d="M -16 11 A 20 20 0 0 1 -17 -10" fill="none" stroke="#eab308" strokeWidth="2.5" />
+                          <path d="M -17 -10 A 20 20 0 0 1 14 -14" fill="none" stroke="#22c55e" strokeWidth="3.5" />
+                          <path d="M 14 -14 A 20 20 0 0 1 16 11" fill="none" stroke="#ef4444" strokeWidth="2.5" />
+
+                          <text x="0" y="-8" textAnchor="middle" fontSize="6.5" fontWeight="800" fill="#0f172a">BAR</text>
+                          <text x="-12" y="14" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#64748b">0</text>
+                          <text x="-14" y="-3" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#64748b">2</text>
+                          <text x="0" y="-13" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#22c55e">3.5</text>
+                          <text x="14" y="-3" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#64748b">4</text>
+                          <text x="12" y="14" textAnchor="middle" fontSize="5.5" fontWeight="700" fill="#ef4444">6</text>
+
+                          {/* Precision Calibrated Needle */}
+                          <g
+                            transform={`rotate(${needleAngle})`}
+                            style={{ transition: "transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)" }}
+                          >
+                            <polygon points="-1.5,4 1.5,4 0.5,-18 -0.5,-18" fill="#ef4444" />
+                            <line x1="0" y1="4" x2="0" y2="-18" stroke="#b91c1c" strokeWidth="0.5" />
+                          </g>
+                          <circle cx="0" cy="0" r="3" fill="#0f172a" />
+                          <circle cx="0" cy="0" r="1.2" fill="#ef4444" />
+                        </g>
+                      );
+                    })()}
+                  </svg>
+                );
+              })()}
             </div>
 
             {/* Sprayer Mixture & Operational Telemetry HUD */}
@@ -735,11 +717,11 @@ Pre-Harvest Interval (PHI): ${formulation.phiDays} Days
               <div className="hud-primary-cell">
                 <span className="hud-label">ACTIVE CHEMICAL DILUTION</span>
                 <div className="hud-value-row">
-                  <span className="hud-color-pill" style={{ backgroundColor: formulation.color }}></span>
-                  <span className="hud-compound-name">{formulation.name}</span>
+                  <span className="hud-color-pill" style={{ backgroundColor: chemicalAdded ? formulation.color : "#38bdf8" }}></span>
+                  <span className="hud-compound-name">{chemicalAdded ? formulation.name : "Clean Water (Needs Chemical Charge)"}</span>
                 </div>
                 <span className="hud-sub-desc">
-                  Rate: <strong>{formulation.ratePerLiter} {formulation.unit}/L</strong> of clean water
+                  Rate: <strong>{formulation.ratePerLiter} {formulation.unit}/L</strong> of water
                 </span>
               </div>
 
@@ -753,11 +735,11 @@ Pre-Harvest Interval (PHI): ${formulation.phiDays} Days
 
               <div className="hud-stat-cell">
                 <span className="hud-stat-title">Operating Pressure</span>
-                <span className="hud-stat-big hud-pressure-val">
+                <span className={`hud-stat-big hud-pressure-val ${pressureBar > 4.2 ? "overpressure" : pressureBar < 2.0 ? "low-pressure" : ""}`}>
                   <span className="hud-status-dot"></span>
-                  {nozzle.pressure}
+                  {pressureBar.toFixed(1)} Bar
                 </span>
-                <span className="hud-stat-caption">{nozzle.name.split(" ")[0]} Calibrated</span>
+                <span className="hud-stat-caption">{pressureBar >= 2.5 && pressureBar <= 4.2 ? "Optimal Atomization" : pressureBar < 2.5 ? "Low (Pump handle)" : "High (Overpressure)"}</span>
               </div>
             </div>
           </div>

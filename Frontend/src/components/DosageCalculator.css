@@ -442,6 +442,96 @@
   100% { transform: rotate(calc(var(--angle, 0deg) + 2deg)); }
 }
 
+/* Interactive Tactile Tank Action Bar */
+.tank-interactive-action-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  background: var(--card-bg, #ffffff);
+  border-radius: 10px;
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  margin-bottom: 8px;
+}
+
+[data-theme="dark"] .tank-interactive-action-bar {
+  background: #182234;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.tactile-btn {
+  flex: 1;
+  min-width: 120px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--card-border, #cbd5e1);
+  background: var(--surface-secondary, #f8fafc);
+  color: var(--text-main, #0f172a);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+[data-theme="dark"] .tactile-btn {
+  background: #131b2a;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #f1f5f9;
+}
+
+.tactile-btn:hover {
+  transform: translateY(-1px);
+  border-color: #0e7490;
+  background: var(--surface-hover, #f1f5f9);
+}
+
+.tactile-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.tactile-btn.pump-btn:active,
+.tactile-btn.pump-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.tactile-btn.spray-btn:active,
+.tactile-btn.spray-btn.spraying {
+  background: #10b981;
+  color: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+}
+
+.tactile-btn.chem-btn.added {
+  border-color: #eab308;
+}
+
+/* Mechanical Lever Pump Stroke Animation */
+.pump-lever-stroke {
+  animation: leverPivotStroke 0.35s ease-in-out;
+  transform-origin: 82px 192px;
+}
+
+@keyframes leverPivotStroke {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(-25deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.tank-mixture-hud .overpressure {
+  color: #dc2626 !important;
+}
+
+.tank-mixture-hud .low-pressure {
+  color: #f59e0b !important;
+}
+
 /* Graduation Labels inside SVG */
 .graduation-label-main {
   font-family: inherit;

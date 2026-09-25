@@ -97,9 +97,15 @@ const VisualFarmCanvas = ({
 }) => {
   const [viewMode, setViewMode] = useState("ndvi"); // "ndvi", "spore", "moisture", "rgb"
   const [showHelpGuide, setShowHelpGuide] = useState(false);
+  const [weatherSim, setWeatherSim] = useState("clear"); // "clear", "rain", "wind"
+  const [compassAngle, setCompassAngle] = useState(0);
 
   const targetCoords = SECTOR_INFO[selectedSectorId] || SECTOR_INFO["sec-3a"];
   const targetSector = sectors.find((s) => s.id === selectedSectorId) || sectors[0];
+
+  const handleCompassClick = () => {
+    setCompassAngle((prev) => prev + 90);
+  };
 
   const droneStyle = {
     "--target-min-x": `${targetCoords.minX}px`,
@@ -171,42 +177,74 @@ const VisualFarmCanvas = ({
           </div>
         </div>
 
-        {/* Friendly View Mode Switcher */}
+        {/* Friendly View Mode Switcher & Weather Controls */}
         <div className="simple-layer-controls">
-          <span className="layer-ctrl-label">Map Mode:</span>
-          <div className="layer-mode-pills">
-            <button
-              type="button"
-              className={`layer-pill-btn ${viewMode === "ndvi" ? "active" : ""}`}
-              onClick={() => setViewMode("ndvi")}
-              title="Green = Healthy crops, Red = Sick crops"
-            >
-              🌿 Crop Health
-            </button>
-            <button
-              type="button"
-              className={`layer-pill-btn ${viewMode === "spore" ? "active" : ""}`}
-              onClick={() => setViewMode("spore")}
-              title="Shows where plant fungus & diseases are spreading"
-            >
-              🦠 Disease Risk
-            </button>
-            <button
-              type="button"
-              className={`layer-pill-btn ${viewMode === "moisture" ? "active" : ""}`}
-              onClick={() => setViewMode("moisture")}
-              title="Shows water level: Blue = Watered, Yellow = Dry"
-            >
-              💧 Water Level
-            </button>
-            <button
-              type="button"
-              className={`layer-pill-btn ${viewMode === "rgb" ? "active" : ""}`}
-              onClick={() => setViewMode("rgb")}
-              title="Real satellite photo view"
-            >
-              📷 Photo View
-            </button>
+          <div className="layer-mode-row">
+            <span className="layer-ctrl-label">Map Mode:</span>
+            <div className="layer-mode-pills">
+              <button
+                type="button"
+                className={`layer-pill-btn ${viewMode === "ndvi" ? "active" : ""}`}
+                onClick={() => setViewMode("ndvi")}
+                title="Green = Healthy crops, Red = Sick crops"
+              >
+                🌿 Crop Health
+              </button>
+              <button
+                type="button"
+                className={`layer-pill-btn ${viewMode === "spore" ? "active" : ""}`}
+                onClick={() => setViewMode("spore")}
+                title="Shows where plant fungus & diseases are spreading"
+              >
+                🦠 Disease Risk
+              </button>
+              <button
+                type="button"
+                className={`layer-pill-btn ${viewMode === "moisture" ? "active" : ""}`}
+                onClick={() => setViewMode("moisture")}
+                title="Shows water level: Blue = Watered, Yellow = Dry"
+              >
+                💧 Water Level
+              </button>
+              <button
+                type="button"
+                className={`layer-pill-btn ${viewMode === "rgb" ? "active" : ""}`}
+                onClick={() => setViewMode("rgb")}
+                title="Real satellite photo view"
+              >
+                📷 Photo View
+              </button>
+            </div>
+          </div>
+
+          <div className="weather-sim-row">
+            <span className="layer-ctrl-label">Weather Sim:</span>
+            <div className="weather-mode-pills">
+              <button
+                type="button"
+                className={`weather-pill-btn ${weatherSim === "clear" ? "active" : ""}`}
+                onClick={() => setWeatherSim("clear")}
+                title="Clear sunny skies"
+              >
+                ☀️ Sunny
+              </button>
+              <button
+                type="button"
+                className={`weather-pill-btn ${weatherSim === "rain" ? "active" : ""}`}
+                onClick={() => setWeatherSim("rain")}
+                title="Heavy rainfall & high humidity simulation"
+              >
+                🌧️ Rain & Dew
+              </button>
+              <button
+                type="button"
+                className={`weather-pill-btn ${weatherSim === "wind" ? "active" : ""}`}
+                onClick={() => setWeatherSim("wind")}
+                title="Spore-carrying wind currents simulation"
+              >
+                💨 Spore Gale
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -224,12 +262,12 @@ const VisualFarmCanvas = ({
           </div>
           <div className="guide-col">
             <span className="guide-title">3. Turn on Sprinklers 💧</span>
-            <p className="guide-text">Click "Water All Fields" to turn on automated irrigation and nourish the crops.</p>
+            <p className="guide-text">Click "Water All Fields" or click the South River pump to activate irrigation.</p>
           </div>
         </div>
       )}
 
-      {/* Interactive Quick Action Toolbar (Simple buttons that everyone understands) */}
+      {/* Interactive Quick Action Toolbar */}
       <div className="farm-quick-actions-toolbar">
         <div className="current-target-pill">
           <span className="target-label">CURRENTLY SELECTED:</span>
@@ -303,8 +341,25 @@ const VisualFarmCanvas = ({
               type="button"
               className="banner-spray-btn"
               onClick={onTriggerSpray}
+              title={`Direct drone to spray ${targetCoords.name}`}
             >
               🚁 Spray This Plot
+            </button>
+            <button
+              type="button"
+              className="banner-water-btn"
+              onClick={onTriggerDrip}
+              title="Activate plot hydration sprinklers"
+            >
+              💧 Water Plot
+            </button>
+            <button
+              type="button"
+              className="banner-infect-btn"
+              onClick={onTriggerOutbreak}
+              title="Simulate fungal spore contagion on this plot"
+            >
+              🦠 Outbreak Risk
             </button>
           </div>
         </div>
@@ -474,10 +529,32 @@ const VisualFarmCanvas = ({
             strokeDasharray="14 12"
             className="river-flow-stream"
           />
-          <rect x="445" y="405" width="28" height="20" rx="3" fill="#334155" stroke="#94a3b8" strokeWidth="1.5" />
-          <circle cx="459" cy="415" r="4" fill="#0284c7" />
-          <text x="490" y="475" fill="#38bdf8" fontSize="11" fontWeight="800" textAnchor="middle" opacity="0.9" letterSpacing="0.08em">
-            SOUTH RIVER WATER SOURCE • AUTOMATED PUMP ACTIVE
+          {/* Interactive South River Automated Pump Unit */}
+          <g
+            className="interactive-svg-pump"
+            onClick={onTriggerDrip}
+            style={{ cursor: "pointer" }}
+            filter="url(#plotShadow)"
+          >
+            <circle cx="459" cy="415" r="16" fill="rgba(56, 189, 248, 0.2)" className="beacon-ping" />
+            <rect x="443" y="403" width="32" height="24" rx="4" fill="#1e293b" stroke="#38bdf8" strokeWidth="2" />
+            <circle cx="459" cy="415" r="5" fill={activeScenario === "drip" ? "#38bdf8" : "#0284c7"} />
+            <circle cx="459" cy="415" r="2" fill="#ffffff" />
+          </g>
+
+          <text
+            x="490"
+            y="475"
+            fill="#38bdf8"
+            fontSize="11"
+            fontWeight="800"
+            textAnchor="middle"
+            opacity="0.9"
+            letterSpacing="0.08em"
+            onClick={onTriggerDrip}
+            style={{ cursor: "pointer" }}
+          >
+            SOUTH RIVER WATER SOURCE • {activeScenario === "drip" ? "💧 PUMPING IRRIGATION..." : "CLICK PUMP TO WATER ALL"}
           </text>
 
           {/* ========================================================================= */}
@@ -739,6 +816,83 @@ const VisualFarmCanvas = ({
           )}
 
           {/* ========================================================================= */}
+          {/* WEATHER SIMULATION OVERLAYS (Rain drops, Dew ripples, Wind Spores)        */}
+          {/* ========================================================================= */}
+          {weatherSim === "rain" && (
+            <g className="weather-rain-layer" pointerEvents="none">
+              {[
+                { x1: 50, y1: 20, x2: 30, y2: 90 },
+                { x1: 150, y1: 80, x2: 130, y2: 150 },
+                { x1: 250, y1: 30, x2: 230, y2: 100 },
+                { x1: 350, y1: 70, x2: 330, y2: 140 },
+                { x1: 450, y1: 10, x2: 430, y2: 80 },
+                { x1: 550, y1: 90, x2: 530, y2: 160 },
+                { x1: 650, y1: 40, x2: 630, y2: 110 },
+                { x1: 750, y1: 100, x2: 730, y2: 170 },
+                { x1: 850, y1: 50, x2: 830, y2: 120 },
+                { x1: 100, y1: 240, x2: 80, y2: 310 },
+                { x1: 200, y1: 300, x2: 180, y2: 370 },
+                { x1: 400, y1: 250, x2: 380, y2: 320 },
+                { x1: 500, y1: 310, x2: 480, y2: 380 },
+                { x1: 700, y1: 260, x2: 680, y2: 330 },
+                { x1: 800, y1: 320, x2: 780, y2: 390 },
+              ].map((streak, i) => (
+                <line
+                  key={`rain-${i}`}
+                  x1={streak.x1}
+                  y1={streak.y1}
+                  x2={streak.x2}
+                  y2={streak.y2}
+                  stroke="#38bdf8"
+                  strokeWidth="2"
+                  strokeDasharray="10 20"
+                  opacity="0.75"
+                  className="rain-streak-anim"
+                />
+              ))}
+              {/* Rain ground splash ripples */}
+              <circle cx="160" cy="140" r="8" fill="none" stroke="#38bdf8" strokeWidth="1" className="ripple-anim-1" />
+              <circle cx="480" cy="130" r="10" fill="none" stroke="#38bdf8" strokeWidth="1" className="ripple-anim-2" />
+              <circle cx="750" cy="150" r="9" fill="none" stroke="#38bdf8" strokeWidth="1" className="ripple-anim-1" />
+              <circle cx="460" cy="330" r="11" fill="none" stroke="#38bdf8" strokeWidth="1" className="ripple-anim-2" />
+            </g>
+          )}
+
+          {weatherSim === "wind" && (
+            <g className="weather-wind-layer" pointerEvents="none">
+              <path
+                d="M 20 80 Q 250 40, 500 90 T 920 60"
+                fill="none"
+                stroke="rgba(251, 146, 60, 0.6)"
+                strokeWidth="2.5"
+                strokeDasharray="14 10"
+                className="wind-stream-anim"
+              />
+              <path
+                d="M 20 200 Q 300 240, 600 180 T 920 220"
+                fill="none"
+                stroke="rgba(239, 68, 68, 0.6)"
+                strokeWidth="2"
+                strokeDasharray="18 12"
+                className="wind-stream-anim-2"
+              />
+              <path
+                d="M 20 340 Q 350 300, 650 360 T 920 320"
+                fill="none"
+                stroke="rgba(251, 146, 60, 0.5)"
+                strokeWidth="2"
+                strokeDasharray="12 14"
+                className="wind-stream-anim"
+              />
+              {/* Spores drifting */}
+              <circle cx="280" cy="75" r="3.5" fill="#f97316" opacity="0.8" className="spore-drift" />
+              <circle cx="420" cy="85" r="4.5" fill="#ef4444" opacity="0.9" className="spore-drift" />
+              <circle cx="680" cy="190" r="4" fill="#f97316" opacity="0.85" className="spore-drift" />
+              <circle cx="520" cy="340" r="3.5" fill="#ef4444" opacity="0.8" className="spore-drift" />
+            </g>
+          )}
+
+          {/* ========================================================================= */}
           {/* DYNAMIC FLIGHT VECTOR & WAYPOINTS (TARGETS SELECTED SECTOR)               */}
           {/* ========================================================================= */}
           {activeScenario === "spray" ? (
@@ -759,7 +913,8 @@ const VisualFarmCanvas = ({
           {/* ========================================================================= */}
           <g
             className={`autonomous-drone-svg ${activeScenario === "spray" ? "spraying-mission" : "patrol-mission"}`}
-            style={droneStyle}
+            style={{ ...droneStyle, cursor: "pointer" }}
+            onClick={onTriggerSpray}
           >
             <ellipse cx="0" cy="32" rx="22" ry="9" fill="rgba(0,0,0,0.45)" />
 
@@ -810,7 +965,14 @@ const VisualFarmCanvas = ({
             <circle cx="0" cy="12" r="1.8" fill="#38bdf8" className="nav-strobe" />
           </g>
 
-          <g transform="translate(900, 48)" pointerEvents="none" opacity="0.85">
+          {/* Interactive Clickable Compass */}
+          <g
+            transform={`translate(900, 48) rotate(${compassAngle})`}
+            onClick={handleCompassClick}
+            style={{ cursor: "pointer" }}
+            opacity="0.9"
+            filter="url(#plotShadow)"
+          >
             <circle cx="0" cy="0" r="18" fill="rgba(15, 23, 42, 0.85)" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
             <polygon points="0,-14 4,0 -4,0" fill="#ef4444" />
             <polygon points="0,14 4,0 -4,0" fill="#94a3b8" />
