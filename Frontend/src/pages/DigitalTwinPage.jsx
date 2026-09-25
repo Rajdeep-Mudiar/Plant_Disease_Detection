@@ -583,6 +583,7 @@ const DigitalTwinPage = ({ onNavigateToScanner }) => {
 
       {/* Multispectral Satellite NDVI & Canopy Vegetation Index Explorer */}
       <SatelliteNdviExplorer
+        sectors={sectors}
         onDispatchDrone={(sectorId) => {
           setSelectedSectorId(sectorId);
           triggerScenarioPrecisionSpray();

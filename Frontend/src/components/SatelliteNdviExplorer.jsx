@@ -23,7 +23,7 @@ const SATELLITE_INDEX_MODES = [
     spectrum: "665nm (B4) & 842nm (B8)",
     description: "Measures photosynthetically active chlorophyll biomass and canopy density.",
     palette: ["#8B0000", "#FF4500", "#FFD700", "#ADFF2F", "#008000", "#004d00"],
-    healthyRange: "0.72 - 0.92",
+    healthyRange: "0.72 - 0.95",
     stressedRange: "0.20 - 0.50",
   },
   {
@@ -34,7 +34,7 @@ const SATELLITE_INDEX_MODES = [
     spectrum: "705nm (B5) & 842nm (B8)",
     description: "Detects early cellular chlorophyll decay and fungal blight before visible necrotic spots appear.",
     palette: ["#4a0e4e", "#8b008b", "#ff1493", "#ffa500", "#32cd32", "#006400"],
-    healthyRange: "0.45 - 0.70",
+    healthyRange: "0.45 - 0.72",
     stressedRange: "0.10 - 0.30",
   },
   {
@@ -73,21 +73,138 @@ const SATELLITE_INDEX_MODES = [
 ];
 
 const HISTORICAL_PASSES = [
-  { id: "pass-0", date: "Today (Sentinel-2A)", time: "10:42 AM UTC", cloudCover: "1.2%", quality: "99.4%" },
-  { id: "pass-1", date: "5 Days Ago (Sentinel-2B)", time: "11:15 AM UTC", cloudCover: "3.8%", quality: "98.1%" },
-  { id: "pass-2", date: "10 Days Ago (Sentinel-2A)", time: "10:38 AM UTC", cloudCover: "0.5%", quality: "99.8%" },
-  { id: "pass-3", date: "15 Days Ago (Sentinel-2B)", time: "11:04 AM UTC", cloudCover: "12.0%", quality: "94.2%" },
+  { id: "pass-0", date: "Today (Sentinel-2A)", time: "10:42 AM UTC", cloudCover: "1.2%", quality: "99.4%", modFactor: 1.0 },
+  { id: "pass-1", date: "5 Days Ago (Sentinel-2B)", time: "11:15 AM UTC", cloudCover: "3.8%", quality: "98.1%", modFactor: 0.94 },
+  { id: "pass-2", date: "10 Days Ago (Sentinel-2A)", time: "10:38 AM UTC", cloudCover: "0.5%", quality: "99.8%", modFactor: 0.88 },
+  { id: "pass-3", date: "15 Days Ago (Sentinel-2B)", time: "11:04 AM UTC", cloudCover: "12.0%", quality: "94.2%", modFactor: 0.82 },
 ];
 
-const SatelliteNdviExplorer = ({ onDispatchDrone }) => {
+const SatelliteNdviExplorer = ({ sectors = [], onDispatchDrone }) => {
   const { t } = useTranslation();
   const [activeMode, setActiveMode] = useState("ndvi");
   const [selectedPass, setSelectedPass] = useState(0);
-  const [hoveredPixel, setHoveredPixel] = useState(null);
+  const [hoveredSectorId, setHoveredSectorId] = useState(null);
   const [opacity, setOpacity] = useState(85);
   const [isScanning, setIsScanning] = useState(false);
 
+  // Helper to compute spectral values dynamically based on live biophysical sector telemetry
+  const computeSectorSpectralData = (sec, mode, passIdx) => {
+    if (!sec) return { val: "0.85", status: "Optimal", color: "#10b981", numVal: 0.85 };
+    const factor = HISTORICAL_PASSES[passIdx]?.modFactor || 1.0;
+    const health = sec.healthIndex * factor;
+
+    if (mode === "ndvi") {
+      let val = health >= 90
+        ? (0.80 + (health - 90) * 0.015).toFixed(2)
+        : health >= 75
+        ? (0.60 + (health - 75) * 0.013).toFixed(2)
+        : (0.28 + (health / 100) * 0.32).toFixed(2);
+      let status = health >= 88 ? "Vigorous Biomass" : health >= 75 ? "Moderate Vigor" : "Critical Pathogen Stress";
+      let color = health >= 88 ? "#10b981" : health >= 75 ? "#f59e0b" : "#ef4444";
+      return { val: `${val} (${status.split(" ")[0]})`, status, color, numVal: parseFloat(val) };
+    }
+
+    if (mode === "ndre") {
+      let val = (Math.max(0.12, (health / 100) * 0.70)).toFixed(2);
+      let status = health >= 88 ? "Healthy Red Edge" : health >= 75 ? "Early Chlorosis" : "Mycelial Colonization Alert";
+      let color = health >= 88 ? "#10b981" : health >= 75 ? "#f59e0b" : "#db2777";
+      return { val: `${val} (${status.split(" ")[0]})`, status, color, numVal: parseFloat(val) };
+    }
+
+    if (mode === "ndwi") {
+      let moisture = sec.soilMoisture || 38.0;
+      let val = (((moisture - 10) / 70) * 0.55 - 0.05).toFixed(2);
+      let status = moisture > 48 ? "Over-saturated (Spore Risk)" : moisture > 32 ? "Optimal Hydration" : "Moisture Deficit";
+      let color = moisture > 48 ? "#3b82f6" : moisture > 32 ? "#06b6d4" : "#ca8a04";
+      return { val: `${val} (${status.split(" ")[0]})`, status, color, numVal: parseFloat(val) };
+    }
+
+    if (mode === "thermal") {
+      let temp = ((sec.canopyTemp || 21.0) + (100 - health) * 0.08).toFixed(1);
+      let status = temp > 25.5 ? "Transpiration Blockage" : "Normal Canopy Thermal";
+      let color = temp > 25.5 ? "#ef4444" : "#06b6d4";
+      return { val: `${temp}°C`, status, color, numVal: parseFloat(temp) };
+    }
+
+    // Default RGB
+    return {
+      val: health >= 85 ? "Lush Green Foliage" : "Discolored / Chlorotic",
+      status: health >= 85 ? "Optimal" : "Necrotic Risk",
+      color: health >= 85 ? "#10b981" : "#ef4444",
+      numVal: health,
+    };
+  };
+
   const currentModeObj = SATELLITE_INDEX_MODES.find((m) => m.id === activeMode) || SATELLITE_INDEX_MODES[0];
+
+  // Dynamic farm-wide satellite health calculation
+  const hasCriticalSector = sectors.some((s) => s.status === "critical" || s.healthIndex < 75);
+  const criticalSector = sectors.find((s) => s.status === "critical" || s.healthIndex < 75) || sectors[2];
+  const hoveredSector = sectors.find((s) => s.id === hoveredSectorId) || sectors[0] || {};
+  const hoveredTelemetry = computeSectorSpectralData(hoveredSector, activeMode, selectedPass);
+
+  // Dynamic False-Color Heatmap Gradient Generator based on live sectors
+  const generateDynamicHeatmapStyle = () => {
+    // Generate dynamic radial color stops corresponding to sectors 1A, 1B, 2A, 2B, 3A, 3B
+    const sec2a = sectors.find((s) => s.id === "sec-2a");
+    const sec2b = sectors.find((s) => s.id === "sec-2b");
+    const is2aStressed = sec2a ? sec2a.healthIndex < 80 : false;
+    const is2bStressed = sec2b ? sec2b.healthIndex < 80 : false;
+
+    if (activeMode === "ndvi") {
+      if (is2aStressed || is2bStressed) {
+        return {
+          background: "radial-gradient(circle at 75% 35%, #ef4444 0%, #f59e0b 28%, #84cc16 55%, #15803d 85%, #052e16 100%)",
+          mixBlendMode: "screen",
+        };
+      }
+      return {
+        background: "radial-gradient(circle at 50% 50%, #10b981 0%, #059669 35%, #047857 70%, #064e3b 100%)",
+        mixBlendMode: "screen",
+      };
+    }
+
+    if (activeMode === "ndre") {
+      if (is2aStressed || is2bStressed) {
+        return {
+          background: "radial-gradient(circle at 75% 35%, #c026d3 0%, #db2777 30%, #eab308 60%, #16a34a 90%)",
+          mixBlendMode: "screen",
+        };
+      }
+      return {
+        background: "radial-gradient(circle at 50% 50%, #34d399 0%, #10b981 40%, #059669 80%, #064e3b 100%)",
+        mixBlendMode: "screen",
+      };
+    }
+
+    if (activeMode === "ndwi") {
+      return {
+        background: "radial-gradient(circle at 40% 60%, #0284c7 0%, #0369a1 40%, #10b981 80%, #065f46 100%)",
+        mixBlendMode: "screen",
+      };
+    }
+
+    if (activeMode === "thermal") {
+      if (is2aStressed || is2bStressed) {
+        return {
+          background: "radial-gradient(circle at 75% 35%, #dc2626 0%, #f97316 35%, #eab308 65%, #06b6d4 100%)",
+          mixBlendMode: "color-dodge",
+        };
+      }
+      return {
+        background: "radial-gradient(circle at 50% 50%, #06b6d4 0%, #0284c7 40%, #0369a1 80%, #0f172a 100%)",
+        mixBlendMode: "screen",
+      };
+    }
+
+    // RGB
+    return {
+      background: is2aStressed
+        ? "radial-gradient(circle at 75% 35%, #ca8a04 0%, #4d7c0f 45%, #14532d 100%)"
+        : "radial-gradient(circle at 50% 50%, #4d7c0f 0%, #365314 60%, #14532d 100%)",
+      mixBlendMode: "normal",
+    };
+  };
 
   const handleSimulateScan = () => {
     setIsScanning(true);
@@ -103,13 +220,13 @@ const SatelliteNdviExplorer = ({ onDispatchDrone }) => {
         <div className="satellite-title-column">
           <div className="satellite-badge">
             <span className="satellite-pulse-dot"></span>
-            <span>Copernicus Sentinel-2 • 10m Ground Resolution</span>
+            <span>Copernicus Sentinel-2 • 10m Ground Resolution (Live Telemetry Linked)</span>
           </div>
           <h3 className="satellite-main-heading">
             Multispectral Satellite Vegetation Health & Chlorophyll Index
           </h3>
           <p className="satellite-sub-desc">
-            Early spectral detection of cellular foliar stress, pathogen mycelium colonization, and stomatal water loss before symptoms appear to the naked eye.
+            Early spectral detection of cellular foliar stress, pathogen mycelium colonization, and stomatal water loss dynamically synchronized with your farm's biophysical twin.
           </p>
         </div>
 
@@ -119,8 +236,10 @@ const SatelliteNdviExplorer = ({ onDispatchDrone }) => {
             <span className="stat-value highlight">In 18h 24m</span>
           </div>
           <div className="satellite-stat-box">
-            <span className="stat-label">Sun Elevation</span>
-            <span className="stat-value">54.8° Optimal</span>
+            <span className="stat-label">Farm Status</span>
+            <span className={`stat-value ${hasCriticalSector ? "danger-text" : "highlight"}`}>
+              {hasCriticalSector ? "Anomaly Detected" : "100% Vigorous"}
+            </span>
           </div>
         </div>
       </div>
@@ -148,33 +267,35 @@ const SatelliteNdviExplorer = ({ onDispatchDrone }) => {
             {/* Base Satellite Visual */}
             <div className="satellite-layer rgb-base"></div>
 
-            {/* Multispectral False-Color Heatmap Layer */}
+            {/* Dynamic Multispectral False-Color Heatmap Layer */}
             <div
               className={`satellite-layer false-color-overlay mode-${activeMode} ${isScanning ? "scanning" : ""}`}
-              style={{ opacity: opacity / 100 }}
+              style={{
+                opacity: opacity / 100,
+                ...generateDynamicHeatmapStyle(),
+              }}
             ></div>
 
-            {/* Grid Coordinates Overlay */}
+            {/* Dynamic Grid Coordinates Overlay */}
             <div className="satellite-grid-overlay">
-              <div className="grid-cell" onMouseEnter={() => setHoveredPixel({ sector: "Sector 1A", val: activeMode === "ndvi" ? "0.88 (Vigorous)" : activeMode === "ndre" ? "0.62 (Healthy)" : "20.8°C", status: "Optimal" })}>
-                <span className="cell-label">1A</span>
-              </div>
-              <div className="grid-cell" onMouseEnter={() => setHoveredPixel({ sector: "Sector 1B", val: activeMode === "ndvi" ? "0.82 (Healthy)" : activeMode === "ndre" ? "0.58 (Healthy)" : "22.1°C", status: "Optimal" })}>
-                <span className="cell-label">1B</span>
-              </div>
-              <div className="grid-cell stressed" onMouseEnter={() => setHoveredPixel({ sector: "Sector 2A (Blight Outbreak)", val: activeMode === "ndvi" ? "0.41 (Critical Stress)" : activeMode === "ndre" ? "0.19 (Pathogen Alert)" : "28.4°C", status: "Severe Infestation Risk" })}>
-                <span className="cell-label warning">2A (Outbreak)</span>
-                <span className="anomaly-pulse"></span>
-              </div>
-              <div className="grid-cell warning-cell" onMouseEnter={() => setHoveredPixel({ sector: "Sector 2B", val: activeMode === "ndvi" ? "0.64 (Moderate)" : activeMode === "ndre" ? "0.38 (Watch)" : "24.5°C", status: "Early Stress" })}>
-                <span className="cell-label">2B</span>
-              </div>
-              <div className="grid-cell" onMouseEnter={() => setHoveredPixel({ sector: "Sector 3A", val: activeMode === "ndvi" ? "0.91 (Max Vigor)" : activeMode === "ndre" ? "0.68 (Optimal)" : "21.0°C", status: "Optimal" })}>
-                <span className="cell-label">3A</span>
-              </div>
-              <div className="grid-cell" onMouseEnter={() => setHoveredPixel({ sector: "Sector 3B", val: activeMode === "ndvi" ? "0.78 (Healthy)" : activeMode === "ndre" ? "0.52 (Healthy)" : "22.5°C", status: "Optimal" })}>
-                <span className="cell-label">3B</span>
-              </div>
+              {sectors.map((sec) => {
+                const secData = computeSectorSpectralData(sec, activeMode, selectedPass);
+                const isStressed = sec.status === "critical" || sec.healthIndex < 75;
+                const isWarning = sec.status === "warning" || (sec.healthIndex >= 75 && sec.healthIndex < 88);
+
+                return (
+                  <div
+                    key={sec.id}
+                    className={`grid-cell ${isStressed ? "stressed" : isWarning ? "warning-cell" : "healthy-cell"}`}
+                    onMouseEnter={() => setHoveredSectorId(sec.id)}
+                  >
+                    <span className={`cell-label ${isStressed ? "warning" : ""}`}>
+                      {sec.name.split("-")[0].trim()} ({sec.healthIndex}%)
+                    </span>
+                    {isStressed && <span className="anomaly-pulse"></span>}
+                  </div>
+                );
+              })}
             </div>
 
             {/* HUD Overlay */}
@@ -229,30 +350,37 @@ const SatelliteNdviExplorer = ({ onDispatchDrone }) => {
             </div>
           </div>
 
-          {/* Live Hover Telemetry */}
+          {/* Live Hover Telemetry Linked to Active Sector */}
           <div className="analytics-card hover-telemetry-box">
             <h5 className="telemetry-heading">Target Pixel Inspection</h5>
-            {hoveredPixel ? (
+            {hoveredSector?.name ? (
               <div className="telemetry-data-stack">
                 <div className="telemetry-row">
                   <span className="row-key">Active Sector:</span>
-                  <span className="row-val highlight">{hoveredPixel.sector}</span>
+                  <span className="row-val highlight">{hoveredSector.name}</span>
                 </div>
                 <div className="telemetry-row">
-                  <span className="row-key">{currentModeObj.name} Index:</span>
-                  <span className="row-val bold">{hoveredPixel.val}</span>
+                  <span className="row-key">{currentModeObj.name} Value:</span>
+                  <span className="row-val bold">{hoveredTelemetry.val}</span>
                 </div>
                 <div className="telemetry-row">
                   <span className="row-key">Pathology Status:</span>
-                  <span className={`row-val badge ${hoveredPixel.status.includes("Severe") ? "danger" : hoveredPixel.status.includes("Early") ? "warning" : "success"}`}>
-                    {hoveredPixel.status}
+                  <span
+                    className="row-val badge"
+                    style={{
+                      background: `${hoveredTelemetry.color}22`,
+                      color: hoveredTelemetry.color,
+                      border: `1px solid ${hoveredTelemetry.color}44`,
+                    }}
+                  >
+                    {hoveredTelemetry.status} (Health: {hoveredSector.healthIndex}%)
                   </span>
                 </div>
-                {hoveredPixel.status.includes("Severe") && onDispatchDrone && (
+                {hoveredSector.healthIndex < 80 && onDispatchDrone && (
                   <button
                     type="button"
                     className="dispatch-anomaly-btn"
-                    onClick={() => onDispatchDrone("sec-2a")}
+                    onClick={() => onDispatchDrone(hoveredSector.id)}
                   >
                     🚁 Dispatch Drone to Anomaly Hotspot
                   </button>
