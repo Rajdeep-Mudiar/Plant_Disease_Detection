@@ -11,6 +11,7 @@ import DiagnosticReportModal from "../components/DiagnosticReportModal";
 import CropSelector from "../components/CropSelector";
 import LiveVideoArScanner from "../components/LiveVideoArScanner";
 import CropInsuranceAssessor from "../components/CropInsuranceAssessor";
+import AgriDealerLocator from "../components/AgriDealerLocator";
 import { IconScanner, IconCamera, IconSparkles } from "../components/Icons";
 
 const DetectPage = ({
@@ -107,6 +108,9 @@ const DetectPage = ({
           prediction={prediction}
           cropType={selectedCrop}
         />
+
+        {/* Feature: Verified Local Agrochemical & Organic Dealer Locator */}
+        <AgriDealerLocator defaultCrop={selectedCrop} />
 
         <LoadingState loading={loading} />
       </div>

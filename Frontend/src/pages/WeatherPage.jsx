@@ -3,6 +3,7 @@ import "./WeatherPage.css";
 import WeatherRiskCard from "../components/WeatherRiskCard";
 import FarmOutbreakMap from "../components/FarmOutbreakMap";
 import RegionalOutbreakMap from "../components/RegionalOutbreakMap";
+import SporeRiskBarometer from "../components/SporeRiskBarometer";
 import { IconRadar } from "../components/Icons";
 
 const WeatherPage = () => {
@@ -24,6 +25,9 @@ const WeatherPage = () => {
 
       <div className="weather-content-area">
         <WeatherRiskCard />
+
+        {/* Feature: Hourly Pathogen Spore Germination Risk Barometer (BlightCast Engine) */}
+        <SporeRiskBarometer />
 
         {/* Feature 3: Farm Plot GIS Outbreak Heatmap */}
         <FarmOutbreakMap />

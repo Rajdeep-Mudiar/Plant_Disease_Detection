@@ -1,0 +1,267 @@
+/* Spore Risk Barometer CSS */
+.spore-barometer-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #e2e8f0);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+[data-theme="dark"] .spore-barometer-card {
+  background: #182234;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.spore-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.spore-title-col {
+  flex: 1;
+  min-width: 260px;
+}
+
+.spore-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.spore-main-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.spore-sub-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.4;
+}
+
+/* Gauge Circle */
+.spore-current-gauge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gauge-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.gauge-inner {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--card-bg, #ffffff);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-theme="dark"] .gauge-inner {
+  background: #182234;
+}
+
+.gauge-score {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--text-main, #0f172a);
+  line-height: 1;
+}
+
+.gauge-label {
+  font-size: 0.55rem;
+  font-weight: 800;
+  color: var(--text-muted, #94a3b8);
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* Status Banner */
+.spore-status-banner {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-left: 5px solid #dc2626;
+  border-radius: 12px;
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .spore-status-banner {
+  background: #131b2a;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.sb-left {
+  flex: 1;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.risk-tag-pill {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  align-self: flex-start;
+  letter-spacing: 0.03em;
+}
+
+.sb-explanation {
+  font-size: 0.85rem;
+  color: var(--text-main, #1e293b);
+  line-height: 1.45;
+}
+
+[data-theme="dark"] .sb-explanation {
+  color: #e2e8f0;
+}
+
+.sb-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  min-width: 240px;
+}
+
+.sbm-item {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+[data-theme="dark"] .sbm-item {
+  background: #182234;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.sbm-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted, #94a3b8);
+}
+
+.sbm-val {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.sbm-val.highlight {
+  font-weight: 900;
+}
+
+/* Hourly Timeline */
+.spore-hourly-timeline-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sht-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+.sht-bars-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  background: var(--surface-secondary, #f8fafc);
+  padding: 16px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--card-border-subtle, #f1f5f9);
+}
+
+[data-theme="dark"] .sht-bars-grid {
+  background: #131b2a;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.sht-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 6px 4px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.sht-bar-col:hover,
+.sht-bar-col.selected {
+  background: rgba(0, 149, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+.sht-bar-track {
+  width: 14px;
+  height: 80px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .sht-bar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.sht-bar-fill {
+  width: 100%;
+  border-radius: 999px;
+  transition: height 0.3s ease;
+}
+
+.sht-score-text {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.sht-time-label {
+  font-size: 0.68rem;
+  color: var(--text-muted, #64748b);
+  font-weight: 600;
+}

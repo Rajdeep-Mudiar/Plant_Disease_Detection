@@ -4,6 +4,8 @@ import DosageCalculator from "../components/DosageCalculator";
 import EconomicsLossEstimator from "../components/EconomicsLossEstimator";
 import SafetyCountdownTimer from "../components/SafetyCountdownTimer";
 import SoilNutrientAdvisor from "../components/SoilNutrientAdvisor";
+import CropSprayCalendar from "../components/CropSprayCalendar";
+import TreatmentRoiSimulator from "../components/TreatmentRoiSimulator";
 import { IconCalculator, IconShield, IconCheck } from "../components/Icons";
 
 const PPE_ITEMS = [
@@ -65,6 +67,12 @@ const CalculatorPage = () => {
 
         {/* Feature: Soil Chemistry & N-P-K Fertilizer Deficit Rebalancing */}
         <SoilNutrientAdvisor />
+
+        {/* Feature: Interactive Crop Spraying Calendar & Task Scheduler */}
+        <CropSprayCalendar />
+
+        {/* Feature: Treatment ROI & Economic Profit vs Loss Simulator */}
+        <TreatmentRoiSimulator />
 
         {/* Feature 6: Farm Economics & Yield Loss Estimator */}
         <EconomicsLossEstimator />
