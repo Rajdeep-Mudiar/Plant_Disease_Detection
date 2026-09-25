@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./DigitalTwinPage.css";
 import VisualFarmCanvas from "../components/VisualFarmCanvas";
 import SatelliteNdviExplorer from "../components/SatelliteNdviExplorer";
+import DroneMissionPlanner from "../components/DroneMissionPlanner";
 import {
   IconActivity,
   IconLayers,
@@ -586,6 +587,11 @@ const DigitalTwinPage = ({ onNavigateToScanner }) => {
           setSelectedSectorId(sectorId);
           triggerScenarioPrecisionSpray();
         }}
+      />
+
+      {/* Autonomous Drone Waypoint Mission Planner & KML Exporter */}
+      <DroneMissionPlanner
+        selectedSector={selectedSector.name}
       />
     </div>
   );

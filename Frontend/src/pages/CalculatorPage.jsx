@@ -3,6 +3,7 @@ import "./CalculatorPage.css";
 import DosageCalculator from "../components/DosageCalculator";
 import EconomicsLossEstimator from "../components/EconomicsLossEstimator";
 import SafetyCountdownTimer from "../components/SafetyCountdownTimer";
+import SoilNutrientAdvisor from "../components/SoilNutrientAdvisor";
 import { IconCalculator, IconShield, IconCheck } from "../components/Icons";
 
 const PPE_ITEMS = [
@@ -61,6 +62,9 @@ const CalculatorPage = () => {
 
       <div className="calc-content-area">
         <DosageCalculator />
+
+        {/* Feature: Soil Chemistry & N-P-K Fertilizer Deficit Rebalancing */}
+        <SoilNutrientAdvisor />
 
         {/* Feature 6: Farm Economics & Yield Loss Estimator */}
         <EconomicsLossEstimator />

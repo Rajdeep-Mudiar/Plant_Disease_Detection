@@ -9,7 +9,9 @@ import LoadingState from "../components/LoadingState";
 import CameraCaptureModal from "../components/CameraCaptureModal";
 import DiagnosticReportModal from "../components/DiagnosticReportModal";
 import CropSelector from "../components/CropSelector";
-import { IconScanner } from "../components/Icons";
+import LiveVideoArScanner from "../components/LiveVideoArScanner";
+import CropInsuranceAssessor from "../components/CropInsuranceAssessor";
+import { IconScanner, IconCamera, IconSparkles } from "../components/Icons";
 
 const DetectPage = ({
   image,
@@ -27,6 +29,7 @@ const DetectPage = ({
 }) => {
   const [selectedCrop, setSelectedCrop] = useState("potato");
   const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const [isArScannerOpen, setIsArScannerOpen] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -57,6 +60,16 @@ const DetectPage = ({
             </p>
           </div>
         </div>
+
+        {/* Live AR Scanner Button */}
+        <button
+          type="button"
+          className="launch-ar-mode-btn"
+          onClick={() => setIsArScannerOpen(true)}
+        >
+          <IconSparkles size={16} />
+          <span>Launch Live 30 FPS AR Video Scanner</span>
+        </button>
       </div>
 
       <div className="detect-workspace-card">
@@ -89,10 +102,29 @@ const DetectPage = ({
           getStatusColor={getStatusColor}
         />
 
+        {/* Economic Yield Loss & Insurance Risk Assessor */}
+        <CropInsuranceAssessor
+          prediction={prediction}
+          cropType={selectedCrop}
+        />
+
         <LoadingState loading={loading} />
       </div>
 
-      {/* Live Camera Modal */}
+      {/* Live Video AR Scanner Modal */}
+      {isArScannerOpen && (
+        <LiveVideoArScanner
+          onClose={() => setIsArScannerOpen(false)}
+          onCaptureSpecimen={(file, dataUrl) => {
+            setIsArScannerOpen(false);
+            if (onCameraCapture) {
+              onCameraCapture(file, dataUrl);
+            }
+          }}
+        />
+      )}
+
+      {/* Snapshot Camera Modal */}
       <CameraCaptureModal
         isOpen={isCameraOpen}
         onClose={() => setIsCameraOpen(false)}

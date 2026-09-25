@@ -138,6 +138,30 @@
   border-color: var(--ig-blue);
 }
 
+.messenger-speech-toggle {
+  background: var(--surface-secondary);
+  border: 1px solid var(--card-border-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.messenger-speech-toggle:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+}
+
+.messenger-speech-toggle.active {
+  background: rgba(0, 149, 246, 0.15);
+  color: var(--ig-blue);
+  border-color: var(--ig-blue);
+}
+
 .messenger-header-btn {
   background: none;
   border: none;

@@ -1,0 +1,263 @@
+/* Soil Nutrient Advisor CSS */
+.soil-advisor-card {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #dbdbdb);
+  border-radius: 16px;
+  padding: 24px;
+  margin-top: 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+[data-theme="dark"] .soil-advisor-card {
+  background: #182234;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.soil-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.soil-main-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+
+.soil-sub-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.4;
+}
+
+/* Inputs Grid */
+.soil-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  background: var(--surface-secondary, #f8fafc);
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--card-border-subtle, #f1f5f9);
+}
+
+[data-theme="dark"] .soil-inputs-grid {
+  background: #131b2a;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.soil-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.soil-field label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted, #64748b);
+}
+
+.soil-field input,
+.soil-field select {
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border, #cbd5e1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+}
+
+[data-theme="dark"] .soil-field input,
+[data-theme="dark"] .soil-field select {
+  background: #182234;
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #f8fafc;
+}
+
+/* NPK Balance Meters */
+.npk-balance-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.npk-section-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.npk-meters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.npk-meter-box {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  padding: 14px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+[data-theme="dark"] .npk-meter-box {
+  background: #131b2a;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.npk-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.npk-name {
+  color: var(--text-main, #0f172a);
+}
+
+.npk-status {
+  color: var(--text-muted, #64748b);
+  font-family: monospace;
+}
+
+.npk-bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--card-border, #cbd5e1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.npk-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.npk-bar-fill.nitrogen {
+  background: #0095f6;
+}
+
+.npk-bar-fill.phosphorus {
+  background: #f59e0b;
+}
+
+.npk-bar-fill.potassium {
+  background: #10b981;
+}
+
+.npk-deficit-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+/* Fertilizer Cards */
+.fertilizer-prescription-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.prescription-card {
+  padding: 16px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+}
+
+[data-theme="dark"] .prescription-card {
+  background: #131b2a;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.fert-type {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted, #64748b);
+}
+
+.fert-product {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+}
+
+.fert-rate {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #10b981;
+}
+
+.fert-total {
+  font-size: 0.72rem;
+  color: var(--text-muted, #94a3b8);
+  font-weight: 600;
+}
+
+/* pH Advisory Callout */
+.soil-ph-advisory {
+  padding: 14px 18px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.soil-ph-advisory.optimal {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.soil-ph-advisory.acidic {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.soil-ph-advisory.alkaline {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.ph-badge {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--text-main, #0f172a);
+}
+
+.ph-msg {
+  font-size: 0.82rem;
+  color: var(--text-main, #0f172a);
+  font-weight: 600;
+  flex: 1;
+}

@@ -1,23 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./AgronomistChat.css";
 import { IconMessage, IconClose, IconMicrophone, IconMicOff, IconVolume, IconGlobe } from "./Icons";
-
-const SUPPORTED_LANGUAGES = [
-  { label: "English", code: "en-US", name: "English" },
-  { label: "हिंदी (Hindi)", code: "hi-IN", name: "Hindi" },
-  { label: "Español (Spanish)", code: "es-ES", name: "Spanish" },
-  { label: "ਪੰਜਾਬੀ (Punjabi)", code: "pa-IN", name: "Punjabi" },
-  { label: "বাংলা (Bengali)", code: "bn-IN", name: "Bengali" },
-  { label: "Français (French)", code: "fr-FR", name: "French" },
-  { label: "मराठी (Marathi)", code: "mr-IN", name: "Marathi" },
-  { label: "తెలుగు (Telugu)", code: "te-IN", name: "Telugu" },
-  { label: "Deutsch (German)", code: "de-DE", name: "German" },
-];
+import { useTranslation, SUPPORTED_LANGUAGES as GLOBAL_LANGS } from "../context/LanguageContext";
 
 const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
+  const { currentLang, activeLanguageObj } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLang, setSelectedLang] = useState(SUPPORTED_LANGUAGES[0]);
   const [isListening, setIsListening] = useState(false);
+  const [autoSpeak, setAutoSpeak] = useState(false);
   const [messages, setMessages] = useState([
     {
       sender: "bot",
@@ -76,7 +66,22 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
 
     try {
       const recognition = new SpeechRecognition();
-      recognition.lang = selectedLang.code;
+      const speechCodeMap = {
+        en: "en-US",
+        hi: "hi-IN",
+        es: "es-ES",
+        bn: "bn-IN",
+        pa: "pa-IN",
+        mr: "mr-IN",
+        te: "te-IN",
+        ta: "ta-IN",
+        fr: "fr-FR",
+        de: "de-DE",
+        zh: "zh-CN",
+        ar: "ar-SA",
+        pt: "pt-PT",
+      };
+      recognition.lang = speechCodeMap[currentLang] || "en-US";
       recognition.interimResults = false;
       recognition.maxAlternatives = 1;
 
@@ -114,7 +119,22 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
     window.speechSynthesis.cancel();
     const cleanText = text.replace(/\*\*/g, "").replace(/\*/g, "");
     const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.lang = selectedLang.code;
+    const speechCodeMap = {
+      en: "en-US",
+      hi: "hi-IN",
+      es: "es-ES",
+      bn: "bn-IN",
+      pa: "pa-IN",
+      mr: "mr-IN",
+      te: "te-IN",
+      ta: "ta-IN",
+      fr: "fr-FR",
+      de: "de-DE",
+      zh: "zh-CN",
+      ar: "ar-SA",
+      pt: "pt-PT",
+    };
+    utterance.lang = speechCodeMap[currentLang] || "en-US";
     utterance.rate = 1.0;
     window.speechSynthesis.speak(utterance);
   };
@@ -141,7 +161,7 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: textToSend,
-          language: selectedLang.name,
+          language: activeLanguageObj?.name || "English",
           history: currentHistory.map((m) => ({ sender: m.sender, text: m.text })),
           context: {
             disease: currentDiagnosis?.disease || "General Potato Crop",
@@ -155,15 +175,20 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
       }
       
       const data = await res.json();
+      const botReply = data.reply || "I am available to assist with crop treatment recommendations.";
 
       setMessages((prev) => [
         ...prev,
         {
           sender: "bot",
-          text: data.reply || "I am available to assist with crop treatment recommendations.",
+          text: botReply,
           time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         },
       ]);
+
+      if (autoSpeak) {
+        handleSpeakMessage(botReply);
+      }
     } catch (err) {
       console.error("AgronomistChat request failed:", err);
       setLastError(err.message);
@@ -243,24 +268,15 @@ const AgronomistChat = ({ currentDiagnosis, apiBaseUrl }) => {
             </div>
             
             <div className="messenger-header-actions">
-              {/* Language Selector */}
-              <div className="lang-picker-wrap" title="Select Voice & Text Language">
-                <IconGlobe size={13} className="lang-globe-icon" />
-                <select
-                  value={selectedLang.code}
-                  onChange={(e) => {
-                    const l = SUPPORTED_LANGUAGES.find((lang) => lang.code === e.target.value);
-                    if (l) setSelectedLang(l);
-                  }}
-                  className="chat-lang-select"
-                >
-                  {SUPPORTED_LANGUAGES.map((lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {/* Auto-Speak Toggle */}
+              <button
+                type="button"
+                className={`messenger-speech-toggle ${autoSpeak ? "active" : ""}`}
+                onClick={() => setAutoSpeak(!autoSpeak)}
+                title={autoSpeak ? "Auto-Speak Responses (Enabled)" : "Enable Auto-Speak Voice Responses"}
+              >
+                <IconVolume size={14} />
+              </button>
 
               <button 
                 type="button" 

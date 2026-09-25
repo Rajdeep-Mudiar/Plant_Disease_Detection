@@ -2,6 +2,7 @@ import React from "react";
 import "./WeatherPage.css";
 import WeatherRiskCard from "../components/WeatherRiskCard";
 import FarmOutbreakMap from "../components/FarmOutbreakMap";
+import RegionalOutbreakMap from "../components/RegionalOutbreakMap";
 import { IconRadar } from "../components/Icons";
 
 const WeatherPage = () => {
@@ -26,6 +27,9 @@ const WeatherPage = () => {
 
         {/* Feature 3: Farm Plot GIS Outbreak Heatmap */}
         <FarmOutbreakMap />
+
+        {/* Feature: Regional Community Epidemiology Outbreak Cluster Map */}
+        <RegionalOutbreakMap />
 
         <div className="weather-principles-card">
           <h3 className="principles-heading">Pathogen & Weather Correlation Principles</h3>
