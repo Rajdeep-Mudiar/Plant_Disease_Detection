@@ -169,6 +169,16 @@ const DigitalTwinPage = ({ onNavigateToScanner }) => {
     return () => clearInterval(interval);
   }, [simRunning, simSpeed]);
 
+  // Sync sectors to localStorage and broadcast real-time event for FarmOutbreakMap
+  useEffect(() => {
+    try {
+      localStorage.setItem("agro_farm_sectors", JSON.stringify(sectors));
+      window.dispatchEvent(new CustomEvent("agro_farm_sectors_changed", { detail: sectors }));
+    } catch (e) {
+      // ignore
+    }
+  }, [sectors]);
+
   // Scenario Triggers
   const triggerScenarioSporeOutbreak = () => {
     setActiveScenario("outbreak");
@@ -191,20 +201,23 @@ const DigitalTwinPage = ({ onNavigateToScanner }) => {
 
   const triggerScenarioPrecisionSpray = () => {
     setActiveScenario("spray");
+    const targetSector = sectors.find((s) => s.id === selectedSectorId) || sectors[0];
     setSectors((prev) =>
       prev.map((s) => {
-        if (s.status === "critical" || s.status === "warning") {
+        if (s.id === selectedSectorId || s.status === "critical" || s.status === "warning") {
           return {
             ...s,
             status: "treating",
-            droneStatus: "Deploying Precision Fungicide",
+            droneStatus: s.id === selectedSectorId ? "Deploying Precision Fungicide (Target)" : "Queued for Foliar Spray",
             lastTreatment: "Autonomous Drone Spray (Active)",
+            healthIndex: Math.min(99, s.healthIndex + 6),
+            sporeLoad: Math.max(5, Math.round(s.sporeLoad * 0.35)),
           };
         }
         return s;
       })
     );
-    addActionLog("AUTONOMOUS ACTION: Precision agricultural drone dispatched for target foliar fungicide application across affected sectors.");
+    addActionLog(`AUTONOMOUS ACTION: Precision agricultural drone dispatched for target foliar fungicide application in ${targetSector.name}.`);
   };
 
   const triggerScenarioDripFertigation = () => {
@@ -386,6 +399,10 @@ const DigitalTwinPage = ({ onNavigateToScanner }) => {
         selectedSectorId={selectedSectorId}
         onSelectSector={setSelectedSectorId}
         activeScenario={activeScenario}
+        onTriggerSpray={triggerScenarioPrecisionSpray}
+        onTriggerDrip={triggerScenarioDripFertigation}
+        onTriggerOutbreak={triggerScenarioSporeOutbreak}
+        onReset={resetSimulation}
       />
 
       {/* Main Twin Layout: 3D Grid + Deep Telemetry Inspector */}

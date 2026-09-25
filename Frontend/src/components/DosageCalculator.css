@@ -232,55 +232,89 @@
 }
 
 /* Tank Visualizer */
+/* Realistic Knapsack Sprayer Visualizer */
 .tank-visualizer-box {
-  background: var(--surface-secondary, #f8fafc);
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   border: 1px solid var(--card-border-subtle, #e2e8f0);
-  border-radius: 8px;
-  padding: 14px;
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.05);
 }
 
 .tank-visualizer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.visualizer-header-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.visualizer-live-badge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #0284c7;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.visualizer-live-badge::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
 }
 
 .visualizer-title {
   margin: 0;
-  font-size: 0.78rem;
+  font-size: 0.88rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--text-muted, #64748b);
+  color: var(--text-main, #0f172a);
 }
 
 .agitate-mix-btn {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 8px;
-  font-size: 0.72rem;
+  gap: 6px;
+  padding: 5px 12px;
+  font-size: 0.74rem;
   font-weight: 600;
-  color: #0095f6;
-  background: var(--card-bg, #ffffff);
-  border: 1px solid #93c5fd;
-  border-radius: 4px;
+  color: #0284c7;
+  background: #ffffff;
+  border: 1.5px solid #bae6fd;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .agitate-mix-btn:hover {
-  background: #eff6ff;
+  background: #f0f9ff;
+  border-color: #0284c7;
+  transform: translateY(-1px);
 }
 
 .agitate-mix-btn.agitating {
-  background: #0095f6;
+  background: #0284c7;
   color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
 }
 
 .spin-icon {
-  animation: spinSlow 1s linear infinite;
+  animation: spinSlow 0.9s linear infinite;
 }
 
 @keyframes spinSlow {
@@ -288,130 +322,264 @@
   to { transform: rotate(360deg); }
 }
 
-.tank-graphic-container {
+.realistic-sprayer-viewport {
+  width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 0 10px;
+}
+
+.realistic-knapsack-svg {
+  width: 100%;
+  max-width: 370px;
+  height: auto;
+  filter: drop-shadow(0 6px 12px rgba(15, 23, 42, 0.08));
+  transition: transform 0.25s ease;
+  overflow: visible;
+}
+
+.realistic-knapsack-svg.tank-sloshing {
+  animation: tankRocking 0.35s ease-in-out infinite alternate;
+}
+
+@keyframes tankRocking {
+  0% { transform: rotate(-1deg) translateY(0); }
+  100% { transform: rotate(1deg) translateY(-2px); }
+}
+
+/* Pump Lever Animation */
+.pump-pumping {
+  animation: leverPumpCycle 0.55s ease-in-out infinite alternate;
+  transform-origin: 82px 192px;
+}
+
+@keyframes leverPumpCycle {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(18deg); }
+}
+
+/* Fluid Wave Physics */
+.wave-anim-group {
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.wave-layer-1 {
+  animation: waveSlosh1 2.8s linear infinite alternate;
+}
+
+.wave-layer-2 {
+  animation: waveSlosh2 2.1s linear infinite alternate;
+}
+
+@keyframes waveSlosh1 {
+  0% { transform: translateX(-15px) scaleY(1); }
+  100% { transform: translateX(15px) scaleY(1.08); }
+}
+
+@keyframes waveSlosh2 {
+  0% { transform: translateX(12px) scaleY(1.05); }
+  100% { transform: translateX(-12px) scaleY(0.95); }
+}
+
+/* Bubble Particle Physics */
+.svg-bubble {
+  fill: rgba(255, 255, 255, 0.85);
+  animation: svgBubbleFloat 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.b-1 { animation-delay: 0.1s; }
+.b-2 { animation-delay: 0.35s; }
+.b-3 { animation-delay: 0.6s; }
+.b-4 { animation-delay: 0.2s; }
+.b-5 { animation-delay: 0.5s; }
+.b-6 { animation-delay: 0.8s; }
+.b-7 { animation-delay: 0.4s; }
+
+@keyframes svgBubbleFloat {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  30% { opacity: 0.9; }
+  90% { opacity: 0.7; }
+  100% { transform: translateY(-70px) scale(1.2); opacity: 0; }
+}
+
+.swirl-path {
+  animation: swirlPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes swirlPulse {
+  0% { stroke-dashoffset: 0; opacity: 0.3; }
+  100% { stroke-dashoffset: 20; opacity: 0.8; }
+}
+
+.foam-active {
+  animation: foamBubbleJiggle 0.4s infinite ease-in-out alternate;
+}
+
+@keyframes foamBubbleJiggle {
+  0% { transform: scaleX(0.98) translateY(0); opacity: 0.6; }
+  100% { transform: scaleX(1.02) translateY(-1.5px); opacity: 0.85; }
+}
+
+/* Spray Mist Cone */
+.spray-mist-cone {
+  animation: mistPuff 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes mistPuff {
+  0% { opacity: 0.5; transform: scale(0.95); }
+  100% { opacity: 0.95; transform: scale(1.08); }
+}
+
+/* Manometer Needle Quiver */
+.needle-pulse {
+  animation: needleJitter 0.12s infinite linear alternate;
+}
+
+@keyframes needleJitter {
+  0% { transform: rotate(calc(var(--angle, 0deg) - 2deg)); }
+  100% { transform: rotate(calc(var(--angle, 0deg) + 2deg)); }
+}
+
+/* Graduation Labels inside SVG */
+.graduation-label-main {
+  font-family: inherit;
+  font-size: 8px;
+  font-weight: 800;
+  fill: #0f172a;
+}
+
+.graduation-label {
+  font-family: inherit;
+  font-size: 7px;
+  font-weight: 600;
+  fill: #475569;
+}
+
+/* Sprayer Mixture Telemetry HUD */
+.tank-mixture-hud {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
+  background: var(--card-bg, #ffffff);
+  border: 1px solid var(--card-border-subtle, #e2e8f0);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 6px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+@media (max-width: 550px) {
+  .tank-mixture-hud {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+}
+
+.hud-primary-cell,
+.hud-stat-cell {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
 }
 
-.knapsack-tank-body {
-  width: 100%;
-  max-width: 280px;
-  height: 96px;
-  background: var(--card-bg, #ffffff);
-  border: 2px solid var(--text-main, #0f172a);
-  border-radius: 8px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
+.hud-primary-cell {
+  border-right: 1px solid var(--card-border-subtle, #e2e8f0);
+  padding-right: 10px;
 }
 
-.tank-top-manifold {
-  position: absolute;
-  top: 4px;
-  left: 8px;
-  right: 8px;
+@media (max-width: 550px) {
+  .hud-primary-cell {
+    border-right: none;
+    border-bottom: 1px solid var(--card-border-subtle, #e2e8f0);
+    padding-bottom: 8px;
+  }
+}
+
+.hud-label {
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+}
+
+.hud-value-row {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  z-index: 5;
+  gap: 6px;
+  margin: 2px 0;
 }
 
-.tank-cap {
-  width: 20px;
-  height: 6px;
-  background: var(--text-main, #0f172a);
-  border-radius: 2px;
+.hud-color-pill {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.15);
 }
 
-.tank-gauge-pill {
+.hud-compound-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main, #0f172a);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hud-sub-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted, #64748b);
+}
+
+.hud-sub-desc strong {
+  color: var(--text-main, #0f172a);
+}
+
+.hud-stat-title {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+}
+
+.hud-stat-big {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main, #0f172a);
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  line-height: 1.2;
+}
+
+.hud-stat-big small {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+}
+
+.hud-pressure-val {
+  color: #0284c7;
   display: flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--text-main, #0f172a);
-  background: rgba(255, 255, 255, 0.9);
-  padding: 1px 6px;
-  border-radius: 4px;
 }
 
-.gauge-dot {
-  width: 5px;
-  height: 5px;
+.hud-status-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  display: inline-block;
 }
 
-.knapsack-fluid-fill {
-  width: 100%;
-  height: 80%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.knapsack-fluid-fill.agitating {
-  animation: fluidShake 0.4s infinite ease-in-out;
-}
-
-@keyframes fluidShake {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px) rotate(0.5deg); }
-}
-
-.mixing-bubbles-layer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.bubble {
-  position: absolute;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  animation: bubbleRise 1.2s infinite ease-in;
-}
-
-.bubble.b1 { width: 6px; height: 6px; left: 20%; bottom: 0; }
-.bubble.b2 { width: 8px; height: 8px; left: 45%; bottom: 0; animation-delay: 0.3s; }
-.bubble.b3 { width: 5px; height: 5px; left: 70%; bottom: 0; animation-delay: 0.6s; }
-.bubble.b4 { width: 7px; height: 7px; left: 85%; bottom: 0; animation-delay: 0.2s; }
-
-@keyframes bubbleRise {
-  0% { transform: translateY(0) scale(0.6); opacity: 0; }
-  50% { opacity: 0.9; }
-  100% { transform: translateY(-60px) scale(1.2); opacity: 0; }
-}
-
-.tank-fill-label {
-  position: relative;
-  z-index: 2;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #0f172a;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 2px 8px;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.tank-graduations {
-  position: absolute;
-  right: 6px;
-  top: 0;
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.hud-stat-caption {
   font-size: 0.65rem;
-  font-weight: 700;
   color: var(--text-muted, #94a3b8);
-  padding: 4px 0;
-  pointer-events: none;
 }
 
 /* Nozzle Selection Grid */
@@ -735,34 +903,54 @@
 }
 
 [data-theme="dark"] .tank-visualizer-box {
+  background: linear-gradient(180deg, #111728 0%, #0d121f 100%);
+  border-color: #1e293b;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .tank-hdpe-shell {
+  fill: url(#tankShellGradDark);
+  stroke: #475569;
+}
+
+[data-theme="dark"] .tank-ground-shadow {
+  fill: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .graduation-label-main {
+  fill: #f8fafc;
+}
+
+[data-theme="dark"] .graduation-label {
+  fill: #94a3b8;
+}
+
+[data-theme="dark"] .gauge-dial-face {
+  fill: #0f172a;
+  stroke: #334155;
+}
+
+[data-theme="dark"] .gauge-brand-text {
+  fill: #38bdf8;
+}
+
+[data-theme="dark"] .tank-mixture-hud {
   background: #111728;
   border-color: #1e293b;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
-[data-theme="dark"] .knapsack-tank-body {
-  background: rgba(15, 23, 42, 0.85);
-  border: 1.5px solid #334155;
-  box-shadow: inset 0 2px 14px rgba(0, 0, 0, 0.7), 0 0 20px rgba(56, 189, 248, 0.08);
+[data-theme="dark"] .hud-primary-cell {
+  border-color: #1e293b;
 }
 
-[data-theme="dark"] .tank-cap {
-  background: #38bdf8;
-  box-shadow: 0 0 8px rgba(56, 189, 248, 0.5);
-}
-
-[data-theme="dark"] .tank-gauge-pill {
-  background: rgba(15, 23, 42, 0.88);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.3);
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
-}
-
-[data-theme="dark"] .tank-fill-label {
+[data-theme="dark"] .hud-compound-name,
+[data-theme="dark"] .hud-stat-big {
   color: #f8fafc;
-  background: rgba(15, 23, 42, 0.88);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .hud-sub-desc strong {
+  color: #f8fafc;
 }
 
 [data-theme="dark"] .agitate-mix-btn {

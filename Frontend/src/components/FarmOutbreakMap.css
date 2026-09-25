@@ -87,10 +87,51 @@
   border-color: var(--ig-blue);
 }
 
+.gis-toggle-btn.fullscreen-toggle {
+  background: rgba(0, 149, 246, 0.08);
+  border-color: rgba(0, 149, 246, 0.3);
+  color: var(--ig-blue);
+}
+
+.gis-toggle-btn.fullscreen-toggle:hover {
+  background: rgba(0, 149, 246, 0.15);
+}
+
+.gis-toggle-btn.fullscreen-toggle.active {
+  background: var(--ig-blue);
+  color: #ffffff;
+  border-color: var(--ig-blue);
+}
+
+/* Full Screen Mode Expansion */
+.gis-outbreak-card.fullscreen-mode {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  height: 100vh !important;
+  max-height: 100vh !important;
+  overflow-y: auto;
+  background: var(--card-bg, #ffffff);
+  padding: 1.25rem 2rem;
+  box-shadow: none;
+}
+
+.gis-outbreak-card.fullscreen-mode .map-viewport-frame {
+  height: calc(100vh - 160px);
+  min-height: 520px;
+}
+
+.gis-outbreak-card.fullscreen-mode .gis-map-layout-grid {
+  grid-template-columns: 1fr 380px;
+}
+
 .gis-map-layout-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 1.25rem;
+  transition: all 0.2s ease;
 }
 
 @media (max-width: 900px) {
@@ -106,12 +147,18 @@
   border: 1px solid var(--card-border);
   position: relative;
   background: var(--surface-secondary);
+  transition: height 0.2s ease;
 }
 
 .leaflet-actual-map {
   width: 100%;
   height: 100%;
   z-index: 1;
+}
+
+/* Hide Leaflet Attribution Link & Control */
+.leaflet-control-attribution {
+  display: none !important;
 }
 
 /* Custom Leaflet Dark/Light adjustments */
